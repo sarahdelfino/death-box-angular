@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Card } from './card/card';
+import { Stack } from './stack';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,10 @@ export class GameService {
   values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
   suits = ['D', 'C', 'H', 'S']
   deck = new Array<Card>();
-  stacks = new Array();
+  stacks = new Array<Stack>();
   constructor() { }
 
-  public createDeck(): Array<Card> {
+  public createDeck() {
     this.suits.forEach((s) => {
       for (let v of this.values) {
         this.deck.push(new Card(v.toString(), s));
@@ -35,19 +36,22 @@ export class GameService {
     }
   }
 
-  public createStacks(): Array<Card> {
+  public createStacks(): Array<Stack> {
     for (let i = 0; i < 9; i++) {
-      var stack = new Array<Card>();
-      stack.push(this.drawCard());
+      var stack = new Array();
+      // stack.push(this.drawCard());
       // stack = this.drawCard();
-      this.stacks.push(stack);
+      stack.push(this.drawCard());
+      // console.log("Stack[0]: ", stack[0]);
+      // this.stacks.push(stack[0]);
+      // console.log("Stacks[i]: ", this.stacks[i][0]);
+      this.stacks['card'] = stack[0];
+      console.log(this.stacks);
     }
+    // this.stacks[0].push(this.drawCard());
+    // console.log("Stacks[0] after: ", this.stacks[0]);
     console.log(this.stacks);
-    for (var x in this.stacks) {
-      for (var y in this.stacks[x]) {
-        return this.stacks[x][y];
-      }
-    }
+    return this.stacks;
   }
 
   public stackAdd(card: Card) {

@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/d
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
 import { HighLowComponent } from '../high-low/high-low.component';
+import { Stack } from '../stack';
 
 @Component({
   selector: 'app-game',
@@ -13,7 +14,7 @@ import { HighLowComponent } from '../high-low/high-low.component';
 export class GameComponent implements OnInit {
 
   private deck: Array<Card>;
-  public stacks: Array<Card>;
+  public stacks: Array<any>;
 
   constructor(private _gameService: GameService,
     private dialog: MatDialog) { }
