@@ -1,0 +1,10 @@
+img {
+    max-width: 200px;
+    height: auto;
+    margin: 20px;
+}
+
+.selected {
+    border-width: 2px;
+    border-color: red;
+}

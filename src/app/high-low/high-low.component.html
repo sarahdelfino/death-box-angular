@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Higher or Lower?</h2>
+<mat-dialog-content class="mat-typography">
+  <p>You chose: {{ card.cardName }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="true" (click)="higher()" style="margin: 10px;">High</button>
+  <button mat-button [mat-dialog-close]="true" (click)="lower()">Low</button>
+</mat-dialog-actions>
