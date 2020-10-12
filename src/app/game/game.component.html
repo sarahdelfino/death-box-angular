@@ -1,4 +1,9 @@
-<div class="table" *ngFor="let card of stacks; let i = index;">
-  <app-card [card]="card" (clickedCardEmitter)="clickedCard($event)" (click)="openDialog(card)"></app-card>
+<div class="table" *ngFor="let c of table.stacks; let i = index">
+  <div class="table" *ngFor="let card of c.cards">
+    <app-card
+      [card]="card"
+      (clickedCardEmitter)="clickedCard($event)"
+      (click)="openDialog(card)"
+    ></app-card>
+  </div>
 </div>
-

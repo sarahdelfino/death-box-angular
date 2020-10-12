@@ -13,15 +13,14 @@ import { HighLowComponent } from '../high-low/high-low.component';
 export class GameComponent implements OnInit {
 
   private deck: Array<Card>;
-  public stacks: Array<Card>;
+  public table;
 
   constructor(private _gameService: GameService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
     this.deck = this._gameService.createDeck();
-    this.stacks = this._gameService.createStacks();
-    
+    this.table = this._gameService.createStacks();
   }
 
   openDialog(card: Card) {

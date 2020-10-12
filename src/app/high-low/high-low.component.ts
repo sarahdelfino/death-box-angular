@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Card } from '../card/card';
 
 @Component({
   selector: 'app-high-low',
@@ -8,7 +9,7 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dial
 })
 export class HighLowComponent implements OnInit {
 
-  card: string;
+  public card: Card;
 
   constructor(
     // private dialog: MatDialog,
