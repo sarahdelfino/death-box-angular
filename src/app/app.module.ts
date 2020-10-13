@@ -9,13 +9,15 @@ import { CardComponent } from './card/card.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HighLowComponent } from './high-low/high-low.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { StackComponent } from './stack/stack.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GameComponent,
     CardComponent,
-    HighLowComponent
+    HighLowComponent,
+    StackComponent
   ],
   imports: [
     BrowserModule,

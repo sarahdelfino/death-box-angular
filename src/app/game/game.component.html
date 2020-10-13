@@ -1,5 +1,5 @@
-<div class="table" *ngFor="let c of table.stacks; let i = index">
-  <div class="table" *ngFor="let card of c.cards">
+<div class="table" *ngFor="let stack of table.stacks; let i = index">
+  <div class="table" *ngFor="let card of stack.cards; let first = first;" [ngClass]="{ first: first }">
     <app-card
       [card]="card"
       (clickedCardEmitter)="clickedCard($event)"

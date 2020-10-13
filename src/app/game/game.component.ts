@@ -20,7 +20,7 @@ export class GameComponent implements OnInit {
 
   ngOnInit() {
     this.deck = this._gameService.createDeck();
-    this.table = this._gameService.createStacks();
+    // this.table = this._gameService.createStacks();
   }
 
   openDialog(card: Card) {
@@ -32,7 +32,7 @@ export class GameComponent implements OnInit {
     const dialogRef = this.dialog.open(HighLowComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      data => console.log('Dialog result: ', data)
+      data => console.log('You chose: ', data.cardName)
     );
   }
 

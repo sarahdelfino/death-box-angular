@@ -10,12 +10,12 @@ import { Card } from '../card/card';
 export class HighLowComponent implements OnInit {
 
   public card: Card;
+  public choice: string;
 
   constructor(
-    // private dialog: MatDialog,
     private dialogRef: MatDialogRef<HighLowComponent>,
     @Inject(MAT_DIALOG_DATA) data) {
-    this.card = data;
+    this.card = data[0];
   }
 
   ngOnInit() {
@@ -23,13 +23,15 @@ export class HighLowComponent implements OnInit {
   }
 
   higher() {
-    console.log("You chose higher");
-    this.dialogRef.close(this.card);
+    // console.log("You chose higher");
+    this.choice = "higher";
+    this.dialogRef.close(this.choice);
   }
 
   lower() {
-    console.log("You chose lower");
-    this.dialogRef.close(this.card);
+    // console.log("You chose lower");
+    this.choice = "lower";
+    this.dialogRef.close(this.choice);
   }
 
 
