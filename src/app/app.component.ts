@@ -32,19 +32,17 @@ export class AppComponent {
     var tmp = new Array;
     for (let i = 0; i < 9; i++) {
       var stack = new Array();
-      // var tmpArry = Array();
       stack.push(this.deck.pop());
-      // stack.cards = tmpArry;
-      // tmp.push(stack);
       this.stacks.push(stack);
     }
-    // this.stacks.push(tmp);
     console.log(this.stacks);
   }
 
-  addToStack() {
-    this.stacks[0].push(this.deck.pop());
-    console.log("addToStack(): ", this.stacks);
+  addToStack(i, card) {
+    // add card to the top of the stack
+    this.stacks[i].unshift(card);
+    console.log("Added ", card, "to stack: ", i);
+    console.log(this.stacks);
   }
 
   clickedCard(card: Card) {
@@ -77,9 +75,9 @@ export class AppComponent {
     } else {
       console.log("You're wrong!");
     };
-    for (let s in this.stacks) {
-      console.log(s);
-    }
+    // get index of current card and add to stack
+    var cardIndex = this.stacks.indexOf(card);
+    this.addToStack(cardIndex, newCard);
 
   }
 }
