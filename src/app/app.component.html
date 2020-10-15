@@ -1,16 +1,7 @@
-<!-- <div class="container"> -->
-  <ng-container *ngFor="let stack of stacks">
-    <app-stack [cards]="stack"
+<ng-container *ngFor="let stack of stacks" mat-sidenav-container>
+  <app-stack
+    [cards]="stack"
     (clickedCardEmitter)="clickedCard($event)"
-    (click)="openDialog(stack)"></app-stack>
-  </ng-container>
-  <!-- <app-stack [deck]="deck"></app-stack>
-  <app-stack [deck]="deck"></app-stack>
-  <app-stack [deck]="deck"></app-stack>
-  <app-stack [deck]="deck"></app-stack>
-  <app-stack [deck]="deck"></app-stack>
-  <app-stack [deck]="deck"></app-stack>
-  <app-stack [deck]="deck"></app-stack>
-  <app-stack [deck]="deck"></app-stack>
-  <app-stack [deck]="deck"></app-stack> -->
-<!-- </div> -->
+    (click)="chooseCard(stack)"
+  ></app-stack>
+</ng-container>

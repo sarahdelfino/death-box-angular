@@ -25,7 +25,7 @@ export class StackComponent implements OnInit {
 
   ngOnInit() {
     // this.cards.push(this.deck.pop());
-    console.log("Cards: ", this.cards);
+    // console.log("Cards: ", this.cards);
   }
 
   public add(card: Card) {

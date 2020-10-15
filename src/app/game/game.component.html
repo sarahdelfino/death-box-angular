@@ -1,9 +1,1 @@
-<div class="table" *ngFor="let stack of table.stacks; let i = index">
-  <div class="table" *ngFor="let card of stack.cards; let first = first;" [ngClass]="{ first: first }">
-    <app-card
-      [card]="card"
-      (clickedCardEmitter)="clickedCard($event)"
-      (click)="openDialog(card)"
-    ></app-card>
-  </div>
-</div>
+<h1>Game Component</h1>

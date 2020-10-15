@@ -12,10 +12,7 @@ export class GameService {
   suits = ['D', 'C', 'H', 'S']
   deck = new Array<Card>();
   table = new Table;
-  constructor(
-  ) {
-    // this.createDeck();
-   }
+  constructor() { }
 
   public createDeck(): Array<Card> {
     this.suits.forEach((s) => {
@@ -40,28 +37,6 @@ export class GameService {
     }
   }
 
-  // public createStacks(): Table {
-  //   var tmp = new Array;
-  //   for (let i = 0; i < 9; i++) {
-  //     var stack = new Stack;
-  //     stack.id = i;
-  //     var tmpArr = Array();
-  //     tmpArr.push(this.drawCard());
-  //     stack.cards = tmpArr;
-  //     tmp.push(stack);
-  //   }
-  //   console.log(tmp);
-  //   this.table.stacks = tmp;
-  //   console.log(this.table);
-  //   console.log(this.table.stacks[0].cards[0].cardName);
-  //   return this.table;
-  // }
-
-  public stackAdd(card: Card) {
-    // this.stacks[0].push(card);
-    // this.table.stacks[0].cards.splice(0, 0, card);
-  }
-
   public stackIndex() {
     return this.table.stacks;
   }
@@ -75,7 +50,6 @@ export class GameService {
   }
 
   public clickedCard(card: Card) {
-    console.log("User clicked: " + card);
-    // this.stackAdd(card);
+    // console.log("User clicked: " + card);
   }
 }
