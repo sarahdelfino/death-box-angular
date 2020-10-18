@@ -6,7 +6,7 @@ import { HighLowComponent } from './high-low/high-low.component';
 import { RemoveStacksComponent } from './remove-stacks/remove-stacks.component';
 import { Stack } from './stack';
 import { StackComponent } from './stack/stack.component';
-import { WelcomeComponent } from './welcome/welcome.component';
+import { ModalComponent } from './modal/modal.component';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +29,6 @@ export class AppComponent {
   ngOnInit() {
     this.deck = this._gameService.createDeck();
     this.createStacks();
-    this.openWelcome();
   }
 
   createStacks() {
@@ -56,21 +55,7 @@ export class AppComponent {
       this.openHighLow(card);
     } else {
       this.openRemoveStacks();
-      // this.removeStacks();
     }
-  }
-
-  openWelcome() {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.data = [];
-    
-    const dialogRef = this.dialog.open(WelcomeComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(
-      data => {
-        console.log(data);
-      });
   }
 
   openRemoveStacks() {
@@ -92,6 +77,7 @@ export class AppComponent {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.data = card;
+    dialogConfig.disableClose = true;
     // this.dialog.open(HighLowComponent, dialogConfig);
 
     const dialogRef = this.dialog.open(HighLowComponent, dialogConfig);
@@ -100,26 +86,44 @@ export class AppComponent {
       data => {
         this.choice = data;
         this.compare(this.choice, card);
+        if (this.turns == 3) {
+          this.openNewPlayer();
+          this.turns = 0;
+        }
       });
+  }
+
+  openNewPlayer() {
+    const dialogConfig = new MatDialogConfig();
+    const timeout = 1000;
+
+    const dialogRef = this.dialog.open(ModalComponent);
+
+    dialogRef.afterOpened().subscribe(_ => {
+      setTimeout(() => {
+        dialogRef.close();
+      }, timeout)
+    })
   }
 
   compare(choice, card) {
     var newCard = this.deck.pop();
     console.log("newCard: ", newCard.value);
-    if (choice == "higher" && (Number(newCard.value) > Number(card[0].value))) {
-      console.log("You're right!");
-      this.turns = this.turns + 1;
-      console.log("You have chosen correctly ", this.turns, " times");
-    } else if (choice == "lower" && (Number(newCard.value) < Number(card[0].value))) {
-      console.log("You're right!");
-      this.turns = this.turns + 1;
-      console.log("You have chosen correctly ", this.turns, " times");
-    } else {
-      console.log("You're wrong!");
-    };
+      if (choice == "higher" && (Number(newCard.value) > Number(card[0].value))) {
+        console.log("You're right!");
+        this.turns = this.turns + 1;
+        console.log("You have chosen correctly ", this.turns, " times");
+      } else if (choice == "lower" && (Number(newCard.value) < Number(card[0].value))) {
+        console.log("You're right!");
+        this.turns = this.turns + 1;
+        console.log("You have chosen correctly ", this.turns, " times");
+      } else {
+        console.log("You're wrong!");
+      };
     // get index of current card and add to stack
     var cardIndex = this.stacks.indexOf(card);
     this.addToStack(cardIndex, newCard);
+
   }
 
   removeStacks() {

@@ -14,6 +14,7 @@ export class StackComponent implements OnInit {
 
   // private deck: Array<Card>;
   // public cards: any = [];
+  wasClicked = false;
   
   @Input()
   public cards: any = [];
@@ -24,8 +25,7 @@ export class StackComponent implements OnInit {
   constructor(private _gameService: GameService) { }
 
   ngOnInit() {
-    // this.cards.push(this.deck.pop());
-    // console.log("Cards: ", this.cards);
+    
   }
 
   public add(card: Card) {
@@ -33,6 +33,7 @@ export class StackComponent implements OnInit {
   }
 
   onCardClick() {
+    this.wasClicked = !this.wasClicked;
     this.clickedCardEmitter.emit(this.cards[0].cardName);
   }
 

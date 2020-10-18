@@ -10,7 +10,6 @@ import { CardComponent } from './card/card.component';
 import { StackComponent } from './stack/stack.component';
 import { RemoveStacksComponent } from './remove-stacks/remove-stacks.component';
 import { HighLowComponent } from './high-low/high-low.component';
-import { WelcomeComponent } from './welcome/welcome.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { ModalComponent } from './modal/modal.component';
 
 
 @NgModule({
@@ -28,7 +28,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     HighLowComponent,
     StackComponent,
     RemoveStacksComponent,
-    WelcomeComponent
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
