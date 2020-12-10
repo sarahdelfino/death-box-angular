@@ -14,26 +14,28 @@ export class StackComponent implements OnInit {
 
   // private deck: Array<Card>;
   // public cards: any = [];
+  selectedStack: Card;
   wasClicked = false;
-  
+
   @Input()
   public cards: any = [];
-  
+
   @Output()
   private clickedCardEmitter: EventEmitter<Card> = new EventEmitter();
 
   constructor(private _gameService: GameService) { }
 
   ngOnInit() {
-    
+
   }
 
   public add(card: Card) {
     this.cards.splice(0, 0, card);
   }
 
-  onCardClick() {
-    this.wasClicked = !this.wasClicked;
+  onCardClick(stack: Card) {
+    // this.wasClicked = !this.wasClicked;
+    this.selectedStack = stack;
     this.clickedCardEmitter.emit(this.cards[0].cardName);
   }
 

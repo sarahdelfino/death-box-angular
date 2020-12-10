@@ -18,6 +18,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ModalComponent } from './modal/modal.component';
+import { MatRippleModule } from '@angular/material/core';
+import { PlayersComponent } from './players/players.component';
+import { PlayersFormComponent } from './players-form/players-form.component';
 
 
 @NgModule({
@@ -29,6 +32,8 @@ import { ModalComponent } from './modal/modal.component';
     StackComponent,
     RemoveStacksComponent,
     ModalComponent,
+    PlayersComponent,
+    PlayersFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,6 +44,7 @@ import { ModalComponent } from './modal/modal.component';
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
+    MatRippleModule,
     RouterModule.forRoot([
       {
         path: '',

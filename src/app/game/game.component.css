@@ -2,7 +2,3 @@
     display: inline;
     max-width: 800px;
 }
-.selected {
-    border-width: 2px;
-    border-color: red;
-}
