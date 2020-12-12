@@ -7,6 +7,8 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./modal.component.css']
 })
 export class ModalComponent implements OnInit {
+  title;
+  body;
 
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>

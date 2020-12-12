@@ -1,4 +1,15 @@
-.container {
+/* .container {
     width: 750px;
     margin: 0 auto;
 }
+
+.grid-container {
+    display: inline-grid;
+    grid-template-columns: auto auto auto;
+    background-color: #2196F3;
+    padding: 10px;
+}
+
+.grid-item {
+    text-align: center;
+} */

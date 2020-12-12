@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormArray, FormGroup } from '@angular/forms';
+import { GameService } from '../game.service';
 
 @Component({
   selector: 'app-players-form',
@@ -10,11 +11,18 @@ export class PlayersFormComponent implements OnInit {
 
   playersForm: FormGroup;
   
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+    private gameService: GameService) {
     this.playersForm = this.formBuilder.group({
       player1: '',
       player2: '',
-      players: this.formBuilder.array([]),
+      player3: '',
+      player4: '',
+      player5: '',
+      player6: '',
+      player7: '',
+      player8: '',
+      // players: this.formBuilder.array([]),
     });
    }
 
@@ -31,9 +39,10 @@ export class PlayersFormComponent implements OnInit {
     })
   }
 
-  onSubmit() {
-    console.log(this.playersForm.value);
-    this.playersForm.reset();
+  onSubmit(data) {
+    // console.log(data);
+    this.gameService.addPlayers(data);
+    // this.playersForm.reset();
   }
 
   addPlayer() {

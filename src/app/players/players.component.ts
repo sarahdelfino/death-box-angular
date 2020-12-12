@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { GameService } from '../game.service';
+import { Player } from '../player';
 
 
 @Component({
@@ -7,11 +9,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./players.component.css']
 })
 export class PlayersComponent implements OnInit {
-  
+  players;
 
-  constructor() { }
+  constructor(public gameService: GameService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.getPlayers();
+  }
+
+  getPlayers() {
+    this.players = this.gameService.players;
+    console.log(this.players);
   }
 
   

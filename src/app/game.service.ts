@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Card } from './card/card';
+import { Player } from './player';
 import { Stack } from './stack';
 import { Table } from './table';
 
@@ -12,6 +13,7 @@ export class GameService {
   suits = ['D', 'C', 'H', 'S']
   deck = new Array<Card>();
   table = new Table;
+  players = new Array<Player>();
   constructor() { }
 
   public createDeck(): Array<Card> {
@@ -51,5 +53,18 @@ export class GameService {
 
   public clickedCard(card: Card) {
     // console.log("User clicked: " + card);
+  }
+
+  public addPlayers(players) {
+    // console.log("PLAYERS: ", players);
+    for(let p in players) {
+      this.players.push(new Player(players[p], ""));
+    }
+    console.log(this.players);
+    // console.log("IN GAME SERVICE:", players);
+  }
+
+  public getPlayers(): Array<Player> {
+    return this.players;
   }
 }
