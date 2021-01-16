@@ -13,7 +13,8 @@ export class GameService {
   suits = ['D', 'C', 'H', 'S']
   deck = new Array<Card>();
   table = new Table;
-  players = new Array<Player>();
+  // players = new Array<Player>();
+  players = [];
   constructor() { }
 
   public createDeck(): Array<Card> {
@@ -71,6 +72,10 @@ export class GameService {
     console.log("INSIDE GET PLAYERS: ", this.players);
     console.log("LOCALSTORAGE: ", localStorage.getItem('players'));
     this.players = JSON.parse(localStorage.getItem('players'));
+    // const str = this.players.json()
+    // console.log("FILTERED: ", str.filter(x => x !== null));
+    // console.log(str);
+    console.log(this.players);
     return this.players;
   }
 }

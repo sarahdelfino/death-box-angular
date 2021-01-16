@@ -1,4 +1,13 @@
 <h1>Players</h1>
-<div *ngFor="let player of players">
-    <p>{{ player.name }}</p>
-</div>
+<!-- <div *ngFor="let player of players"> -->
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Seconds drank</th>
+        </tr>
+        <tr>
+            <td>{{ this.player.name }} </td>
+            <td>{{ player.secondsDrank }}</td>
+        </tr>
+    </table>
+<!-- </div> -->

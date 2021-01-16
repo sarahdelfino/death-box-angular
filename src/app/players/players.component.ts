@@ -11,6 +11,8 @@ import { Player } from '../player';
 })
 export class PlayersComponent implements OnInit {
   players:any = [];
+  player = this.players.name;
+  secondsDrank = this.players.secondsDrank;
 
   constructor(public gameService: GameService) { }
 
