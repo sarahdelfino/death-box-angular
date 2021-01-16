@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { GameService } from '../game.service';
 import { Player } from '../player';
 
@@ -9,17 +10,13 @@ import { Player } from '../player';
   styleUrls: ['./players.component.css']
 })
 export class PlayersComponent implements OnInit {
-  players;
+  players:any = [];
 
   constructor(public gameService: GameService) { }
 
   ngOnInit() {
-    this.getPlayers();
-  }
-
-  getPlayers() {
-    this.players = this.gameService.players;
-    console.log(this.players);
+    this.players = this.gameService.getPlayers();
+    console.log("PLAYERS COMPONENT: ", this.players);
   }
 
   

@@ -21,6 +21,7 @@ import { ModalComponent } from './modal/modal.component';
 import { MatRippleModule } from '@angular/material/core';
 import { PlayersComponent } from './players/players.component';
 import { PlayersFormComponent } from './players-form/players-form.component';
+import { GameService } from './game.service';
 
 
 @NgModule({
@@ -53,7 +54,7 @@ import { PlayersFormComponent } from './players-form/players-form.component';
     ]),
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [GameService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

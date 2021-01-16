@@ -56,15 +56,21 @@ export class GameService {
   }
 
   public addPlayers(players) {
-    // console.log("PLAYERS: ", players);
+    console.log("PLAYERS: ", players);
     for(let p in players) {
       this.players.push(new Player(players[p], ""));
     }
     console.log(this.players);
+    localStorage.setItem('players', JSON.stringify(this.players));
+    // sessionStorage.setItem('players', JSON.stringify(players));
+    // return this.players;
     // console.log("IN GAME SERVICE:", players);
   }
 
   public getPlayers(): Array<Player> {
+    console.log("INSIDE GET PLAYERS: ", this.players);
+    console.log("LOCALSTORAGE: ", localStorage.getItem('players'));
+    this.players = JSON.parse(localStorage.getItem('players'));
     return this.players;
   }
 }

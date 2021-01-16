@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormArray, FormGroup } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { GameService } from '../game.service';
+import { HighLowComponent } from '../high-low/high-low.component';
+import { Player } from '../player';
 
 @Component({
   selector: 'app-players-form',
@@ -12,7 +16,12 @@ export class PlayersFormComponent implements OnInit {
   playersForm: FormGroup;
   
   constructor(private formBuilder: FormBuilder,
-    private gameService: GameService) {
+    private gameService: GameService,
+    // private dialogRef: MatDialogRef,
+    private router: Router) {
+   }
+
+  ngOnInit() {
     this.playersForm = this.formBuilder.group({
       player1: '',
       player2: '',
@@ -24,9 +33,6 @@ export class PlayersFormComponent implements OnInit {
       player8: '',
       // players: this.formBuilder.array([]),
     });
-   }
-
-  ngOnInit(): void {
   }
 
   players() : FormArray {
@@ -40,8 +46,10 @@ export class PlayersFormComponent implements OnInit {
   }
 
   onSubmit(data) {
-    // console.log(data);
+    console.log("TS DATA: ", data);
     this.gameService.addPlayers(data);
+    // this.dialogRef.close(data);
+    this.router.navigateByUrl('/play', { state: data });
     // this.playersForm.reset();
   }
 

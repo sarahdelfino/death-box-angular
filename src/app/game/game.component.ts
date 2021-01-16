@@ -5,6 +5,7 @@ import { Card } from '../card/card';
 import { HighLowComponent } from '../high-low/high-low.component';
 import { ModalComponent } from '../modal/modal.component';
 import { RemoveStacksComponent } from '../remove-stacks/remove-stacks.component';
+import { PlayersFormComponent } from '../players-form/players-form.component';
 
 @Component({
   selector: 'app-game',
@@ -18,6 +19,7 @@ export class GameComponent implements OnInit {
   public stacks: any = [];
   public choice = "";
   public turns = 0;
+  // public data: any = [];
 
   constructor(private _gameService: GameService,
     private dialog: MatDialog
@@ -27,6 +29,7 @@ export class GameComponent implements OnInit {
   ngOnInit() {
     this.deck = this._gameService.createDeck();
     this.createStacks();
+    // this.openPlayerModal();
   }
 
   createStacks() {
@@ -37,11 +40,13 @@ export class GameComponent implements OnInit {
     }
   }
 
+  getLength(i) {
+    return this.stacks[i].length;
+  }
+
   addToStack(i, card) {
     // add card to the top of the stack
     this.stacks[i].unshift(card);
-    // console.log("Added ", card, "to stack: ", i);
-    // console.log(this.stacks);
   }
 
   clickedCard(card: Card) {
@@ -54,6 +59,20 @@ export class GameComponent implements OnInit {
     } else {
       this.openRemoveStacks();
     }
+  }
+
+  openPlayerModal () {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    
+    const dialogRef = this.dialog.open(PlayersFormComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      data => {
+        this._gameService.addPlayers(data);
+        console.log("AFTER SUBMIT: ", this._gameService.getPlayers());
+        
+      });
   }
 
   openRemoveStacks() {
@@ -84,18 +103,22 @@ export class GameComponent implements OnInit {
       data => {
         this.choice = data;
         this.compare(this.choice, card);
+        var body = "You win this round! Next player!";
+        var modalData = {"body": body};
         if (this.turns == 3) {
-          this.openNewPlayer();
+          this.openModal(modalData);
           this.turns = 0;
         }
       });
   }
 
-  openNewPlayer() {
+  openModal(data: any) {
     const dialogConfig = new MatDialogConfig();
     const timeout = 1000;
+    dialogConfig.data = data;
+    console.log("DIALOGCONFIG: ", dialogConfig.data);
 
-    const dialogRef = this.dialog.open(ModalComponent);
+    const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
 
     dialogRef.afterOpened().subscribe(_ => {
       setTimeout(() => {
@@ -107,21 +130,21 @@ export class GameComponent implements OnInit {
   compare(choice, card) {
     var newCard = this.deck.pop();
     console.log("newCard: ", newCard.value);
-      if (choice == "higher" && (Number(newCard.value) > Number(card[0].value))) {
-        console.log("You're right!");
-        this.turns = this.turns + 1;
-        console.log("You have chosen correctly ", this.turns, " times");
-      } else if (choice == "lower" && (Number(newCard.value) < Number(card[0].value))) {
-        console.log("You're right!");
-        this.turns = this.turns + 1;
-        console.log("You have chosen correctly ", this.turns, " times");
-      } else {
-        console.log("You're wrong!");
-      };
-    // get index of current card and add to stack
     var cardIndex = this.stacks.indexOf(card);
-    this.addToStack(cardIndex, newCard);
-
+        // get index of current card and add to stack
+        this.addToStack(cardIndex, newCard);
+    if (choice == "higher" && (Number(newCard.value) > Number(card[1].value))) {
+      console.log("You're right!");
+      this.turns = this.turns + 1;
+      console.log("You have chosen correctly ", this.turns, " times");
+    } else if (choice == "lower" && (Number(newCard.value) < Number(card[1].value))) {
+      console.log("You're right!");
+      this.turns = this.turns + 1;
+      console.log("You have chosen correctly ", this.turns, " times");
+    } else {
+      console.log("You're wrong! You must drink for ", this.getLength(cardIndex), " seconds!");
+      console.log(this.stacks);
+    };
   }
 
   removeStacks() {
