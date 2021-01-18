@@ -1,48 +1,20 @@
 {
-  "name": "death-box-angular",
-  "version": "0.0.0",
+  "name": "nodejsapi",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "start": "node index.js",
+    "dev": "nodemon ./server.js localhost 3080",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "private": true,
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "description": "node server",
   "dependencies": {
-    "@angular/animations": "^10.2.4",
-    "@angular/cdk": "^10.2.7",
-    "@angular/common": "^10.2.4",
-    "@angular/compiler": "^10.2.4",
-    "@angular/core": "^10.2.4",
-    "@angular/forms": "^10.2.4",
-    "@angular/material": "^10.2.7",
-    "@angular/platform-browser": "^10.2.4",
-    "@angular/platform-browser-dynamic": "^10.2.4",
-    "@angular/router": "^10.2.4",
-    "rxjs": "~6.6.0",
-    "tslib": "^2.1.0",
-    "zone.js": "~0.10.2"
+    "express": "^4.17.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1001.7",
-    "@angular/cli": "^10.2.1",
-    "@angular/compiler-cli": "^10.2.4",
-    "@types/jasmine": "~3.5.0",
-    "@types/jasminewd2": "~2.0.3",
-    "@types/node": "^12.19.14",
-    "codelyzer": "^6.0.0",
-    "jasmine-core": "~3.6.0",
-    "jasmine-spec-reporter": "~5.0.0",
-    "karma": "~5.0.0",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage-istanbul-reporter": "~3.0.2",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "^1.5.0",
-    "protractor": "~7.0.0",
-    "ts-node": "~8.3.0",
-    "tslint": "~6.1.0",
-    "typescript": "^4.0.5"
+    "nodemon": "^2.0.7"
   }
 }

@@ -1,0 +1,47 @@
+h1 {
+    font-weight: 400;
+    font-size: 50px;
+    text-align: center;
+}
+
+.container {
+    /* text-align: center; */
+    width: 750px;
+    /* height: 550px; */
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.group {
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.button {
+    height: 50px;
+    width: 80px;
+    font-size: 18px;
+    font-family: 'Inconsolata', monospace;
+    font-weight: 500;
+    /* border: 2px solid purple; */
+    border-radius: 20px;
+    /* color: #fff; */
+    /* background-color: pink; */
+}
+
+.button:hover {
+    color: #fff;
+    background-color: black;
+}
+
+label {
+    font-size: 16px;
+}
+
+input {
+    height: 30px;
+    margin-top: 5px;
+}
+
