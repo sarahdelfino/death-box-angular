@@ -1,8 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,6 +25,7 @@ import { PlayersComponent } from './players/players.component';
 import { PlayersFormComponent } from './players-form/players-form.component';
 import { GameService } from './game.service';
 
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import { GameService } from './game.service';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatDialogModule,
@@ -48,6 +51,7 @@ import { GameService } from './game.service';
     MatInputModule,
     MatRippleModule,
     HttpClientModule,
+    SocketIoModule.forRoot(config),
     RouterModule.forRoot([
       {
         path: '',

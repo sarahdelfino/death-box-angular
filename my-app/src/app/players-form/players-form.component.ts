@@ -48,17 +48,17 @@ export class PlayersFormComponent implements OnInit {
   }
 
   onSubmit(data) {
-    console.log("TS DATA: ", data);
+    // console.log("TS DATA: ", data);
     this.gameService.addPlayers(data);
     this.router.navigateByUrl('/play');
 
-    // API stuff below
-    this.gameService.addUser(this.playersForm.value).pipe().subscribe(data => {
-      console.log('message::::', data);
-      this.userCount = this.userCount + 1;
-      console.log(this.userCount);
-      this.playersForm.reset();
-    });
+    // first tutorial/API stuff below
+    // this.gameService.addUser(this.playersForm.value).pipe().subscribe(data => {
+    //   console.log('message::::', data);
+    //   this.userCount = this.userCount + 1;
+    //   console.log(this.userCount);
+    //   this.playersForm.reset();
+    // });
     this.playersForm.reset();
   }
 

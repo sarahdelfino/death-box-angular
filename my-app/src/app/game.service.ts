@@ -15,7 +15,7 @@ export class GameService {
   deck = new Array<Card>();
   table = new Table;
   players = new Array<Player>();
-  currentPlayer = 0;
+  currentPlayer = 1;
   rootURL = '/api';
 
   constructor(private http: HttpClient) { }
@@ -66,18 +66,21 @@ export class GameService {
     }
     console.log(this.players);
     localStorage.setItem('players', JSON.stringify(this.players));
-    for(let p in this.players) {
-      this.addUser(this.players[p]);
-    }
+
+    // first tutorial stuff
+    // for(let p in this.players) {
+    //   this.addUser(this.players[p]);
+    // }
   }
 
-  getUsers() {
-    return this.http.get(this.rootURL + '/users');
-  }
+  // first tutorial stuff
+  // getUsers() {
+  //   return this.http.get(this.rootURL + '/users');
+  // }
 
-  addUser(user: any) {
-    return this.http.post(this.rootURL + '/user', {user});
-  }
+  // addUser(user: any) {
+  //   return this.http.post(this.rootURL + '/user', {user});
+  // }
 
   public getPlayers(): Array<Player> {
     // console.log("INSIDE GET PLAYERS: ", this.players);
@@ -86,16 +89,20 @@ export class GameService {
     // filter any null or empty players
     var filtered = this.players.filter(x => (x != null) && (x.name != ""));
     this.players = filtered;
-    console.log("USERS: ", this.getUsers);
+    // console.log("USERS: ", this.getUsers);
     localStorage.clear;
     return this.players;
   }
 
-  public setCurrentPlayer() {
-    
+  public setNextPlayer(x): void {
+    console.log("BEFORE: ", this.currentPlayer);
+    this.currentPlayer = x;
+    console.log("AFTER: ", this.currentPlayer);
+    // return this.currentPlayer;
   }
 
-  public getCurrentPlayer() {
+  public getCurrentPlayer(): number {
+    console.log("GETCURRENTPLAYER: ", this.currentPlayer);
     return this.currentPlayer;
   }
 

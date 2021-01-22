@@ -9,12 +9,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class ModalComponent implements OnInit {
   public title?: string;
   public body?: string;
+  public currentPlayer?: string;
 
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) data) {
     this.title = data.title;
     this.body = data.body;
+    this.currentPlayer = data.currentPlayer;
   }
 
   closeDialog(): void {

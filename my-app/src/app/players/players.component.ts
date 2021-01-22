@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { GameService } from '../game.service';
 import { Player } from '../player';
+import { SocketService } from '../socket.service';
 
 
 @Component({
@@ -10,6 +11,8 @@ import { Player } from '../player';
   styleUrls: ['./players.component.css']
 })
 export class PlayersComponent implements OnInit {
+  newMessage: string;
+  messageList: string[] = [];
   players: any = [];
   users: any[] = [];
   player = this.players.name;
@@ -18,6 +21,7 @@ export class PlayersComponent implements OnInit {
 
   constructor(public gameService: GameService) { }
 
+
   ngOnInit() {
     this.players = this.gameService.getPlayers();
     console.log("PLAYERS COMPONENT: ", this.players);
@@ -25,11 +29,11 @@ export class PlayersComponent implements OnInit {
     console.log("CURRENT PLAYER: ", this.currentPlayer);
   }
 
-  getAllPlayers() {
-    this.gameService.getUsers().pipe().subscribe((users: any[]) => {
-      this.users = users;
-    });
-  }
+  // getAllPlayers() {
+  //   this.gameService.getUsers().pipe().subscribe((users: any[]) => {
+  //     this.users = users;
+  //   });
+  // }
 
   
 

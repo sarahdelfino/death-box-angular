@@ -103,9 +103,24 @@ export class GameComponent implements OnInit {
       data => {
         this.choice = data;
         this.compare(this.choice, card);
-        var body = "You've survived this round! Next player!";
-        var modalData = {"body": body};
         if (this.turns == 3) {
+          var tmp = this._gameService.getCurrentPlayer();
+          console.log("TMP: ", tmp);
+          console.log("LEN: ", this._gameService.players.length);
+          if (tmp == this._gameService.players.length - 1) {
+            console.log("End of player list..");
+            this._gameService.setNextPlayer(0);
+          } else {
+            console.log("NEW TMP: ", tmp + 1);
+            this._gameService.setNextPlayer(tmp + 1);
+          }
+          console.log(this._gameService.players);
+          var currentPlayer = this._gameService.players[tmp].name;
+          var body = `You've survived this round! ${currentPlayer}, you're next!`;
+          var modalData = {
+            "body": body,
+            "currentPlayer": currentPlayer
+          };
           this.openModal(modalData);
           this.turns = 0;
         }
