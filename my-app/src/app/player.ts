@@ -2,7 +2,9 @@ export class Player {
     name: string;
     secondsDrank: string;
 
-    constructor(name: string, secondsDrank: string) {
+    constructor(
+        name: string,
+        secondsDrank: string) {
         this.name = name;
         this.secondsDrank = secondsDrank;
     }

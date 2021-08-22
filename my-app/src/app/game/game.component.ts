@@ -22,8 +22,7 @@ export class GameComponent implements OnInit {
   // public data: any = [];
 
   constructor(private _gameService: GameService,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog) { }
 
 
   ngOnInit() {
@@ -61,20 +60,6 @@ export class GameComponent implements OnInit {
     }
   }
 
-  // openPlayerModal () {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = true;
-    
-  //   const dialogRef = this.dialog.open(PlayersFormComponent, dialogConfig);
-
-  //   dialogRef.afterClosed().subscribe(
-  //     data => {
-  //       this._gameService.addPlayers(data);
-  //       console.log("AFTER SUBMIT: ", this._gameService.getPlayers());
-        
-  //     });
-  // }
-
   openRemoveStacks() {
     const dialogConfig = new MatDialogConfig();
     const timeout = 2000;
@@ -103,6 +88,20 @@ export class GameComponent implements OnInit {
       data => {
         this.choice = data;
         this.compare(this.choice, card);
+        // this._gameService.turn();
+        // this.openModal(modalData);
+        // this.turns = 0;
+        // if (this.turns == 3) {
+        //   var tmp = this._gameService.getCurrentPlayer();
+        //   console.log("TMP: ", tmp);
+        //   console.log("LEN: ", this._gameService.players.length);
+        //   if (tmp == this._gameService.players.length - 1) {
+        //     console.log("End of player list..");
+        //     this._gameService.setNextPlayer(0);
+        //   } else {
+        //     console.log("NEW TMP: ", tmp + 1);
+        //     this._gameService.setNextPlayer(tmp + 1);
+        //   }
         if (this.turns == 3) {
           var tmp = this._gameService.getCurrentPlayer();
           console.log("TMP: ", tmp);
@@ -116,9 +115,9 @@ export class GameComponent implements OnInit {
           }
           console.log(this._gameService.players);
           var currentPlayer = this._gameService.players[tmp].name;
-          var body = `You've survived this round! ${currentPlayer}, you're next!`;
+          var title = `${currentPlayer}, you're next!`;
           var modalData = {
-            "body": body,
+            "title": title,
             "currentPlayer": currentPlayer
           };
           this.openModal(modalData);

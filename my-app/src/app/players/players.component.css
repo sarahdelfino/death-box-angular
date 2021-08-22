@@ -1,3 +1,7 @@
 p {
     font-size: 20px;
 }
+
+.currentPlayer {
+    background-color: yellow;
+}

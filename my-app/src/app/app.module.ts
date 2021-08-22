@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SocketIoModule, SocketIoConfig  } from 'ngx-socket-io';
 import { HttpClientModule } from '@angular/common/http';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,6 +24,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { PlayersComponent } from './players/players.component';
 import { PlayersFormComponent } from './players-form/players-form.component';
 import { GameService } from './game.service';
+import { StartComponent } from './start/start.component';
+import { SocketService } from './socket.service';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -38,6 +40,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ModalComponent,
     PlayersComponent,
     PlayersFormComponent,
+    StartComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,7 +63,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ]),
     BrowserAnimationsModule
   ],
-  providers: [GameService],
+  providers: [
+    GameService,
+    SocketService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

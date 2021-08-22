@@ -25,3 +25,12 @@ img:hover {
   border-radius: 13px;
 } */
 
+.high-low {
+  /* position: absolute; */
+  /* top: 50%; */
+  top: 0;
+  left: 0;
+  border: 1px solid red;
+  width: 100px;
+  height: 100px;
+}

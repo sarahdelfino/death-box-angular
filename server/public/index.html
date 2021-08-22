@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Deathbox</title>
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="first-container">
+      <div class="logo">
+        <img src="./assets/logo.svg" />
+      </div>
+      <div class="second-container">
+        <div id="playerCount"></div>
+        <div id="playerList"></div>
+        <div id="gameLobby" style="display: none">
+            <div id="room" style="display:none"></div>
+          <h2>Players</h2>
+          <ul id="messages"></ul>
+          <div id="waiting" style="display: none">
+            <p>Waiting on host to start the game...</p>
+          </div>
+          <button id="start" style="display: none">Start Game</button>
+        </div>
+        <div class="forms">
+          <form id="create" action="/games" method="POST">
+            <input id="host" autocomplete="off" placeholder="name" />
+            <button>Create game</button>
+          </form>
+          <!-- <img class="or" src="assets/or.png"> -->
+          <form id="join" action="">
+            <input id="gameId" autocomplete="off" placeholder="game id" />
+            <input id="player" autocomplete="off" placeholder="name" />
+            <button>Join game</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io({ autoConnect: false });
+      /*var socket = io();*/
+
+      var gameLobby = document.getElementById("gameLobby");
+      var room = document.getElementById("room");
+      var messages = document.getElementById("messages");
+      var create = document.getElementById("create");
+      var host = document.getElementById("host");
+      var join = document.getElementById("join");
+      var gameId = document.getElementById("gameId");
+      var player = document.getElementById("player");
+      var playerCount = document.getElementById("playerCount");
+      var playerList = document.getElementById("playerList");
+      var start = document.getElementById("start");
+      var waiting = document.getElementById("waiting");
+
+      // create game event listener
+      create.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (host.value) {
+          /*console.log(host.value);
+                socket.auth = { host };*/
+          socket.connect();
+          socket.emit("game created", host.value);
+          host.value = "";
+        }
+        hide(join);
+        hide(create);
+        show(gameLobby);
+        show(start);
+        show(room);
+      });
+
+      // join game event listener
+      join.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (gameId.value && player.value) {
+          socket.connect();
+          socket.emit("game joined", gameId.value, player.value);
+          /*console.log(player.value + " joined room " + gameId.value);*/
+          gameId.value = "";
+          player.value = "";
+        }
+        hide(join);
+        hide(create);
+        show(gameLobby);
+        show(waiting);
+        show(room);
+      });
+
+      socket.on("game created", function (msg, gameId) {
+        // messages
+        var item = document.createElement("li");
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+        // gameId for title
+        var roomTitle = document.createElement("h1");
+        roomTitle.textContent = gameId;
+        room.appendChild(roomTitle);
+      });
+
+      socket.on("game joined", function (msg) {
+        var item = document.createElement("li");
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+        show(room);
+      });
+
+      socket.on("connect_error", (err) => {
+        if (err.message === "invalid playername") {
+          let playernameAlreadySelected = false;
+        }
+      });
+
+      // functions
+
+      function show(elements, specifiedDisplay) {
+        var computedDisplay, element, index;
+
+        elements = elements.length ? elements : [elements];
+        for (index = 0; index < elements.length; index++) {
+          element = elements[index];
+
+          // remove element's inline display styling
+          element.style.display = "";
+          computedDisplay = window
+            .getComputedStyle(element, null)
+            .getPropertyValue("display");
+
+          if (computedDisplay === "none") {
+            element.style.display = specifiedDisplay || "block";
+          }
+        }
+      }
+
+      function hide(elements) {
+        console.log(elements);
+        elements = elements.length ? elements : [elements];
+        for (var index = 0; index < elements.length; index++) {
+          elements[index].style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -39,4 +39,12 @@ export class StackComponent implements OnInit {
     this.clickedCardEmitter.emit(this.cards[0].cardName);
   }
 
+  over() {
+    console.log("over");
+  }
+
+  out() {
+    console.log("out");
+  }
+
 }

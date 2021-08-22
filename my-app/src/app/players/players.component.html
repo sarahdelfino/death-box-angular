@@ -1,5 +1,5 @@
 <h1>Players</h1>
-<div *ngFor="let player of players">
+<div *ngFor="let player of players; let index = i" [ngClass]="{'currentPlayer': this.currentPlayer === this.players[index] }">
     <p>{{ player.name }}</p>
     <p>{{ player.secondsDrank }}</p>
 </div>

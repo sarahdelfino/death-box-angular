@@ -4,6 +4,8 @@ import { Card } from './card/card';
 import { Player } from './player';
 import { Stack } from './stack';
 import { Table } from './table';
+import { PlayersComponent } from './players/players.component';
+import { GameComponent } from './game/game.component';
 
 @Injectable({
   providedIn: 'root'
@@ -63,34 +65,18 @@ export class GameService {
     console.log("PLAYERS: ", players);
     for(let p in players) {
       this.players.push(new Player(players[p], ""));
+      console.log(p);
     }
-    console.log(this.players);
-    localStorage.setItem('players', JSON.stringify(this.players));
-
-    // first tutorial stuff
-    // for(let p in this.players) {
-    //   this.addUser(this.players[p]);
-    // }
-  }
-
-  // first tutorial stuff
-  // getUsers() {
-  //   return this.http.get(this.rootURL + '/users');
-  // }
-
-  // addUser(user: any) {
-  //   return this.http.post(this.rootURL + '/user', {user});
-  // }
-
-  public getPlayers(): Array<Player> {
-    // console.log("INSIDE GET PLAYERS: ", this.players);
-    console.log("LOCALSTORAGE: ", localStorage.getItem('players'));
-    this.players = JSON.parse(localStorage.getItem('players'));
     // filter any null or empty players
     var filtered = this.players.filter(x => (x != null) && (x.name != ""));
     this.players = filtered;
-    // console.log("USERS: ", this.getUsers);
-    localStorage.clear;
+    localStorage.setItem('players', JSON.stringify(this.players));
+  }
+
+  public getPlayers(): Array<Player> {
+    console.log("LOCALSTORAGE: ", localStorage.getItem('players'));
+    this.players = JSON.parse(localStorage.getItem('players'));
+    // localStorage.clear;
     return this.players;
   }
 
@@ -98,6 +84,7 @@ export class GameService {
     console.log("BEFORE: ", this.currentPlayer);
     this.currentPlayer = x;
     console.log("AFTER: ", this.currentPlayer);
+    // this.playersComponent.setCurrentPlayer(this.currentPlayer);
     // return this.currentPlayer;
   }
 

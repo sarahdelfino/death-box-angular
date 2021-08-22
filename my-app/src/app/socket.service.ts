@@ -5,19 +5,20 @@ import { Observable, Observer } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
+export const environment = {
+  production: false,
+  SOCKET_ENDPOINT: 'http://localhost:3000'
+};
+
 export class SocketService {
+  socket;
 
-  constructor(private socket: Socket) { }
+  constructor(private io: Socket) { }
 
-  public sendMessage(message) {
-    this.socket.emit('new-message', message);
+  setupSocketConnection() {
+    this.socket = this.io(environment.SOCKET_ENDPOINT)
   }
 
-  public getMessages = () => {
-    return new Observable((observer: Observer<any>) => {
-      this.socket.on('new-message', (message) => {
-        observer.next(message);
-      });
-    });
-  }
+  
 }

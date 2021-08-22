@@ -2,5 +2,9 @@
   [src]="cards[0].cardPath"
   alt="{{ cards[0].cardName }}"
   (click)="onCardClick(cards)"
+  (mouseover)="over()"
+  (mouseout)="out()"
   [class.selected]="cards === selectedStack"
 />
+<!-- <div class="high-low"></div> -->
+<!-- <div class="high-low" *ngFor="let card of cards"></div> -->
