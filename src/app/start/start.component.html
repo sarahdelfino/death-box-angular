@@ -4,13 +4,16 @@
   </div>
   <div class="forms">
     <form [formGroup]="createGameForm" id="create" method="POST">
-      <input
-        id="name"
-        type="text"
-        formControlName="host"
-        autocomplete="off"
-        placeholder="name"
-      />
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          id="name"
+          type="text"
+          formControlName="host"
+          autocomplete="off"
+        />
+      </mat-form-field>
       <button
         (click)="createGame(createGameForm.value)"
         type="submit"
@@ -20,9 +23,21 @@
       </button>
     </form>
     <form [formGroup]="joinGameForm" id="join" method="POST">
-      <input id="gameId" formControlName="id" autocomplete="off" placeholder="game id" />
-      <input id="name" formControlName="name" autocomplete="off" placeholder="name" />
-      <button (click)="joinGame(joinGameForm.value)" type="submit" routerLink="/lobby">Join game</button>
+      <mat-form-field appearance="outline">
+        <mat-label>Game id</mat-label>
+        <input matInput id="gameId" formControlName="id" autocomplete="off" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput id="name" formControlName="name" autocomplete="off" />
+      </mat-form-field>
+      <button
+        (click)="joinGame(joinGameForm.value)"
+        type="submit"
+        routerLink="/lobby"
+      >
+        Join game
+      </button>
     </form>
   </div>
 </div>
