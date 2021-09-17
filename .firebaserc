@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "death-box-28ecf": {
+      "hosting": {
+        "death-box-angular": [
+          "death-box-28ecf"
+        ]
+      }
+    }
+  }
+}

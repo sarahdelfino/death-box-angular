@@ -34,3 +34,12 @@ img:hover {
   width: 100px;
   height: 100px;
 }
+
+@media (max-width: 1300px) {
+  img {
+      /* max-width: 25vw; */
+      max-width: 150px;
+      max-height: 200px;
+  
+  }
+}
