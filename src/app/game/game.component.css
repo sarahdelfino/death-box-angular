@@ -22,7 +22,7 @@ body {
     border-radius: 10px;
 }
 
-@media (max-width: 1300px) {
+@media (min-width: 1300px) {
   .container {
     width: 470px;
     max-height: 700px;
@@ -32,13 +32,13 @@ body {
   }
 }
 
-@media (max-width: 300px) {
+@media (max-width: 400px) {
   .container {
-    width: 300px;
-    max-height: 600px;
+    width: 330px;
+    max-height: 550px;
   }
   .card-container {
-    max-width: 300px;
+    max-width: 330px;
   }
 }
 

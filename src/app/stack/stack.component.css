@@ -35,7 +35,7 @@ img:hover {
   height: 100px;
 }
 
-@media (max-width: 1300px) {
+@media (min-width: 1300px) {
   img {
       /* max-width: 25vw; */
       max-width: 150px;
@@ -44,12 +44,12 @@ img:hover {
   }
 }
 
-@media (max-width: 300px) {
+@media (max-width: 400px) {
   img {
       /* max-width: 25vw; */
-      max-width: 50px;
-      max-height: 100px;
-      margin: 1px;
+      max-width: 100px;
+      max-height: 150px;
+      margin: 2.5px;
   
   }
 }
