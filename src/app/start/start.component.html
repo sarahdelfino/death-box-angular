@@ -3,21 +3,21 @@
     <img src="./assets/logo.svg" />
   </div>
   <div class="forms">
-    <form [formGroup]="createGameForm" id="create" method="POST">
+    <form [formGroup]="createGameForm" id="create" method="POST" (ngSubmit)="onSubmit(createGameForm.value)">
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input
-          matInput
-          id="name"
-          type="text"
           formControlName="host"
+          required
+          matInput
+          id="host"
+          type="text"
           autocomplete="off"
         />
       </mat-form-field>
       <button
-        (click)="createGame(createGameForm.value)"
+        (click)="onSubmit(createGameForm.value)"
         type="submit"
-        routerLink="/lobby"
       >
         Create game
       </button>
@@ -34,13 +34,11 @@
       <button
         (click)="joinGame(joinGameForm.value)"
         type="submit"
-        routerLink="/lobby"
       >
         Join game
       </button>
     </form>
   </div>
-</div>
 <!-- <script src="/socket.io/socket.io.js"></script>
 <script>
   var socket = io({ autoConnect: false });

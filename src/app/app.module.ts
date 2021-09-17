@@ -12,6 +12,10 @@ import { CardComponent } from './card/card.component';
 import { StackComponent } from './stack/stack.component';
 import { RemoveStacksComponent } from './remove-stacks/remove-stacks.component';
 import { HighLowComponent } from './high-low/high-low.component';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { environment } from '../environments/environment';
+
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
@@ -51,6 +55,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MatDialogModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
     MatInputModule,
     MatRippleModule,
     HttpClientModule,

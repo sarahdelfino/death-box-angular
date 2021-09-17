@@ -6,6 +6,9 @@ import { HighLowComponent } from '../high-low/high-low.component';
 import { ModalComponent } from '../modal/modal.component';
 import { RemoveStacksComponent } from '../remove-stacks/remove-stacks.component';
 import { PlayersFormComponent } from '../players-form/players-form.component';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { SocketioService } from '../socketio.service';
+
 
 @Component({
   selector: 'app-game',
@@ -19,16 +22,25 @@ export class GameComponent implements OnInit {
   public stacks: any = [];
   public choice = "";
   public turns = 0;
+  id: string;
   // public data: any = [];
 
   constructor(private _gameService: GameService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private socketService: SocketioService,
+    private route: ActivatedRoute) { }
 
 
   ngOnInit() {
+    this.getId();
     this.deck = this._gameService.createDeck();
     this.createStacks();
     // this.openPlayerModal();
+  }
+
+  getId(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.socketService.getGame(id).subscribe(id => this.id = id);
   }
 
   createStacks() {

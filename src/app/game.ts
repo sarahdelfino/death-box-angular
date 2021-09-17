@@ -2,13 +2,13 @@ import { Player } from "./player";
 
 export class Game {
     id: string;
-    host: string;
-    players: Array<{name: string, secondsDrank: string}>;
+    host?: string;
+    players?: Array<string>;
 
     constructor(
         id: string,
-        host: string,
-        players: []) {
+        host?: string,
+        players?: [any]) {
         this.id = id;
         this.host = host;
         this.players = players;
@@ -32,6 +32,6 @@ export class Game {
 
     public addPlayer(player: string) {
         console.log(player);
-        this.players.push({ name: player, secondsDrank:'0' });
+        this.players.push(player);
     }
 }

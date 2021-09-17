@@ -1,0 +1,18 @@
+{
+    "games": {
+        "game1": {
+            "host": "delf"
+        },
+        "game2": {
+            "host": "cole"
+        }
+    },
+    "players": {
+        "delf": {
+            "game1": "true"
+        },
+        "cole": {
+            "game2": "true"
+        }
+    }
+}

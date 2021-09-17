@@ -8,8 +8,8 @@ import { StartComponent } from './start/start.component';
 
 const routes: Routes = [
   { path: '', component: StartComponent },
-  { path: 'play', component: GameComponent, },
-  { path: 'lobby', component: LobbyComponent, },
+  { path: 'lobby/:id', component: LobbyComponent, },
+  { path: 'play/:id', component: GameComponent, },
 ];
 
 @NgModule({

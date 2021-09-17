@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
         Game.players.push(player);
         console.log("PLAYERS: " + Game.players);
         getClients(gameId);
-        io.to(gameId).emit('game joined', player + " joined " + gameId);
+        io.emit('game joined', player + " joined " + gameId);
     })
     /*socket.on('disconnect', () => {
         console.log('user disconnected');

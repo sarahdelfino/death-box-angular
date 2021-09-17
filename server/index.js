@@ -8,37 +8,55 @@ const io = require("socket.io")(http, {
 // const { Server } = require("http");
 const { nanoid } = require("nanoid");
 var Game = new Object();
+const players = [];
 
 app.get("/", (req, res) => {
   res.send("<h1>Hey Socket.io</h1>");
 });
 
-io.on("connection", (socket) => {
-  let previousId;
+io.on('connection', (socket) => {
 
   const safeJoin = (currentId) => {
+    var previousId = '';
     socket.leave(previousId);
     socket.join(currentId);
     console.log(`Socket ${socket.id} joined room ${currentId}`);
     previousId = currentId;
   };
   socket.on("game created", (game) => {
-    console.log("GAME CREATED WITH HOST: " + game.host);
     safeJoin(game.id);
-    // getClients(game.id);
-  });
-  socket.on("join game", (game) => {
-    console.log("HELLO");
-    // getClients(game.id);
-    safeJoin(game.id);
-    io.to(game.id).emit('game joined', game.players + " joined " + game.id);
-  })
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
+    socket.emit("game", game.id);
+    players.push(game.host);
+    io.emit('players', players);
   });
 
-  socket.on("my message", (msg) => {
-    io.emit("my broadcast", `server: ${msg}`);
+  io.emit('players', players);
+
+  socket.on("join game", (game) => {
+    io.emit("game", game.id);
+    socket.emit("game", game.id);
+    players.push(game.name);
+    io.emit('players', players);
+    safeJoin(game.id);
+  })
+  socket.on("get game", (id) => {
+console.log("get game" + id);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+    // players = [];
+  });
+
+  socket.on('message', (message) => {
+    console.log(message);
+    //yes
+    io.emit('message', `${socket.id} said ${message}`);
+    io.in('message').emit('message', 'the game will start soon');
+    socket.to('message').emit('nice game', "let's play a game");
+    //yes
+    socket.broadcast.emit('message', 'hello friends!');
+    socket.emit('message', 'can you hear me?', 1, 2, 'abc');
   });
 });
 
