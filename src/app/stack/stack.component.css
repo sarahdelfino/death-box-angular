@@ -44,12 +44,12 @@ img:hover {
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 300px) {
   img {
       /* max-width: 25vw; */
-      max-width: 75px;
-      max-height: 125px;
-      margin: 5px;
+      max-width: 50px;
+      max-height: 100px;
+      margin: 1px;
   
   }
 }
