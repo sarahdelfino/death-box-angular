@@ -32,7 +32,7 @@ body {
   }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 300px) {
   .container {
     width: 300px;
     max-height: 600px;
