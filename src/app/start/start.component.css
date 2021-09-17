@@ -50,3 +50,35 @@ button:hover {
 mat-form-field.mat-form-field {
     margin-right: 10px;
 }
+
+@media (max-width: 400px) {
+    .first-container {
+        width: 350px;
+        height: 500px;
+    }
+    h1 {
+        font-size: 55px;
+    }
+    img {
+        width: 350px;
+        margin-top: -20px;
+        /* height: auto; */
+    }
+    .logo {
+        margin: 0;
+        height: 300px;
+    }
+    button {
+        width: 75px;
+        height: 30px;
+        margin-top: 10px;
+        font-size: 10px;
+        margin: 0;
+    }
+    form {
+        padding-left: 20px;
+    }
+    mat-form-field.mat-form-field {
+        width: 150px;
+    }
+}

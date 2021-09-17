@@ -31,3 +31,20 @@ button:hover {
     color: #a134f6;
     font-weight: bold;
 }
+
+@media (max-width: 400px) {
+    .container {
+        width: 300px;
+        height: auto;
+    }
+    h1 {
+        font-size: 55px;
+    }
+    button {
+        width: 75px;
+        height: 30px;
+        margin-top: 10px;
+        font-size: 10px;
+        margin: 0;
+    }
+}
