@@ -5,7 +5,7 @@
   <h3>Host: {{ this.host }}</h3>
   <button (click)="startGame()">Start game</button>
     <h2>Players connected:</h2>
-  <div *ngFor="let player of players | async">
+  <div *ngFor="let player of playerList">
     <p>{{ player }}</p>
   </div>
 </div>

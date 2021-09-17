@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Game } from '../game';
+import { DatabaseService } from '../database.service';
 
 @Component({
   selector: 'app-lobby',
@@ -20,25 +21,38 @@ export class LobbyComponent implements OnInit {
   constructor(private socketService: SocketioService,
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location) { }
+    private location: Location,
+    private db: DatabaseService
+    ) { }
 
   ngOnInit() {
     this.getId();
-    console.log(this.game);
-    // this.id = this.socketService.getGameId();
-    this.host = this.socketService.getHost();
-    this.players = this.socketService.players;
-    // this.playerList.push(this.host);
-    // this.players = this.socketService.getPlayers();
-    this.socketService.getNewPlayer().subscribe((player: string) => {
-      this.playerList.push(player);
-    })
-    this.socketService.getGame(this.id);
+    this.getHost();
+    this.getPlayers();
   }
 
   getId(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.socketService.getGame(id).subscribe(id => this.id = id);
+    this.id = this.route.snapshot.paramMap.get('id');
+  }
+
+  getHost(): void {
+    // this.db.getGame(this.id).subscribe(game => this.game = game);
+    this.db.getGame(this.id).valueChanges().subscribe(data => {
+      console.log(data);
+      this.host = data.host;
+    });
+    console.log(this.game);
+  }
+
+  getPlayers() {
+    this.db.getPlayers(this.id).valueChanges().subscribe(data => {
+      console.log(data);
+      for (let x in data) {
+        this.playerList.push(data[x].name)
+        console.log(this.playerList);
+      }
+    })
+
   }
 
   startGame() {

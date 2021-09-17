@@ -65,7 +65,7 @@ export class StartComponent implements OnInit {
     console.log(joinFormData);
     this.socketService.joinGame(joinFormData);
     // console.log(this.game.players);
-    this.dbService.update(joinFormData.id, joinFormData.name);
+    this.dbService.addPlayer(joinFormData.id, joinFormData.name);
     this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
   }
 
