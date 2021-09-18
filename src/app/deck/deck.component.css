@@ -1,5 +1,65 @@
-img {
-    width: 200px;
-    margin-top: 40px;
-    margin-left: 20px;
+.container {
+    margin-top: -200px;
 }
+
+.stack {
+    position: relative;
+    z-index: 1;
+    top: 178px;
+    left: 0;
+}
+
+.s {
+    max-width: 200px;
+    max-height: 200px;
+
+}
+
+:host {
+    display: block;
+    /* perspective: 600px; */
+}
+
+.card {
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    transform-style: preserve-3d;
+}
+
+.face {
+    display: block;
+    position: absolute;
+    backface-visibility: hidden;
+}
+
+.back {
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.front {
+    transform: rotateY(180deg);
+}
+
+@media (min-width: 1200px) {
+    .stack {
+        max-width: 150px;
+        max-height: 180px;
+    }
+    .back {
+        max-width: 200px;
+        max-height: 200px;
+    }
+    .face {
+        max-width: 180px;
+        max-height: 180px;
+
+    }
+    .front {
+        left: 210px;
+        top: 5px;
+    }
+  }
+  

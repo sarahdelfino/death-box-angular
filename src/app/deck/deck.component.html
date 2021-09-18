@@ -1,3 +1,16 @@
-<div class="deck" *ngIf="this.deckCount > 40">
+<!-- <div class="deck" *ngIf="this.deckCount > 40">
     <img src="../../assets/cards/back2.png ">
+</div> -->
+<div class="container">
+    <div class="stack">
+        <img class="s" src="../../assets/cards/back2.png">
+    </div>
+    <div class="card" [@cardFlip]="data.state">
+        <div class="face back">
+            <img class="back" src="../../assets/cards/back3.png">
+        </div>
+        <div class="face front">
+            <img class="face" [src]="card.cardPath">
+        </div>
+    </div>
 </div>

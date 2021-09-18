@@ -23,6 +23,7 @@ export class GameComponent implements OnInit {
   public choice = "";
   public turns = 0;
   id: string;
+  newCard: Card;
   // public data: any = [];
 
   constructor(private _gameService: GameService,
@@ -154,21 +155,21 @@ export class GameComponent implements OnInit {
   }
 
   compare(choice, card) {
-    var newCard = this.deck.pop();
-    console.log("newCard: ", newCard.value);
+    this.newCard = this.deck.pop();
+    console.log("newCard: ", this.newCard.value);
     var cardIndex = this.stacks.indexOf(card);
         // get index of current card and add to stack
-        this.addToStack(cardIndex, newCard);
-    if (choice == "higher" && (Number(newCard.value) > Number(card[1].value))) {
+        this.addToStack(cardIndex, this.newCard);
+    if (choice == "higher" && (Number(this.newCard.value) > Number(card[1].value))) {
       console.log("You're right!");
       this.turns = this.turns + 1;
       console.log("You have chosen correctly ", this.turns, " times");
-    } else if (choice == "lower" && (Number(newCard.value) < Number(card[1].value))) {
+    } else if (choice == "lower" && (Number(this.newCard.value) < Number(card[1].value))) {
       console.log("You're right!");
       this.turns = this.turns + 1;
       console.log("You have chosen correctly ", this.turns, " times");
     } else {
-      var body = "You're wrong! You must drink for ";
+      var body = "You're wrong! Drink for ";
       var drinkFor = this.getLength(cardIndex);
       var body = body + drinkFor + " seconds!";
       var modalData = {"body": body};
