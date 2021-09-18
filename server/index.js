@@ -14,6 +14,12 @@ app.get("/", (req, res) => {
   res.send("<h1>Hey Socket.io</h1>");
 });
 
+app.use("/play/:id", (req, res) => {
+  id = req.params.id;
+  console.log(id);
+  res.send('The id you specified is ' + id);
+})
+
 io.on('connection', (socket) => {
 
   const safeJoin = (currentId) => {
@@ -43,10 +49,10 @@ io.on('connection', (socket) => {
 console.log("get game" + id);
   });
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-    // players = [];
-  });
+  // socket.on("disconnect", (socket) => {
+  //   console.log(socket.currentId + "user disconnected");
+  //   // players = [];
+  // });
 
   socket.on('message', (message) => {
     console.log(message);

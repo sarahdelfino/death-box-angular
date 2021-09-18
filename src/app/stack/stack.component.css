@@ -35,11 +35,12 @@ img:hover {
   height: 100px;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1200px) {
   img {
       /* max-width: 25vw; */
       max-width: 150px;
-      max-height: 200px;
+      max-height: 180px;
+      margin: 2.5px;
   
   }
 }

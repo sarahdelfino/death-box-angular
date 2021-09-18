@@ -30,6 +30,8 @@ import { GameService } from './game.service';
 import { StartComponent } from './start/start.component';
 import { SocketioService } from './socketio.service';
 import { LobbyComponent } from './lobby/lobby.component';
+import { PlayersComponent } from './players/players.component';
+import { DeckComponent } from './deck/deck.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -45,6 +47,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     PlayersFormComponent,
     StartComponent,
     LobbyComponent,
+    PlayersComponent,
+    DeckComponent,
   ],
   imports: [
     BrowserModule,
