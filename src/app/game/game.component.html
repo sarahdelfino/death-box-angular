@@ -1,12 +1,14 @@
-<div class="container">
-  <div class="card-container">
-    <ng-container *ngFor="let stack of stacks">
-      <app-stack
-        class="grid-item"
-        [cards]="stack"
-        (clickedCardEmitter)="clickedCard($event)"
-        (click)="chooseCard(stack)"
-      ></app-stack>
-    </ng-container>
+<div class="game">
+  <div class="container">
+    <div class="card-container">
+      <ng-container *ngFor="let stack of stacks">
+        <app-stack class="grid-item" [cards]="stack" (clickedCardEmitter)="clickedCard($event)"
+          (click)="chooseCard(stack)"></app-stack>
+      </ng-container>
+    </div>
+  </div>
+  <div class="right">
+  <app-players></app-players>
+  <app-deck></app-deck>
   </div>
 </div>

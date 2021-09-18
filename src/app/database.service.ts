@@ -16,10 +16,12 @@ export class DatabaseService {
   gamesList: AngularFireList<Game> = null;
   gameRef: AngularFireObject<Game> = null;
   playersList: AngularFireList<any> = null;
+  playersObject: AngularFireObject<Player> = null;
   host = null;
   database = null;
   gamesRef = null;
   playersRef = null;
+  secondsRef = null;
 
 
   constructor(private db: AngularFireDatabase) {
@@ -27,6 +29,7 @@ export class DatabaseService {
     this.database = firebase.database();
     this.gamesRef = firebase.database().ref('games');
     this.playersRef = firebase.database().ref('players');
+    
    }
 
   // Fetch Single Game Object
@@ -36,8 +39,9 @@ export class DatabaseService {
   }
 
   getPlayers(id: string) {
-    this.playersList = this.db.list('players/' + id);
-    return this.playersList;
+    // this.playersList = this.db.list('players/' + id);
+    this.playersObject = this.db.object('players/' + id);
+    return this.playersObject;
   }
 
    create(game: Game): any {
@@ -49,9 +53,7 @@ export class DatabaseService {
 
    update(id: string, val: any): Promise<void> {
      let playerCount = 0;
-     console.log("BEF: " + playerCount);
      playerCount += 1;
-     console.log("AFT: " + playerCount);
      var p = "player";
      p = "player" + playerCount.toString();
      return firebase.database().ref('/players/' + id + '/' + p + '/').set({
