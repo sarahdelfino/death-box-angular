@@ -6,7 +6,7 @@
     position: relative;
     z-index: 1;
     top: 178px;
-    left: 50px;
+    left: 0;
 }
 
 .s {
@@ -17,40 +17,46 @@
 
 :host {
     display: block;
-    /* perspective: 600px; */
+    perspective: 600px;
 }
 
 .card {
+    // box-shadow: 10px 10px 43px -18px rgba(0, 0, 0, 0.75);
+    // border-radius: 5px;
+    // height: 300px;
+    // width: 200px;
+    // cursor: pointer;
     position: relative;
     top: 0;
     left: 0;
     z-index: 99;
+    position: relative;
     transform-style: preserve-3d;
 }
 
 .face {
     display: block;
     position: absolute;
-    left: 50px;
+    // width: 100%;
+    // height: 100%;
+    // border-radius: inherit;
     backface-visibility: hidden;
-    /* border: solid red 1px; */
+
+    > img {
+        // width: 100%;
+        // height: 100%;
+        object-fit: cover;
+        // border-radius: inherit;
+    }
 }
 
-.fce {
-    display: block;
-    position: absolute;
-    left: 0;
-    max-width: 180px;
-    max-height: 180px;
+.front {
+    transform: rotateY(180deg);
 }
 
 .back {
     max-width: 300px;
     max-height: 300px;
-}
-
-.front {
-    transform: rotateY(180deg);
 }
 
 @media (min-width: 1200px) {
@@ -68,8 +74,10 @@
 
     }
     .front {
-        right: 100px;
+        left: 210px;
         top: 5px;
     }
   }
   
+
+

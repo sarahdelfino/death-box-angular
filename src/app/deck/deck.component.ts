@@ -5,7 +5,7 @@ import { GameService } from '../game.service';
 
 export interface CardData {
   imageId: string;
-  state: "default" | "flipped" | "matched";
+  state: "default" | "flipped";
 }
 
 @Component({
@@ -17,7 +17,7 @@ export interface CardData {
       state(
         "default",
         style({
-          transform: "rotateY(180deg)"
+          transform: "none"
         })
       ),
       state(
