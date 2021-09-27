@@ -3,14 +3,17 @@ import { Player } from "./player";
 export class Game {
     id: string;
     host?: string;
+    currentPlayer?: string;
     players?: Array<string>;
 
     constructor(
         id: string,
         host?: string,
+        currentPlayer?: string,
         players?: [any]) {
         this.id = id;
         this.host = host;
+        this.currentPlayer = currentPlayer;
         this.players = players;
     }
     public getGameId() {

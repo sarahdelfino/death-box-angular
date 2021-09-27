@@ -44,9 +44,19 @@ export class DatabaseService {
     return this.playersObject;
   }
 
+  getCurrentPlayer(id: string) {
+    this.gameRef = this.db.object('games/' + id);
+    // return tmp.currentPlayer;
+  }
+
+  setCurrentPlayer(id: string, name: string) {
+    firebase.database().ref('/games/' + id + '/currentPlayer/').set(name);
+  }
+
    create(game: Game): any {
     firebase.database().ref('/games/' + game.id).set({
-      host: game.host
+      host: game.host,
+      currentPlayer: game.host
     });
     this.addPlayer(game.id, game.host);
    }

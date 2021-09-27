@@ -11,6 +11,7 @@ export class PlayersComponent implements OnInit {
   players: string[] = [];
   seconds: number[] = [];
   id: string;
+  currentPlayer: string;
 
   constructor(private db: DatabaseService,
     private route: ActivatedRoute
@@ -20,6 +21,8 @@ export class PlayersComponent implements OnInit {
     this.getId();
     console.log(this.id);
     this.getPlayers();
+    console.log(this.currentPlayer);
+    // this.db.setCurrentPlayer(this.id, this.currentPlayer);
   }
 
   getId(): void {
@@ -30,12 +33,18 @@ export class PlayersComponent implements OnInit {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
       console.log(data);
       for (let x in data) {
-        this.players.push(data[x].name)
-        this.seconds.push(data[x].seconds);
+        console.log(data[x]);
+        this.players.push(data[x]);
+        // this.players.push(data[x].name)
+        // this.seconds.push(data[x].seconds);
         console.log(this.players);
       }
     })
 
+  }
+
+  setCurrentPlayer(name: string) {
+    this.db.setCurrentPlayer(this.id, name);
   }
 
 

@@ -8,6 +8,8 @@ import { RemoveStacksComponent } from '../remove-stacks/remove-stacks.component'
 import { PlayersFormComponent } from '../players-form/players-form.component';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { SocketioService } from '../socketio.service';
+import { Coord } from 'src/coord';
+import { DatabaseService } from '../database.service';
 
 
 @Component({
@@ -24,9 +26,11 @@ export class GameComponent implements OnInit {
   public turns = 0;
   id: string;
   newCard: Card;
+  pos: Coord;
   // public data: any = [];
 
   constructor(private _gameService: GameService,
+    private db: DatabaseService,
     private dialog: MatDialog,
     private socketService: SocketioService,
     private route: ActivatedRoute) { }
@@ -39,9 +43,10 @@ export class GameComponent implements OnInit {
     // this.openPlayerModal();
   }
 
-  getId(): void {
+  getId() {
     const id = this.route.snapshot.paramMap.get('id');
     this.socketService.getGame(id).subscribe(id => this.id = id);
+    return id;
   }
 
   createStacks() {
@@ -66,10 +71,21 @@ export class GameComponent implements OnInit {
   }
 
   chooseCard(card: Card) {
+    // console.log(card);
+    // this.pos = this.xy(this.stacks.indexOf(card));
+    // console.log(this.pos);
+    
     if (this.deck.length >= 1) {
       this.openHighLow(card);
     } else {
       this.openRemoveStacks();
+    }
+  }
+
+  xy(i): Coord {
+    return {
+      x: i % 3,
+      y: Math.floor(i / 3)
     }
   }
 
@@ -101,34 +117,9 @@ export class GameComponent implements OnInit {
       data => {
         this.choice = data;
         this.compare(this.choice, card);
-        // this._gameService.turn();
-        // this.openModal(modalData);
-        // this.turns = 0;
-        // if (this.turns == 3) {
-        //   var tmp = this._gameService.getCurrentPlayer();
-        //   console.log("TMP: ", tmp);
-        //   console.log("LEN: ", this._gameService.players.length);
-        //   if (tmp == this._gameService.players.length - 1) {
-        //     console.log("End of player list..");
-        //     this._gameService.setNextPlayer(0);
-        //   } else {
-        //     console.log("NEW TMP: ", tmp + 1);
-        //     this._gameService.setNextPlayer(tmp + 1);
-        //   }
         if (this.turns == 3) {
-          var tmp = this._gameService.getCurrentPlayer();
-          console.log("TMP: ", tmp);
-          console.log("LEN: ", this._gameService.players.length);
-          if (tmp == this._gameService.players.length - 1) {
-            console.log("End of player list..");
-            this._gameService.setNextPlayer(0);
-          } else {
-            console.log("NEW TMP: ", tmp + 1);
-            this._gameService.setNextPlayer(tmp + 1);
-          }
-          console.log(this._gameService.players);
-          var currentPlayer = this._gameService.players[tmp].name;
-          var title = `${currentPlayer}, you're next!`;
+          var currentPlayer = 'next player';
+          var title = `${currentPlayer}, you're up!`;
           var modalData = {
             "title": title,
             "currentPlayer": currentPlayer
@@ -156,6 +147,9 @@ export class GameComponent implements OnInit {
 
   compare(choice, card) {
     this.newCard = this.deck.pop();
+    this.pos = this.xy(this.stacks.indexOf(card));
+    this.newCard.position = this.pos;
+    console.log(this.pos);
     console.log("newCard: ", this.newCard.value);
     var cardIndex = this.stacks.indexOf(card);
         // get index of current card and add to stack

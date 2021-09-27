@@ -57,39 +57,7 @@ export class GameService {
   }
 
   public clickedCard(card: Card) {
-    // console.log("User clicked: " + card);
-  }
-
-  public addPlayers(players) {
-    console.log("PLAYERS: ", players);
-    for(let p in players) {
-      this.players.push(new Player(players[p], ""));
-      console.log(p);
-    }
-    // filter any null or empty players
-    var filtered = this.players.filter(x => (x != null) && (x.name != ""));
-    this.players = filtered;
-    localStorage.setItem('players', JSON.stringify(this.players));
-  }
-
-  public getPlayers(): Array<Player> {
-    console.log("LOCALSTORAGE: ", localStorage.getItem('players'));
-    this.players = JSON.parse(localStorage.getItem('players'));
-    // localStorage.clear;
-    return this.players;
-  }
-
-  public setNextPlayer(x): void {
-    console.log("BEFORE: ", this.currentPlayer);
-    this.currentPlayer = x;
-    console.log("AFTER: ", this.currentPlayer);
-    // this.playersComponent.setCurrentPlayer(this.currentPlayer);
-    // return this.currentPlayer;
-  }
-
-  public getCurrentPlayer(): number {
-    console.log("GETCURRENTPLAYER: ", this.currentPlayer);
-    return this.currentPlayer;
+    console.log("User clicked: " + card);
   }
 
 }
