@@ -25,7 +25,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ModalComponent } from './modal/modal.component';
 import { MatRippleModule } from '@angular/material/core';
-import { PlayersFormComponent } from './players-form/players-form.component';
 import { GameService } from './game.service';
 import { StartComponent } from './start/start.component';
 import { SocketioService } from './socketio.service';
@@ -44,7 +43,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     StackComponent,
     RemoveStacksComponent,
     ModalComponent,
-    PlayersFormComponent,
     StartComponent,
     LobbyComponent,
     PlayersComponent,

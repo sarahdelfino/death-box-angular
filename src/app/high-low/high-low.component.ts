@@ -1,37 +1,98 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component, Inject, OnInit, Input, SimpleChanges } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Card } from '../card/card';
+import { GameService } from '../game.service';
+
+export interface CardData {
+  imageId: string;
+  state: "default" | "flipped";
+}
 
 @Component({
   selector: 'app-high-low',
   templateUrl: './high-low.component.html',
-  styleUrls: ['./high-low.component.css']
+  styleUrls: ['./high-low.component.css'],
+  animations: [
+    trigger("cardFlip", [
+      state(
+        "default",
+        style({
+          transform: "none"
+        })
+      ),
+      state(
+        "flipped",
+        style({
+          transform: "rotateY(180deg)",
+        })
+      ),
+      transition("default => flipped", [animate("400ms")]),
+      transition("flipped => default", [animate("400ms")])
+    ])
+  ]
 })
 export class HighLowComponent implements OnInit {
 
+  // @Input()
+  // public card: Card;
+
   public card: Card;
   public choice: string;
+  newCard: Card;
+  data: CardData = {
+    imageId: "",
+    state: "default"
+  };
+  title: string;
 
   constructor(
-    private dialogRef: MatDialogRef<HighLowComponent>,
+    public dialogRef: MatDialogRef<HighLowComponent>,
+    private gameService: GameService,
     @Inject(MAT_DIALOG_DATA) data) {
-    this.card = data[0];
+      console.log(data.data);
+    this.card = data.data.crd[0];
+    console.log(this.card);
+    this.newCard = data.data.newCrd;
+    this.title = "Higher or lower?";
   }
 
   ngOnInit() {
 
   }
 
+  cardFlip() {
+    if (this.data.state === "default") {
+      this.data.state = "flipped";
+    } else {
+      this.data.state = "default";
+    }
+  }
+
+  flipEnd($event) {
+    if ($event.fromState != 'void') {
+      let data = [this.card, this.newCard];
+      if (this.gameService.compare(this.choice, this.card.value, this.newCard.value) == true) {
+        console.log("true");
+        this.title = "Correct!";
+      } else {
+        console.log("false");
+        this.title = "Wrong!";
+      }
+      let timer = setTimeout(() => {
+        this.dialogRef.close(data);
+      }, 1500);
+    }
+  }
+
   higher() {
-    // console.log("You chose higher");
     this.choice = "higher";
-    this.dialogRef.close(this.choice);
+    this.cardFlip();
   }
 
   lower() {
-    // console.log("You chose lower");
     this.choice = "lower";
-    this.dialogRef.close(this.choice);
+    this.cardFlip();
   }
 
 

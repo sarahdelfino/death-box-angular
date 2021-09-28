@@ -1,11 +1,12 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Coord } from 'src/coord';
 import { Card } from '../card/card';
 import { GameService } from '../game.service';
 
 export interface CardData {
   imageId: string;
-  state: "default" | "flipped" | "matched";
+  state: "default" | "flipped" | "moved";
 }
 
 @Component({
@@ -17,23 +18,31 @@ export interface CardData {
       state(
         "default",
         style({
-          transform: "rotateY(180deg)"
+          transform: "none"
         })
       ),
       state(
         "flipped",
         style({
-          transform: "rotateY(180deg)"
+          transform: "rotateY(180deg)",
+        })
+      ),
+      state(
+        "moved",
+        style({
+          transform: "translateY(0)"
         })
       ),
       transition("default => flipped", [animate("400ms")]),
-      transition("flipped => default", [animate("400ms")])
+      transition("flipped => moved", [animate("400ms")])
     ])
   ]
 })
 export class DeckComponent implements OnInit {
   @Input()
   public card: Card;
+
+  pos: Coord = null;
 
   data: CardData = {
     imageId: "",
@@ -49,14 +58,14 @@ export class DeckComponent implements OnInit {
     for (const propName in changes) {
       const chng = changes[propName];
       const cur  = JSON.stringify(chng.currentValue);
-      console.log(chng.currentValue);
+      // console.log(chng.currentValue);
       const prev = JSON.stringify(chng.previousValue);
       this.changeLog.push(`${propName}: currentValue = ${cur}, previousValue = ${prev}`);
-      console.log(this.changeLog);
+      // console.log(this.changeLog);
       if (cur != "undefined") {
         this.card.cardPath = chng.currentValue.cardPath;
         this.data.imageId = this.card.cardName;
-        console.log(this.card);
+        // console.log(this.card);
         this.cardFlip();
         
       }
@@ -74,7 +83,7 @@ export class DeckComponent implements OnInit {
     if (this.data.state === "default") {
       this.data.state = "flipped";
     } else {
-      this.data.state = "default";
+      this.data.state = "moved";
     }
   }
 

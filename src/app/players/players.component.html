@@ -1,6 +1,10 @@
 <div class="players">
-    <h1>Players</h1>
-    <div *ngFor="let player of players" class="players-containers">
-        <p>{{ player }}</p>
-    </div>
+    <table>
+            <th>Players</th>
+            <th>Seconds</th>
+        <tr *ngFor="let player of players" class="players-containers">
+            <td>{{ player.name }}</td>
+            <td>{{ player.seconds }}</td>
+        </tr>
+    </table>
 </div>

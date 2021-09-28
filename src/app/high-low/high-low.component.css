@@ -1,5 +1,106 @@
-img {
+.container {
+    width: 500px;
+    height: 400px;
+}
+
+.mat-dialog-content {
+    width: auto;
+    height: 225px;
+    overflow: visible;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.arrow {
     width: 100px;
     margin: 10px;
     margin-bottom: 20px;
 }
+
+.s {
+    max-width: 200px;
+    max-height: 200px;
+
+}
+
+:host {
+    display: block;
+    /* perspective: 600px; */
+}
+
+.card {
+    position: relative;
+    top: -180px;
+    left: 0;
+    /* top: 0px;
+    left: 0px;
+    z-index: 99;  */
+    transform-style: preserve-3d;
+}
+
+.face {
+    display: block;
+    position: absolute;
+    top: 0px;
+    /* left: 50px; */
+    backface-visibility: hidden;
+    /* border: solid red 1px; */
+}
+
+.fce {
+    display: block;
+    position: absolute;
+    left: 150px;
+    max-width: 180px;
+    max-height: 180px;
+}
+
+.back {
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.front {
+    transform: rotateY(180deg);
+}
+
+@media (min-width: 1200px) {
+    .stack {
+        max-width: 150px;
+        max-height: 180px;
+    }
+    .back {
+        max-width: 200px;
+        max-height: 200px;
+    }
+    .face {
+        max-width: 180px;
+        max-height: 180px;
+
+    }
+    .front {
+        right: 100px;
+        top: 5px;
+    }
+  }
+
+  @media (min-width: 600px) {
+    .stack {
+        max-width: 150px;
+        max-height: 180px;
+    }
+    .back {
+        max-width: 200px;
+        max-height: 200px;
+    }
+    .face {
+        max-width: 180px;
+        max-height: 180px;
+
+    }
+    .front {
+        right: 100px;
+        top: 5px;
+    }
+  }
+  

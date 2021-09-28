@@ -5,6 +5,8 @@ import { Player } from './player';
 import { Stack } from './stack';
 import { Table } from './table';
 import { GameComponent } from './game/game.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ModalComponent } from './modal/modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +20,12 @@ export class GameService {
   players = new Array<Player>();
   currentPlayer = 1;
   rootURL = '/api';
+  public stacks: any = [];
+  newCard: Card;
+  public turns = 0;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private dialog: MatDialog,) { }
 
   public createDeck(): Array<Card> {
     this.suits.forEach((s) => {
@@ -44,6 +50,21 @@ export class GameService {
     }
   }
 
+  createStacks() {
+    for (let i = 0; i < 9; i++) {
+      var stack = new Array();
+      stack.push(this.deck.pop());
+      this.stacks.push(stack);
+    }
+    return this.stacks;
+  }
+
+  addToStack(i, card) {
+    // add card to the top of the stack
+    this.stacks[i].unshift(card);
+    return this.stacks;
+  }
+
   public stackIndex() {
     return this.table.stacks;
   }
@@ -57,39 +78,40 @@ export class GameService {
   }
 
   public clickedCard(card: Card) {
-    // console.log("User clicked: " + card);
+    console.log("User clicked: " + card);
   }
 
-  public addPlayers(players) {
-    console.log("PLAYERS: ", players);
-    for(let p in players) {
-      this.players.push(new Player(players[p], ""));
-      console.log(p);
-    }
-    // filter any null or empty players
-    var filtered = this.players.filter(x => (x != null) && (x.name != ""));
-    this.players = filtered;
-    localStorage.setItem('players', JSON.stringify(this.players));
-  }
+  compare(choice, card, newCard) {
+  if ((choice == "higher" && (Number(newCard) > Number(card))) || (choice == "lower" && (Number(newCard) < Number(card)))) {
+    console.log("You're right!");
+    // this.turns = this.turns + 1;
+    return true;
+  } else {
+    // var body = "You're wrong! Drink for ";
+    // // var drinkFor = this.stacks[cardIndex].length;
+    // var drinkFor = 10;
+    // var body = body + drinkFor + " seconds!";
+    // var modalData = {"body": body};
+    // // this.openModal(modalData);
+    console.log("you're wrong!");
+    // console.log(this.stacks);
+    return false;
+  };
+}
 
-  public getPlayers(): Array<Player> {
-    console.log("LOCALSTORAGE: ", localStorage.getItem('players'));
-    this.players = JSON.parse(localStorage.getItem('players'));
-    // localStorage.clear;
-    return this.players;
-  }
+openModal(data: any) {
+  const dialogConfig = new MatDialogConfig();
+  const timeout = 1000;
+  dialogConfig.data = data;
+  console.log("DIALOGCONFIG: ", dialogConfig.data);
 
-  public setNextPlayer(x): void {
-    console.log("BEFORE: ", this.currentPlayer);
-    this.currentPlayer = x;
-    console.log("AFTER: ", this.currentPlayer);
-    // this.playersComponent.setCurrentPlayer(this.currentPlayer);
-    // return this.currentPlayer;
-  }
+  const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
 
-  public getCurrentPlayer(): number {
-    console.log("GETCURRENTPLAYER: ", this.currentPlayer);
-    return this.currentPlayer;
-  }
+  dialogRef.afterOpened().subscribe(_ => {
+    setTimeout(() => {
+      dialogRef.close();
+    }, timeout)
+  })
+}
 
 }
