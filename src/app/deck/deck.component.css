@@ -1,13 +1,9 @@
-.container {
-    margin-top: -200px;
-}
-
-.stack {
+/* .stack {
     position: relative;
     z-index: 1;
     top: 178px;
     left: 50px;
-}
+} */
 
 .s {
     max-width: 200px;
@@ -22,16 +18,19 @@
 
 .card {
     position: relative;
-    top: 0;
+    top: -150px;
     left: 0;
+    /* top: 0px;
+    left: 0px;
     z-index: 99;
-    transform-style: preserve-3d;
+    transform-style: preserve-3d; */
 }
 
 .face {
     display: block;
     position: absolute;
-    left: 50px;
+    top: 0px;
+    /* left: 50px; */
     backface-visibility: hidden;
     /* border: solid red 1px; */
 }
@@ -69,6 +68,26 @@
     }
     .front {
         right: 100px;
+        top: 5px;
+    }
+  }
+
+  @media (min-width: 600px) {
+    .stack {
+        max-width: 100px;
+        max-height: 150px;
+    }
+    .back {
+        max-width: 200px;
+        max-height: 200px;
+    }
+    .face {
+        max-width: 200px;
+        max-height: 200px;
+
+    }
+    .front {
+        right: 30px;
         top: 5px;
     }
   }

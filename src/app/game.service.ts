@@ -5,6 +5,8 @@ import { Player } from './player';
 import { Stack } from './stack';
 import { Table } from './table';
 import { GameComponent } from './game/game.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ModalComponent } from './modal/modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +20,12 @@ export class GameService {
   players = new Array<Player>();
   currentPlayer = 1;
   rootURL = '/api';
+  public stacks: any = [];
+  newCard: Card;
+  public turns = 0;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private dialog: MatDialog,) { }
 
   public createDeck(): Array<Card> {
     this.suits.forEach((s) => {
@@ -44,6 +50,21 @@ export class GameService {
     }
   }
 
+  createStacks() {
+    for (let i = 0; i < 9; i++) {
+      var stack = new Array();
+      stack.push(this.deck.pop());
+      this.stacks.push(stack);
+    }
+    return this.stacks;
+  }
+
+  addToStack(i, card) {
+    // add card to the top of the stack
+    this.stacks[i].unshift(card);
+    return this.stacks;
+  }
+
   public stackIndex() {
     return this.table.stacks;
   }
@@ -59,5 +80,38 @@ export class GameService {
   public clickedCard(card: Card) {
     console.log("User clicked: " + card);
   }
+
+  compare(choice, card, newCard) {
+  if ((choice == "higher" && (Number(newCard) > Number(card))) || (choice == "lower" && (Number(newCard) < Number(card)))) {
+    console.log("You're right!");
+    // this.turns = this.turns + 1;
+    return true;
+  } else {
+    // var body = "You're wrong! Drink for ";
+    // // var drinkFor = this.stacks[cardIndex].length;
+    // var drinkFor = 10;
+    // var body = body + drinkFor + " seconds!";
+    // var modalData = {"body": body};
+    // // this.openModal(modalData);
+    console.log("you're wrong!");
+    // console.log(this.stacks);
+    return false;
+  };
+}
+
+openModal(data: any) {
+  const dialogConfig = new MatDialogConfig();
+  const timeout = 1000;
+  dialogConfig.data = data;
+  console.log("DIALOGCONFIG: ", dialogConfig.data);
+
+  const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
+
+  dialogRef.afterOpened().subscribe(_ => {
+    setTimeout(() => {
+      dialogRef.close();
+    }, timeout)
+  })
+}
 
 }

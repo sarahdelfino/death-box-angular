@@ -5,7 +5,6 @@ import { Card } from '../card/card';
 import { HighLowComponent } from '../high-low/high-low.component';
 import { ModalComponent } from '../modal/modal.component';
 import { RemoveStacksComponent } from '../remove-stacks/remove-stacks.component';
-import { PlayersFormComponent } from '../players-form/players-form.component';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { SocketioService } from '../socketio.service';
 import { Coord } from 'src/coord';
@@ -39,7 +38,8 @@ export class GameComponent implements OnInit {
   ngOnInit() {
     this.getId();
     this.deck = this._gameService.createDeck();
-    this.createStacks();
+    // this.createStacks();
+    this.stacks = this._gameService.createStacks();
     // this.openPlayerModal();
   }
 
@@ -50,11 +50,13 @@ export class GameComponent implements OnInit {
   }
 
   createStacks() {
-    for (let i = 0; i < 9; i++) {
-      var stack = new Array();
-      stack.push(this.deck.pop());
-      this.stacks.push(stack);
-    }
+    // for (let i = 0; i < 9; i++) {
+    //   var stack = new Array();
+    //   stack.push(this.deck.pop());
+    //   this.stacks.push(stack);
+    // }
+    // this._gameService.createStacks();
+    // this.stacks = this._gameService.createStacks();
   }
 
   getLength(i) {
@@ -63,6 +65,10 @@ export class GameComponent implements OnInit {
 
   addToStack(i, card) {
     // add card to the top of the stack
+    // this.stacks[i].unshift(card);
+    // this.stacks = this._gameService.addToStack(i, card);
+    console.log(this.stacks);
+    console.log(this.stacks[i]);
     this.stacks[i].unshift(card);
   }
 
@@ -106,27 +112,40 @@ export class GameComponent implements OnInit {
 
   openHighLow(card: Card) {
     const dialogConfig = new MatDialogConfig();
+    let crd = card;
+    let newCrd = this.deck.pop();
 
-    dialogConfig.data = card;
+    dialogConfig.data = {crd, newCrd};
     dialogConfig.disableClose = true;
     // this.dialog.open(HighLowComponent, dialogConfig);
 
-    const dialogRef = this.dialog.open(HighLowComponent, dialogConfig);
+    // const dialogRef = this.dialog.open(HighLowComponent, dialogConfig);
+
+    const dialogRef = this.dialog.open(HighLowComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: dialogConfig
+    });
 
     dialogRef.afterClosed().subscribe(
       data => {
-        this.choice = data;
-        this.compare(this.choice, card);
-        if (this.turns == 3) {
-          var currentPlayer = 'next player';
-          var title = `${currentPlayer}, you're up!`;
-          var modalData = {
-            "title": title,
-            "currentPlayer": currentPlayer
-          };
-          this.openModal(modalData);
-          this.turns = 0;
-        }
+        console.log(data);
+        var cardIndex = this.stacks.indexOf(card);
+        console.log(cardIndex);
+        // get index of current card and add to stack
+        this.addToStack(cardIndex, data[1]);
+        // this.choice = data;
+        // this.compare(this.choice, card);
+        // if (this.turns == 3) {
+        //   var currentPlayer = 'next player';
+        //   var title = `${currentPlayer}, you're up!`;
+        //   var modalData = {
+        //     "title": title,
+        //     "currentPlayer": currentPlayer
+        //   };
+        //   this.openModal(modalData);
+        //   this.turns = 0;
+        // }
       });
   }
 
@@ -146,31 +165,32 @@ export class GameComponent implements OnInit {
   }
 
   compare(choice, card) {
-    this.newCard = this.deck.pop();
-    this.pos = this.xy(this.stacks.indexOf(card));
-    this.newCard.position = this.pos;
-    console.log(this.pos);
-    console.log("newCard: ", this.newCard.value);
-    var cardIndex = this.stacks.indexOf(card);
-        // get index of current card and add to stack
-        this.addToStack(cardIndex, this.newCard);
-    if (choice == "higher" && (Number(this.newCard.value) > Number(card[1].value))) {
-      console.log("You're right!");
-      this.turns = this.turns + 1;
-      console.log("You have chosen correctly ", this.turns, " times");
-    } else if (choice == "lower" && (Number(this.newCard.value) < Number(card[1].value))) {
-      console.log("You're right!");
-      this.turns = this.turns + 1;
-      console.log("You have chosen correctly ", this.turns, " times");
-    } else {
-      var body = "You're wrong! Drink for ";
-      var drinkFor = this.getLength(cardIndex);
-      var body = body + drinkFor + " seconds!";
-      var modalData = {"body": body};
-      this.openModal(modalData);
-      console.log(body);
-      console.log(this.stacks);
-    };
+    // this.newCard = this.deck.pop();
+    // this.pos = this.xy(this.stacks.indexOf(card));
+    // this.newCard.position = this.pos;
+    // console.log(this.pos);
+    // console.log("newCard: ", this.newCard.value);
+    // var cardIndex = this.stacks.indexOf(card);
+    //     // get index of current card and add to stack
+    //     this.addToStack(cardIndex, this.newCard);
+    // if (choice == "higher" && (Number(this.newCard.value) > Number(card[1].value))) {
+    //   console.log("You're right!");
+    //   this.turns = this.turns + 1;
+    //   console.log("You have chosen correctly ", this.turns, " times");
+    // } else if (choice == "lower" && (Number(this.newCard.value) < Number(card[1].value))) {
+    //   console.log("You're right!");
+    //   this.turns = this.turns + 1;
+    //   console.log("You have chosen correctly ", this.turns, " times");
+    // } else {
+    //   var body = "You're wrong! Drink for ";
+    //   var drinkFor = this.getLength(cardIndex);
+    //   var body = body + drinkFor + " seconds!";
+    //   var modalData = {"body": body};
+    //   this.openModal(modalData);
+    //   console.log(body);
+    //   console.log(this.stacks);
+    // };
+    // this._gameService.compare(choice, card);
   }
 
   removeStacks() {
