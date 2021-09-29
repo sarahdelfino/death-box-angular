@@ -38,10 +38,10 @@ export class LobbyComponent implements OnInit {
   getHost(): void {
     // this.db.getGame(this.id).subscribe(game => this.game = game);
     this.db.getGame(this.id).valueChanges().subscribe(data => {
-      console.log(data);
+      // console.log(data);
       this.host = data.host;
     });
-    console.log(this.game);
+    // console.log(this.game);
   }
 
   getPlayers() {
@@ -49,7 +49,7 @@ export class LobbyComponent implements OnInit {
       console.log(data);
       for (let x in data) {
         this.playerList.push(data[x].name)
-        console.log(this.playerList);
+        // console.log(this.playerList);
       }
     })
 

@@ -1,5 +1,5 @@
 .players {
-    margin-top: 50px;
+    margin: 20px;
     width: 300px;
     height: 300px;
     margin-left: auto;
@@ -34,7 +34,8 @@ table {
 }
 
 th {
-    font-size: 30px;
+    /* font-size: 30px; */
+    width: 100%;
 }
 
 td {
@@ -50,3 +51,10 @@ td {
 /* .players-containers td, .players-containers th {
     border: 1px solid white;
 } */
+
+@media (max-width: 1200px) {
+    .players {
+        width: 200px;
+        margin: 10px;
+    }
+}

@@ -27,9 +27,11 @@ export class PlayersComponent implements OnInit {
   ngOnInit() {
     this.getId();
     this.getPlayers();
+    // this.currentPlayer = this.players[0];
     this.db.getCurrentPlayer(this.id).valueChanges().subscribe(data => {
+      console.log(data);
       this.currentPlayer = data;
-      console.log(this.currentPlayer);
+      // console.log(this.currentPlayer);
     })
   }
 
@@ -37,9 +39,9 @@ export class PlayersComponent implements OnInit {
     for (const propName in changes) {
       const chng = changes[propName];
       const cur = JSON.stringify(chng.currentValue);
-      console.log(chng.currentValue);
+      // console.log(chng.currentValue);
       if (this.currentPlayer && cur == '0') {
-        console.log(this.currentPlayer);
+        // console.log(this.currentPlayer);
         this.setCurrentPlayer(this.currentPlayer);
       }
     }
@@ -54,7 +56,7 @@ export class PlayersComponent implements OnInit {
       for (let x in data) {
         this.players.push(data[x]);
       }
-      console.log(this.players);
+      // console.log(this.players);
     })
 
   }
@@ -67,11 +69,13 @@ export class PlayersComponent implements OnInit {
   }
 
   setCurrentPlayer(player: any) {
-    var currIndex = this.players.findIndex(p => p.name === player.name);
+    var currIndex = this.players.findIndex(p => p.name === player);
     if (currIndex < this.players.length - 1) {
-      this.db.setCurrentPlayer(this.id, this.players[currIndex + 1]);
+      console.log(this.players[currIndex+1].name);
+      this.db.setCurrentPlayer(this.id, this.players[currIndex + 1].name);
     } else {
-      this.db.setCurrentPlayer(this.id, this.players[0]);
+      console.log(this.players[0]);
+      this.db.setCurrentPlayer(this.id, this.players[0].name);
     }
   }
 
