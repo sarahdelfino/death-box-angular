@@ -27,7 +27,7 @@ export interface CardData {
           transform: "rotateY(180deg)",
         })
       ),
-      transition("default => flipped", [animate("400ms")]),
+      transition("default => flipped", [animate("200ms")]),
       transition("flipped => default", [animate("400ms")])
     ])
   ]
@@ -50,9 +50,9 @@ export class HighLowComponent implements OnInit {
     public dialogRef: MatDialogRef<HighLowComponent>,
     private gameService: GameService,
     @Inject(MAT_DIALOG_DATA) data) {
-      console.log(data.data);
+      // console.log(data.data);
     this.card = data.data.crd[0];
-    console.log(this.card);
+    // console.log(this.card);
     this.newCard = data.data.newCrd;
     this.title = "Higher or lower?";
   }
@@ -71,17 +71,16 @@ export class HighLowComponent implements OnInit {
 
   flipEnd($event) {
     if ($event.fromState != 'void') {
-      let data = [this.card, this.newCard];
-      if (this.gameService.compare(this.choice, this.card.value, this.newCard.value) == true) {
-        console.log("true");
+      let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
+      let data = [this.card, this.newCard, compare];
+      if (compare == true) {
         this.title = "Correct!";
       } else {
-        console.log("false");
         this.title = "Wrong!";
       }
       let timer = setTimeout(() => {
         this.dialogRef.close(data);
-      }, 1500);
+      }, 1000);
     }
   }
 

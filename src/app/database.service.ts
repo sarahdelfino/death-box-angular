@@ -14,7 +14,7 @@ export class DatabaseService {
 
   private dbPath = '/games';
   gamesList: AngularFireList<Game> = null;
-  gameRef: AngularFireObject<Game> = null;
+  gameRef: AngularFireObject<any> = null;
   playersList: AngularFireList<any> = null;
   playersObject: AngularFireObject<Player> = null;
   host = null;
@@ -45,8 +45,8 @@ export class DatabaseService {
   }
 
   getCurrentPlayer(id: string) {
-    this.gameRef = this.db.object('games/' + id);
-    // return tmp.currentPlayer;
+    this.gameRef = this.db.object('games/' + id + '/currentPlayer/');
+    return this.gameRef;
   }
 
   setCurrentPlayer(id: string, name: string) {

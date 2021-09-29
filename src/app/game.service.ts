@@ -78,23 +78,13 @@ export class GameService {
   }
 
   public clickedCard(card: Card) {
-    console.log("User clicked: " + card);
+    // console.log("User clicked: " + card);
   }
 
   compare(choice, card, newCard) {
   if ((choice == "higher" && (Number(newCard) > Number(card))) || (choice == "lower" && (Number(newCard) < Number(card)))) {
-    console.log("You're right!");
-    // this.turns = this.turns + 1;
     return true;
   } else {
-    // var body = "You're wrong! Drink for ";
-    // // var drinkFor = this.stacks[cardIndex].length;
-    // var drinkFor = 10;
-    // var body = body + drinkFor + " seconds!";
-    // var modalData = {"body": body};
-    // // this.openModal(modalData);
-    console.log("you're wrong!");
-    // console.log(this.stacks);
     return false;
   };
 }
