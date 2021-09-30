@@ -28,14 +28,14 @@ body {
     max-width: 750px;
 } */
 
-/* .container { */
+.container {
     /* max-width: 1200px; */
-    /* width: auto;
+    width: auto;
     display: flex;
     justify-content: space-between;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     margin: auto;
-} */
+}
 
 /* .right {
   display: block;

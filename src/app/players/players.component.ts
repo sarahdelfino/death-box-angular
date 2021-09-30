@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../database.service';
+import { Player } from '../player';
 
 @Component({
   selector: 'app-players',
@@ -8,21 +9,42 @@ import { DatabaseService } from '../database.service';
   styleUrls: ['./players.component.css']
 })
 export class PlayersComponent implements OnInit {
-  players: string[] = [];
+  players: any[] = [];
   seconds: number[] = [];
   id: string;
   currentPlayer: string;
+  changeLog = [];
+  // turns = 0;
+
+  @Input()
+  public turn: number;
+
 
   constructor(private db: DatabaseService,
     private route: ActivatedRoute
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.getId();
-    console.log(this.id);
     this.getPlayers();
-    console.log(this.currentPlayer);
-    // this.db.setCurrentPlayer(this.id, this.currentPlayer);
+    // this.currentPlayer = this.players[0];
+    this.db.getCurrentPlayer(this.id).valueChanges().subscribe(data => {
+      console.log(data);
+      this.currentPlayer = data;
+      // console.log(this.currentPlayer);
+    })
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    for (const propName in changes) {
+      const chng = changes[propName];
+      const cur = JSON.stringify(chng.currentValue);
+      // console.log(chng.currentValue);
+      if (this.currentPlayer && cur == '0') {
+        // console.log(this.currentPlayer);
+        this.setCurrentPlayer(this.currentPlayer);
+      }
+    }
   }
 
   getId(): void {
@@ -31,20 +53,30 @@ export class PlayersComponent implements OnInit {
 
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
-      console.log(data);
       for (let x in data) {
-        console.log(data[x]);
         this.players.push(data[x]);
-        // this.players.push(data[x].name)
-        // this.seconds.push(data[x].seconds);
-        console.log(this.players);
       }
+      // console.log(this.players);
     })
 
   }
 
-  setCurrentPlayer(name: string) {
-    this.db.setCurrentPlayer(this.id, name);
+  getCurrentPlayer(id: string) {
+    this.db.getCurrentPlayer(id).valueChanges().subscribe(data => {
+      this.currentPlayer = data;
+      console.log(this.currentPlayer);
+    })
+  }
+
+  setCurrentPlayer(player: any) {
+    var currIndex = this.players.findIndex(p => p.name === player);
+    if (currIndex < this.players.length - 1) {
+      console.log(this.players[currIndex+1].name);
+      this.db.setCurrentPlayer(this.id, this.players[currIndex + 1].name);
+    } else {
+      console.log(this.players[0]);
+      this.db.setCurrentPlayer(this.id, this.players[0].name);
+    }
   }
 
 

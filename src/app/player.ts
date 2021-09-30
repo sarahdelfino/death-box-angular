@@ -9,7 +9,7 @@ export class Player {
         this.secondsDrank = secondsDrank;
     }
 
-    public getPlayer() {
-        return new Array(this.name, this.secondsDrank);
-    }
+    // public getPlayer() {
+    //     return new Array(this.name, this.secondsDrank);
+    // }
 }
