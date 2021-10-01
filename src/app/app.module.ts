@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SocketIoModule, SocketIoConfig  } from 'ngx-socket-io';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -27,12 +26,9 @@ import { ModalComponent } from './modal/modal.component';
 import { MatRippleModule } from '@angular/material/core';
 import { GameService } from './game.service';
 import { StartComponent } from './start/start.component';
-import { SocketioService } from './socketio.service';
 import { LobbyComponent } from './lobby/lobby.component';
 import { PlayersComponent } from './players/players.component';
 import { DeckComponent } from './deck/deck.component';
-
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 @NgModule({
   declarations: [
@@ -62,7 +58,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MatInputModule,
     MatRippleModule,
     HttpClientModule,
-    SocketIoModule.forRoot(config),
     RouterModule.forRoot([
       {
         path: '',
@@ -72,8 +67,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     BrowserAnimationsModule
   ],
   providers: [
-    GameService,
-    SocketioService
+    GameService
   ],
   bootstrap: [AppComponent]
 })

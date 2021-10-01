@@ -4,6 +4,7 @@ import { AngularFireDatabase, AngularFireDatabaseModule, AngularFireList, Angula
 import firebase from "firebase/app";
 import "firebase/database";
 import { Observable } from 'rxjs';
+import { Card } from './card/card';
 import { Game } from './game';
 import { Player } from './player';
 
@@ -15,7 +16,8 @@ export class DatabaseService {
   private dbPath = '/games';
   gamesList: AngularFireList<Game> = null;
   gameRef: AngularFireObject<any> = null;
-  playersList: AngularFireList<any> = null;
+  playersList: AngularFireList<Player> = null;
+  deckList: AngularFireList<Card> = null;
   playersObject: AngularFireObject<Player> = null;
   host = null;
   database = null;
@@ -38,10 +40,20 @@ export class DatabaseService {
     return this.gameRef;
   }
 
+  setStart(id: string) {
+    firebase.database().ref('games/' + id).update({
+      started: true
+    });
+  }
+
   getPlayers(id: string) {
     // this.playersList = this.db.list('players/' + id);
-    this.playersObject = this.db.object('players/' + id);
-    return this.playersObject;
+    this.playersList = this.db.list('players/' + id);
+    return this.playersList;
+  }
+
+  updateSeconds(id: string, player: string, seconds: number) {
+    firebase.database().ref('/players/' + id + '/');
   }
 
   getCurrentPlayer(id: string) {
@@ -53,13 +65,34 @@ export class DatabaseService {
     firebase.database().ref('/games/' + id + '/currentPlayer/').set(name);
   }
 
-   create(game: Game): any {
+   create(game: Game, deck, stacks): any {
     firebase.database().ref('/games/' + game.id).set({
       host: game.host,
-      currentPlayer: game.host
+      currentPlayer: game.host,
+      deck: deck,
+      stacks: stacks,
+      started: false
     });
     this.addPlayer(game.id, game.host);
    }
+
+   getDeck(id: string) {
+    this.deckList = this.db.list('/games/' + id + '/deck/');
+    return this.deckList;
+   }
+
+   updateDeck(id: string, deck: any) {
+     console.log(deck);
+     firebase.database().ref('/games/' + id + '/deck/').set(deck);
+   }
+
+   updateStacks(id: string, stacks: any, i: number) {
+     firebase.database().ref('/games/' + id + '/stacks/').update(stacks);
+   }
+
+  //  addPlayer(id: string, players: any) {
+  //    firebase.database().ref('/players/' + id + '/').set(players);
+  //  }
 
    update(id: string, val: any): Promise<void> {
      let playerCount = 0;

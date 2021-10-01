@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { SocketioService } from '../socketio.service';
 import { nanoid } from "nanoid";
 import { Game } from '../game';
 import { DatabaseService } from '../database.service';
+import { GameService } from '../game.service';
 
 @Component({
   selector: 'app-start',
@@ -20,10 +20,11 @@ export class StartComponent implements OnInit {
   name: string;
   currentGame: string;
 
-  constructor(private socketService: SocketioService,
+  constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private dbService: DatabaseService,
+    private gameService: GameService
     
     ) { }
 
@@ -52,18 +53,23 @@ export class StartComponent implements OnInit {
   createGame(formData) {
     this.createGameId(formData.host);
     console.log(formData.host);
-    this.socketService.setupSocketConnection(this.game);
-    console.log(this.game.players);
+    // this.socketService.setupSocketConnection(this.game);
+    // console.log(this.game.players);
     // this.dbService.create(this.game).then(() => {
     //   console.log("created new game");
     // });
-    this.dbService.create(this.game);
+    console.log(this.game);
+    let deck = this.gameService.createDeck();
+    let stacks = this.gameService.createStacks(deck);
+    console.log(stacks);
+    this.dbService.create(this.game, deck, stacks);
+    // this.dbService.addPlayer(this.game.id, this.game.host);
+    // this.dbService.addPlayer(this.game.id, [{player: this.game.host, seconds: 0}]);
     this.router.navigateByUrl(`/lobby/${this.game.id}`);
   }
 
   joinGame(joinFormData) {
     console.log(joinFormData);
-    this.socketService.joinGame(joinFormData);
     // console.log(this.game.players);
     this.dbService.addPlayer(joinFormData.id, joinFormData.name);
     this.router.navigateByUrl(`/lobby/${joinFormData.id}`);

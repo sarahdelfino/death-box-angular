@@ -20,6 +20,7 @@ export class PlayersComponent implements OnInit {
   public turn: number;
 
 
+
   constructor(private db: DatabaseService,
     private route: ActivatedRoute
   ) { }
@@ -39,7 +40,7 @@ export class PlayersComponent implements OnInit {
     for (const propName in changes) {
       const chng = changes[propName];
       const cur = JSON.stringify(chng.currentValue);
-      // console.log(chng.currentValue);
+      console.log(chng.currentValue);
       if (this.currentPlayer && cur == '0') {
         // console.log(this.currentPlayer);
         this.setCurrentPlayer(this.currentPlayer);
@@ -59,6 +60,10 @@ export class PlayersComponent implements OnInit {
       // console.log(this.players);
     })
 
+  }
+
+  setPlayerScore() {
+    
   }
 
   getCurrentPlayer(id: string) {

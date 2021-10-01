@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
@@ -6,7 +6,6 @@ import { HighLowComponent } from '../high-low/high-low.component';
 import { ModalComponent } from '../modal/modal.component';
 import { RemoveStacksComponent } from '../remove-stacks/remove-stacks.component';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { SocketioService } from '../socketio.service';
 import { Coord } from 'src/coord';
 import { DatabaseService } from '../database.service';
 import { Player } from '../player';
@@ -20,6 +19,7 @@ import { Player } from '../player';
 })
 export class GameComponent implements OnInit {
 
+  // public deck: Array<Card>;
   public deck: Array<Card>;
   public stacks: any = [];
   public choice = "";
@@ -32,21 +32,43 @@ export class GameComponent implements OnInit {
   constructor(private _gameService: GameService,
     private db: DatabaseService,
     private dialog: MatDialog,
-    private socketService: SocketioService,
     private route: ActivatedRoute) { }
 
 
   ngOnInit() {
-    this.getId();
-    this.deck = this._gameService.createDeck();
-    this.stacks = this._gameService.createStacks();
+    // this.getId();
+    this.id = this._gameService.getId();
+    // this.deck = this._gameService.createDeck();
+    // console.log(this.deck);
+    // this.stacks = this._gameService.createStacks();
+    this.db.getGame(this.id).valueChanges().subscribe(data => {
+      console.log(data);
+      this.deck = data.deck;
+      console.log(this.deck);
+      this.stacks = data.stacks;
+      console.log(this.stacks);
+    });
+    // this._gameService.getDeck();
+    // this.socketService.getDeck().subscribe(x => {
+    //   // console.log(x);
+    //   this.deck.push(x);
+    //   console.log(this.deck);
+    // })
   }
 
-  getId() {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.socketService.getGame(id).subscribe(id => this.id = id);
-    return id;
+  ngOnChanges(changes: SimpleChanges) {
+    for (const propName in changes) {
+      const chng = changes[propName];
+      const cur = JSON.stringify(chng.currentValue);
+      console.log(chng.currentValue);
+    }
   }
+
+  // getId() {
+  //   const id = this.route.snapshot.paramMap.get('id');
+  //   this.socketService.getGame(id).subscribe(id => this.id = id);
+  //   return id;
+  // }
 
   getLength(i) {
     return this.stacks[i].length;
@@ -55,6 +77,9 @@ export class GameComponent implements OnInit {
   addToStack(i, card) {
     // add card to the top of the stack
     this.stacks[i].unshift(card);
+    console.log(this.stacks);
+    this.db.updateStacks(this._gameService.getId(), this.stacks, i);
+    this.db.updateDeck(this._gameService.getId(), this.deck);
   }
 
   clickedCard(card: Card) {
@@ -62,7 +87,7 @@ export class GameComponent implements OnInit {
   }
 
   chooseCard(card: Card) {
-    if (this.deck.length >= 1) {
+    if (this.deck.length > 1) {
       this.openHighLow(card);
     } else {
       this.openRemoveStacks();

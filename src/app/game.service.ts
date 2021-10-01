@@ -7,6 +7,8 @@ import { Table } from './table';
 import { GameComponent } from './game/game.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ModalComponent } from './modal/modal.component';
+import { DatabaseService } from './database.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +27,8 @@ export class GameService {
   public turns = 0;
 
   constructor(private http: HttpClient,
+    private route: ActivatedRoute,
+    private db: DatabaseService,
     private dialog: MatDialog,) { }
 
   public createDeck(): Array<Card> {
@@ -33,7 +37,10 @@ export class GameService {
         this.deck.push(new Card(v.toString(), s));
       }
     });
+    // this.socketService.emitDeck(this.deck);
     this.shuffle(this.deck);
+    // console.log(this.deck);
+    // this.db.updateDeck(this.getId(), this.deck);
     return this.deck;
   }
 
@@ -50,12 +57,26 @@ export class GameService {
     }
   }
 
-  createStacks() {
+  public getId() {
+    const id = this.route.snapshot.paramMap.get('id');
+    return id;
+  }
+
+  getDeck() {
+    this.db.getDeck(this.getId()).valueChanges().subscribe(data => {
+      this.deck = data;
+      console.log(this.deck);
+    })
+  }
+
+  createStacks(deck) {
     for (let i = 0; i < 9; i++) {
       var stack = new Array();
-      stack.push(this.deck.pop());
+      stack.push(deck.pop());
       this.stacks.push(stack);
     }
+    // this.socketService.emitStacks(this.stacks);
+    // this.db.updateStacks(this.getId(), this.stacks);
     return this.stacks;
   }
 

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { SocketioService } from '../socketio.service';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Game } from '../game';
 import { DatabaseService } from '../database.service';
+import { GameService } from '../game.service';
+import { Player } from '../player';
 
 @Component({
   selector: 'app-lobby',
@@ -14,20 +15,31 @@ import { DatabaseService } from '../database.service';
 export class LobbyComponent implements OnInit {
   id: string;
   host: string;
-  playerList: string[] = [];
+  playerList: Player[] = [];
   players: Observable<string[]>;
   game: Game | undefined;
+  started: boolean;
 
-  constructor(private socketService: SocketioService,
+  constructor(
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
+    private gameService: GameService,
     private db: DatabaseService
     ) { }
 
   ngOnInit() {
     this.getId();
-    this.getHost();
+    // this.id = this.gameService.getId();
+    // this.getHost();
+    this.db.getGame(this.id).valueChanges().subscribe(data => {
+      // console.log(data);
+      this.host = data.host,
+      this.started = data.started
+      if (this.started == true) {
+        this.router.navigateByUrl(`/play/${this.id}`);
+      }
+    })
     this.getPlayers();
   }
 
@@ -36,28 +48,21 @@ export class LobbyComponent implements OnInit {
   }
 
   getHost(): void {
-    // this.db.getGame(this.id).subscribe(game => this.game = game);
     this.db.getGame(this.id).valueChanges().subscribe(data => {
-      // console.log(data);
       this.host = data.host;
     });
-    // console.log(this.game);
   }
 
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
-      console.log(data);
-      for (let x in data) {
-        this.playerList.push(data[x].name)
-        // console.log(this.playerList);
-      }
+      this.playerList = data;
     })
 
   }
 
   startGame() {
-    console.log("start");
-    this.router.navigateByUrl(`/play/${this.id}`);
+    this.db.setStart(this.id);
+    // this.router.navigateByUrl(`/play/${this.id}`);
   }
 
 }

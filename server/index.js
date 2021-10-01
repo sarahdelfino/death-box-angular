@@ -27,6 +27,8 @@ io.on('connection', (socket) => {
     socket.leave(previousId);
     socket.join(currentId);
     console.log(`Socket ${socket.id} joined room ${currentId}`);
+    io.in(currentId).emit('join game', 'hello');
+    io.emit('hello')
     previousId = currentId;
   };
   socket.on("game created", (game) => {
@@ -43,11 +45,40 @@ io.on('connection', (socket) => {
     socket.emit("game", game.id);
     players.push(game.name);
     io.emit('players', players);
+    io.emit('join game', 'hello there');
+    io.to('join game').emit('hello there');
     safeJoin(game.id);
   })
   socket.on("get game", (id) => {
 console.log("get game" + id);
   });
+
+  socket.on('deck', (deck) => {
+    var tmp = [];
+    for (let x in deck) {
+      tmp.push(deck[x].cardName);
+      io.emit('deck', deck[x]);
+    }
+    console.log(tmp);
+    // console.log(deck);
+    // io.emit('deck', `${deck}`);
+  })
+
+  socket.on('stacks', (stacks) => {
+    var stk = [];
+    // console.log(stacks);
+    for (let s in stacks) {
+      for (y in stacks[s]) {
+        // console.log(y);
+        // console.log(stacks[s][y].cardName);
+        stk.push(stacks[s][y].cardName);
+      }
+      // stk.push(stacks[s].cardName);
+      // io.emit('stacks', stacks[s]);
+    }
+    console.log(stk);
+    io.emit('stacks', stk);
+  })
 
   // socket.on("disconnect", (socket) => {
   //   console.log(socket.currentId + "user disconnected");
@@ -55,7 +86,7 @@ console.log("get game" + id);
   // });
 
   socket.on('message', (message) => {
-    console.log(message);
+    // console.log(message);
     //yes
     io.emit('message', `${socket.id} said ${message}`);
     io.in('message').emit('message', 'the game will start soon');

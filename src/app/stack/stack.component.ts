@@ -26,6 +26,14 @@ export class StackComponent implements OnInit {
   constructor(private _gameService: GameService) { }
 
   ngOnInit() {
+    // console.log(this.cards);
+    // for (let c in this.cards) {
+    //   var stack = new Array();
+    //   let t = this.cards[c].split('');
+    //   let ln = t.length;
+    //   console.log(t[ln-1]);
+      // stack.push(new Card(this.cards[], this.cards[]))
+    // }
 
   }
 
