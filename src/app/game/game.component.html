@@ -1,5 +1,5 @@
 <div class="game">
-  <div class="container">
+  <div *ngIf="this.isHost == true" class="container">
     <div class="card-container">
       <ng-container *ngFor="let stack of stacks">
         <app-stack class="grid-item" [cards]="stack" (clickedCardEmitter)="clickedCard($event)"
@@ -7,8 +7,11 @@
       </ng-container>
     </div>
   </div>
+  <div *ngIf="this.isHost == false" class="container inner">
+    <button (click)="count()">Count</button>
+  </div>
   <div class="right">
-  <app-players [turn]="turns"></app-players>
+  <app-players [turn]="turns" (curCounter)="getCurCounter($event)"></app-players>
   <!-- <app-deck [card]="newCard"></app-deck> -->
   </div>
 </div>

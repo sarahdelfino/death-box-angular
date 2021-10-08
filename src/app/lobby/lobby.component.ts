@@ -19,6 +19,7 @@ export class LobbyComponent implements OnInit {
   players: Observable<string[]>;
   game: Game | undefined;
   started: boolean;
+  isHost: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,6 +30,11 @@ export class LobbyComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    if (localStorage.getItem('host') == 'true') {
+      this.isHost = true;
+    } else {
+      this.isHost = false;
+    }
     this.getId();
     // this.id = this.gameService.getId();
     // this.getHost();

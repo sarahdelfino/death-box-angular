@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../database.service';
 import { Player } from '../player';
@@ -18,6 +18,7 @@ export class PlayersComponent implements OnInit {
 
   @Input()
   public turn: number;
+  @Output() curCounter = new EventEmitter<string>();
 
 
 
@@ -44,6 +45,7 @@ export class PlayersComponent implements OnInit {
       if (this.currentPlayer && cur == '0') {
         // console.log(this.currentPlayer);
         this.setCurrentPlayer(this.currentPlayer);
+        this.curCounter.emit(this.currentPlayer);
       }
     }
   }
@@ -57,7 +59,7 @@ export class PlayersComponent implements OnInit {
       for (let x in data) {
         this.players.push(data[x]);
       }
-      // console.log(this.players);
+      console.log(this.players);
     })
 
   }

@@ -3,8 +3,10 @@
     <h1>{{ this.id }}</h1>
   </div>
   <h3>Host: {{ this.host }}</h3>
+  <div *ngIf="this.isHost == true">
   <button (click)="startGame()">Start game</button>
-    <h2>Players connected:</h2>
+</div>
+    <h2>Players</h2>
   <div *ngFor="let player of playerList">
     <p>{{ player.name }}</p>
   </div>

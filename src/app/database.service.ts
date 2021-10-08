@@ -90,6 +90,10 @@ export class DatabaseService {
      firebase.database().ref('/games/' + id + '/stacks/').update(stacks);
    }
 
+   getStack(id: string, stack: any) {
+     return firebase.database().ref('/games/' + id + '/stacks/' + stack + '/');
+   }
+
   //  addPlayer(id: string, players: any) {
   //    firebase.database().ref('/players/' + id + '/').set(players);
   //  }

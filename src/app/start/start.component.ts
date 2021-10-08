@@ -65,6 +65,8 @@ export class StartComponent implements OnInit {
     this.dbService.create(this.game, deck, stacks);
     // this.dbService.addPlayer(this.game.id, this.game.host);
     // this.dbService.addPlayer(this.game.id, [{player: this.game.host, seconds: 0}]);
+    localStorage.setItem('user', this.game.host);
+    localStorage.setItem('host', 'true');
     this.router.navigateByUrl(`/lobby/${this.game.id}`);
   }
 
@@ -72,6 +74,7 @@ export class StartComponent implements OnInit {
     console.log(joinFormData);
     // console.log(this.game.players);
     this.dbService.addPlayer(joinFormData.id, joinFormData.name);
+    localStorage.setItem('user', joinFormData.name);
     this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
   }
 

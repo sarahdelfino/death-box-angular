@@ -37,6 +37,30 @@ body {
     margin: auto;
 }
 
+.inner {
+  width: 100%;
+  height: auto;
+}
+
+button {
+  width: 150px;
+  height: 100px;
+  color: white;
+  font-size: 30px;
+  font-weight: 500;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid white;
+  border-radius: 10px;
+  background-color: purple;
+}
+
+button:hover {
+  color: purple;
+  border: 2px solid purple;
+  background-color: white;
+}
+
 /* .right {
   display: block;
   width: 250px;

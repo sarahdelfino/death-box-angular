@@ -50,11 +50,21 @@ export class HighLowComponent implements OnInit {
     public dialogRef: MatDialogRef<HighLowComponent>,
     private gameService: GameService,
     @Inject(MAT_DIALOG_DATA) data) {
-      // console.log(data.data);
+    // console.log(data.data);
     this.card = data.data.crd[0];
     // console.log(this.card);
     this.newCard = data.data.newCrd;
-    this.title = "Higher or lower?";
+    if (parseInt(this.card.value) <= 10 && parseInt(this.card.value) >= 2) {
+      this.title = `Higher or lower than ${this.card.value}?`;
+    } else if (parseInt(this.card.value) == 11) {
+      this.title = "Higher or lower than a jack?"
+    } else if (parseInt(this.card.value) == 12) {
+      this.title = "Higher or lower than a queen?"
+    } else if (parseInt(this.card.value) == 13) {
+      this.title = "Higher or lower than a king?"
+    } else {
+      this.title = "Higher or lower than an ace?"
+    }
   }
 
   ngOnInit() {
@@ -73,10 +83,11 @@ export class HighLowComponent implements OnInit {
     if ($event.fromState != 'void') {
       let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
       let data = [this.card, this.newCard, compare];
+      let seconds = 0;
       if (compare == true) {
         this.title = "Correct!";
       } else {
-        this.title = "Wrong!";
+        this.title = `Wrong! Drink for ${seconds} seconds`;
       }
       let timer = setTimeout(() => {
         this.dialogRef.close(data);

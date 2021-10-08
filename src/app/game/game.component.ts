@@ -24,10 +24,12 @@ export class GameComponent implements OnInit {
   public stacks: any = [];
   public choice = "";
   public turns = 0;
-  currentPlayer: string;
+  currentCounter: string;
   id: string;
   newCard: Card;
   pos: Coord;
+  isHost: boolean;
+  seconds: number;
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
@@ -36,17 +38,25 @@ export class GameComponent implements OnInit {
 
 
   ngOnInit() {
+    if (localStorage.getItem('host') == 'true') {
+      this.isHost = true;
+    } else {
+      this.isHost = false;
+    }
+    if (localStorage.getItem('user') == this.currentCounter) {
+      console.log("hi");
+    }
     // this.getId();
     this.id = this._gameService.getId();
     // this.deck = this._gameService.createDeck();
     // console.log(this.deck);
     // this.stacks = this._gameService.createStacks();
     this.db.getGame(this.id).valueChanges().subscribe(data => {
-      console.log(data);
+      // console.log(data);
       this.deck = data.deck;
-      console.log(this.deck);
+      // console.log(this.deck);
       this.stacks = data.stacks;
-      console.log(this.stacks);
+      // console.log(this.stacks);
     });
     // this._gameService.getDeck();
     // this.socketService.getDeck().subscribe(x => {
@@ -69,6 +79,16 @@ export class GameComponent implements OnInit {
   //   this.socketService.getGame(id).subscribe(id => this.id = id);
   //   return id;
   // }
+
+  getCurCounter(event: any) {
+    this.currentCounter = event;
+    console.log("counter: " + this.currentCounter);
+  }
+
+  count() {
+    console.log("hey");
+    this.db.updateSeconds(this.id, this.currentCounter, this.seconds);
+  }
 
   getLength(i) {
     return this.stacks[i].length;
