@@ -11,7 +11,7 @@
     <button (click)="count()">Count</button>
   </div>
   <div class="right">
-  <app-players [turn]="turns" (curCounter)="getCurCounter($event)"></app-players>
+  <app-players [turn]="turns" [seconds]="seconds" (curCounter)="getCurCounter($event)"></app-players>
   <!-- <app-deck [card]="newCard"></app-deck> -->
   </div>
 </div>

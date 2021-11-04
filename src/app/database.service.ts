@@ -52,8 +52,8 @@ export class DatabaseService {
     return this.playersList;
   }
 
-  updateSeconds(id: string, player: string, seconds: number) {
-    firebase.database().ref('/players/' + id + '/');
+  updateSeconds(id: string, players: any) {
+    firebase.database().ref('/players/' + id + '/').set(players);
   }
 
   getCurrentPlayer(id: string) {
@@ -86,7 +86,7 @@ export class DatabaseService {
      firebase.database().ref('/games/' + id + '/deck/').set(deck);
    }
 
-   updateStacks(id: string, stacks: any, i: number) {
+   updateStacks(id: string, stacks: any) {
      firebase.database().ref('/games/' + id + '/stacks/').update(stacks);
    }
 
@@ -125,8 +125,13 @@ export class DatabaseService {
     return firebase.database().ref().update(updates);
   }
 
-   delete(id: string): Promise<void> {
+   deleteGame(id: string): Promise<void> {
+     this.deletePlayers(id);
      return this.gamesList.remove(id);
+   }
+
+   deletePlayers(id: string): Promise<void> {
+     return this.playersRef.remove(id);
    }
 
    deleteAll(): Promise<void> {

@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 html, body { height: 100%; }
-body { margin: 0; font-family: 'Inconsolata', monospace;}
+body { margin: 0; font-family: 'Inconsolata', monospace; background-color: #ffcdb2; color: #e5989b;}
 
 .card-container {
   max-width: 750px;

@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
@@ -17,7 +17,7 @@ import { Player } from '../player';
   styleUrls: ['./game.component.css'],
   providers: [GameService]
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
 
   // public deck: Array<Card>;
   public deck: Array<Card>;
@@ -66,11 +66,17 @@ export class GameComponent implements OnInit {
     // })
   }
 
+  ngOnDestroy() {
+    if (localStorage.getItem('host') == 'true') {
+      this.db.deleteGame(this.id);
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
       const chng = changes[propName];
       const cur = JSON.stringify(chng.currentValue);
-      console.log(chng.currentValue);
+      // console.log(chng.currentValue);
     }
   }
 
@@ -87,7 +93,7 @@ export class GameComponent implements OnInit {
 
   count() {
     console.log("hey");
-    this.db.updateSeconds(this.id, this.currentCounter, this.seconds);
+    // this.db.updateSeconds(this.id, this.currentCounter, this.seconds);
   }
 
   getLength(i) {
@@ -97,8 +103,7 @@ export class GameComponent implements OnInit {
   addToStack(i, card) {
     // add card to the top of the stack
     this.stacks[i].unshift(card);
-    console.log(this.stacks);
-    this.db.updateStacks(this._gameService.getId(), this.stacks, i);
+    this.db.updateStacks(this._gameService.getId(), this.stacks);
     this.db.updateDeck(this._gameService.getId(), this.deck);
   }
 
@@ -139,8 +144,10 @@ export class GameComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     let crd = card;
     let newCrd = this.deck.pop();
+    let i = this.stacks.indexOf(card);
+    let ln = this.stacks[i].length;
 
-    dialogConfig.data = { crd, newCrd };
+    dialogConfig.data = { crd, newCrd, ln };
     dialogConfig.disableClose = true;
 
     const dialogRef = this.dialog.open(HighLowComponent, {
@@ -159,6 +166,8 @@ export class GameComponent implements OnInit {
           if (this.turns == 3) {
             this.turns = 0;
           }
+        } else {
+          this.seconds = data[3];
         }
       }
     )
@@ -168,7 +177,6 @@ export class GameComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     const timeout = 1000;
     dialogConfig.data = data;
-    console.log("DIALOGCONFIG: ", dialogConfig.data);
 
     const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
 
@@ -180,6 +188,7 @@ export class GameComponent implements OnInit {
   }
 
   removeStacks() {
+    console.log("BEFORE: " + this.stacks);
     if (this.stacks.length == 9) {
       var removedArray = this.stacks.splice(this.stacks.length - 3, 3);
       console.log("Removing: ", removedArray);
@@ -195,6 +204,9 @@ export class GameComponent implements OnInit {
         this.deck.push(card[c]);
       }
     });
-    this._gameService.shuffle(this.deck)
+    this._gameService.shuffle(this.deck);
+    console.log(this.stacks);
+    this.db.updateStacks(this.id, this.stacks);
+    this.db.updateDeck(this.id, this.deck);
   }
 }

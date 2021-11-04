@@ -75,6 +75,7 @@ export class StartComponent implements OnInit {
     // console.log(this.game.players);
     this.dbService.addPlayer(joinFormData.id, joinFormData.name);
     localStorage.setItem('user', joinFormData.name);
+    localStorage.setItem('host', 'false');
     this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
   }
 

@@ -45,6 +45,7 @@ export class HighLowComponent implements OnInit {
     state: "default"
   };
   title: string;
+  stackLength: number;
 
   constructor(
     public dialogRef: MatDialogRef<HighLowComponent>,
@@ -54,6 +55,8 @@ export class HighLowComponent implements OnInit {
     this.card = data.data.crd[0];
     // console.log(this.card);
     this.newCard = data.data.newCrd;
+    this.stackLength = data.data.ln;
+    console.log(this.stackLength);
     if (parseInt(this.card.value) <= 10 && parseInt(this.card.value) >= 2) {
       this.title = `Higher or lower than ${this.card.value}?`;
     } else if (parseInt(this.card.value) == 11) {
@@ -82,12 +85,13 @@ export class HighLowComponent implements OnInit {
   flipEnd($event) {
     if ($event.fromState != 'void') {
       let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
-      let data = [this.card, this.newCard, compare];
-      let seconds = 0;
+      let data = [this.card, this.newCard, compare, this.stackLength];
       if (compare == true) {
         this.title = "Correct!";
+      } else if (compare == false && this.stackLength > 1) {
+        this.title = `Wrong! Drink for ${this.stackLength} seconds`;
       } else {
-        this.title = `Wrong! Drink for ${seconds} seconds`;
+        this.title = `Wrong! Drink for ${this.stackLength} second`;
       }
       let timer = setTimeout(() => {
         this.dialogRef.close(data);

@@ -1,41 +1,19 @@
-<div class="first-container">
-  <div class="logo">
-    <img src="./assets/logo.svg" />
-  </div>
+<div class="container">
+  <img src="./assets/Death.svg" />
+  <img class="info" src="./assets/information.png" />
   <div class="forms">
     <form [formGroup]="createGameForm" id="create" method="POST" (ngSubmit)="onSubmit(createGameForm.value)">
-      <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
-        <input
-          formControlName="host"
-          required
-          matInput
-          id="host"
-          type="text"
-          autocomplete="off"
-        />
-      </mat-form-field>
-      <button
-        (click)="onSubmit(createGameForm.value)"
-        type="submit"
-      >
+      <input formControlName="host" required id="host" type="text" autocomplete="off" placeholder="Name"/>
+      <button (click)="onSubmit(createGameForm.value)" type="submit">
         Create game
       </button>
     </form>
     <form [formGroup]="joinGameForm" id="join" method="POST">
-      <mat-form-field appearance="outline">
-        <mat-label>Game id</mat-label>
-        <input matInput id="gameId" formControlName="id" autocomplete="off" />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
-        <input matInput id="name" formControlName="name" autocomplete="off" />
-      </mat-form-field>
-      <button
-        (click)="joinGame(joinGameForm.value)"
-        type="submit"
-      >
+      <input id="gameId" formControlName="id" autocomplete="off" placeholder="Game ID" />
+      <input id="name" formControlName="name" autocomplete="off" placeholder="Name" />
+      <button (click)="joinGame(joinGameForm.value)" type="submit">
         Join game
       </button>
     </form>
   </div>
+</div>

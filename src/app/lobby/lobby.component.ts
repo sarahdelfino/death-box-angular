@@ -20,6 +20,7 @@ export class LobbyComponent implements OnInit {
   game: Game | undefined;
   started: boolean;
   isHost: boolean;
+  test: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +36,7 @@ export class LobbyComponent implements OnInit {
     } else {
       this.isHost = false;
     }
+    console.log("hst: " + this.isHost);
     this.getId();
     // this.id = this.gameService.getId();
     // this.getHost();
@@ -47,6 +49,8 @@ export class LobbyComponent implements OnInit {
       }
     })
     this.getPlayers();
+    // this.test.push(localStorage.getItem('user'), 0);
+    // this.db.addPlayer(this.id, this.test);
   }
 
   getId(): void {

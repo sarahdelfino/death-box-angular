@@ -90,10 +90,6 @@ export class GameService {
     return this.table.stacks;
   }
 
-  public getStackLength() {
-    return this.table.stacks.length;
-  }
-
   public drawCard() {
     return this.deck.pop();
   }
