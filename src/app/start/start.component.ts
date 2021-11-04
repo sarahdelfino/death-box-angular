@@ -4,8 +4,10 @@ import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { nanoid } from "nanoid";
 import { Game } from '../game';
+import { MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatabaseService } from '../database.service';
 import { GameService } from '../game.service';
+import { InfoComponent } from '../info/info.component';
 
 @Component({
   selector: 'app-start',
@@ -24,6 +26,7 @@ export class StartComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private dbService: DatabaseService,
+    private dialog: MatDialog,
     private gameService: GameService
     
     ) { }
@@ -40,6 +43,12 @@ export class StartComponent implements OnInit {
   }
 
   get f() { return this.createGameForm.controls; }
+
+  onClick() {
+    const dialogConfig = new MatDialogConfig();
+
+    const dialogRef = this.dialog.open(InfoComponent);
+  }
 
   onSubmit(formData) {
     this.submitted = true;

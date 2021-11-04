@@ -24,6 +24,16 @@ body {
   grid-template-rows: repeat(3, 33%);
 }
 
+.info {
+  position: absolute;
+  top: 10px;
+  right: 25px;
+}
+
+.info:hover {
+  cursor: pointer;
+}
+
 /*
 .card-container {
     max-width: 750px;

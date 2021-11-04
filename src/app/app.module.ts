@@ -29,6 +29,7 @@ import { StartComponent } from './start/start.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { PlayersComponent } from './players/players.component';
 import { DeckComponent } from './deck/deck.component';
+import { InfoComponent } from './info/info.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { DeckComponent } from './deck/deck.component';
     LobbyComponent,
     PlayersComponent,
     DeckComponent,
+    InfoComponent,
   ],
   imports: [
     BrowserModule,

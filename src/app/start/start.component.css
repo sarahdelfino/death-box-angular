@@ -26,6 +26,10 @@ img {
     left: 75px;
 }
 
+.info:hover {
+    cursor: pointer;
+}
+
 hr {
     width: 75%;
     margin-top: 50px;

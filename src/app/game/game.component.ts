@@ -9,6 +9,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Coord } from 'src/coord';
 import { DatabaseService } from '../database.service';
 import { Player } from '../player';
+import { InfoComponent } from '../info/info.component';
 
 
 @Component({
@@ -89,6 +90,12 @@ export class GameComponent implements OnInit, OnDestroy {
   getCurCounter(event: any) {
     this.currentCounter = event;
     console.log("counter: " + this.currentCounter);
+  }
+
+  onClick() {
+    const dialogConfig = new MatDialogConfig();
+
+    const dialogRef = this.dialog.open(InfoComponent);
   }
 
   count() {

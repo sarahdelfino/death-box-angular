@@ -1,6 +1,6 @@
 <div class="container">
   <img src="./assets/Death.svg" />
-  <img class="info" src="./assets/information.png" />
+  <img class="info" src="./assets/information.png" (click)="onClick()"/>
   <div class="forms">
     <form [formGroup]="createGameForm" id="create" method="POST" (ngSubmit)="onSubmit(createGameForm.value)">
       <input formControlName="host" required id="host" type="text" autocomplete="off" placeholder="Name"/>
