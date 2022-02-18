@@ -11,11 +11,9 @@ import { Player } from '../player';
 })
 export class PlayersComponent implements OnInit {
   players: any[] = [];
-  // seconds: number[] = [];
   id: string;
   currentPlayer: string;
   changeLog = [];
-  // turns = 0;
 
   @Input() public turn: number;
   @Input() seconds: number;
@@ -30,11 +28,29 @@ export class PlayersComponent implements OnInit {
 
   ngOnInit() {
     this.getId();
-    this.getPlayers();
-    // this.currentPlayer = this.players[0];
-    this.db.getCurrentPlayer(this.id).valueChanges().subscribe(data => {
-      this.currentPlayer = data;
-      // console.log(this.currentPlayer);
+    // this.getPlayers();
+    this.db.getPlayers(this.id).valueChanges().subscribe(data => {
+      this.players = []
+      // initial grab
+      // if (this.players.length == 0 || this.players == null || this.players == undefined) {
+      for (let x in data) {
+        this.players.push(data[x]);
+        if (data[x].currentPlayer) {
+          this.currentPlayer = data[x].name;
+        }
+      }
+      // console.log(this.turn);
+      //   // this.players.push(data[x]);
+      // } else {
+      //   for (let y in data) {
+      //     if (data[y].currentPlayer) {
+      //       this.setPlayerScore(data[y].name, parseInt(data[y].secondsDrank));
+      //     }
+      //   }
+      // }
+      // this.players.push(data);
+      // console.log({ heyYYYYYYYYY: data});
+      // this.players = data;
     });
   }
 
@@ -43,13 +59,16 @@ export class PlayersComponent implements OnInit {
       const chng = changes[propName];
       const cur = JSON.stringify(chng.currentValue);
       // console.log(chng.currentValue);
-      if (this.currentPlayer && cur == '0') {
-        // console.log(this.currentPlayer);
-        this.setCurrentPlayer(this.currentPlayer);
-        this.curCounter.emit(this.currentPlayer);
+      console.log(chng);
+      if (chng.firstChange == false &&
+        this.currentPlayer &&
+        cur == '0') {
+        console.log(this.currentPlayer);
+        // get new player
+        this.getNextPlayer(this.players.findIndex(p => p.name === this.currentPlayer));
       }
     }
-    if (this.seconds) {
+    if (this.seconds && this.seconds != 0) {
       this.setPlayerScore(this.currentPlayer, this.seconds);
     }
   }
@@ -61,42 +80,48 @@ export class PlayersComponent implements OnInit {
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
       for (let x in data) {
+        if (data[x].currentPlayer) {
+          this.currentPlayer = data[x].name;
+        }
         this.players.push(data[x]);
       }
-    })
-
+    });
+    console.log(this.currentPlayer);
   }
 
   setPlayerScore(player: string, seconds: number) {
+    console.log(this.players);
     for (let p in this.players) {
       if (this.players[p].name == player) {
-        this.players[p] = {
-          name: player,
-          seconds: this.players[p].seconds + seconds
-        }
+        console.log("EX: " + this.players[p].secondsDrank + " SEC: " + seconds);
+        this.players[p].secondsDrank = this.players[p].secondsDrank + seconds;
+        console.log(this.players);
+        this.db.updatePlayers(this.id, this.players);
+        this.seconds = 0;
       }
     }
-    console.log(this.players);
-    this.db.updateSeconds(this.id, this.players);
-    this.seconds = 0;
-    this.players = [];
   }
 
   getCurrentPlayer(id: string) {
     this.db.getCurrentPlayer(id).valueChanges().subscribe(data => {
       this.currentPlayer = data;
       console.log(this.currentPlayer);
-    })
+    });
+    return this.currentPlayer;
   }
 
-  setCurrentPlayer(player: any) {
-    var currIndex = this.players.findIndex(p => p.name === player);
-    if (currIndex < this.players.length - 1) {
-      this.db.setCurrentPlayer(this.id, this.players[currIndex + 1].name);
+  getNextPlayer(playerIndex: any) {
+    let newIndex = 0;
+
+    delete this.players[playerIndex].currentPlayer;
+
+    if (playerIndex == this.players.length - 1) {
+      this.players[newIndex].currentPlayer = true;
     } else {
-      this.db.setCurrentPlayer(this.id, this.players[0].name);
+      newIndex = playerIndex + 1;
+      this.players[newIndex].currentPlayer = true;
     }
+    this.db.updatePlayers(this.id, this.players);
   }
-
 
 }

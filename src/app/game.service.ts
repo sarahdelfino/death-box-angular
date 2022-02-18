@@ -62,12 +62,12 @@ export class GameService {
     return id;
   }
 
-  getDeck() {
-    this.db.getDeck(this.getId()).valueChanges().subscribe(data => {
-      this.deck = data;
-      console.log(this.deck);
-    })
-  }
+  // getDeck() {
+  //   this.db.getDeck(this.getId()).valueChanges().subscribe(data => {
+  //     this.deck = data;
+  //     console.log(this.deck);
+  //   })
+  // }
 
   createStacks(deck) {
     for (let i = 0; i < 9; i++) {

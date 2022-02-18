@@ -52,8 +52,12 @@ export class DatabaseService {
     return this.playersList;
   }
 
-  updateSeconds(id: string, players: any) {
+  updatePlayers(id: string, players: any) {
     firebase.database().ref('/players/' + id + '/').set(players);
+  }
+
+  updateSeconds(id: string, player: string, seconds: number) {
+    firebase.database().ref('/players/' + id + '/' + player + '/secondsDrank/').set(seconds);
   }
 
   getCurrentPlayer(id: string) {
@@ -62,18 +66,15 @@ export class DatabaseService {
   }
 
   setCurrentPlayer(id: string, name: string) {
-    firebase.database().ref('/games/' + id + '/currentPlayer/').set(name);
+    firebase.database().ref('/players/' + id + '/currentPlayer/').set(name);
   }
 
-   create(game: Game, deck, stacks): any {
+   create(game: Game): any {
     firebase.database().ref('/games/' + game.id).set({
       host: game.host,
-      currentPlayer: game.host,
-      deck: deck,
-      stacks: stacks,
       started: false
     });
-    this.addPlayer(game.id, game.host);
+    this.addPlayer(game.id, game.host, true);
    }
 
    getDeck(id: string) {
@@ -81,10 +82,10 @@ export class DatabaseService {
     return this.deckList;
    }
 
-   updateDeck(id: string, deck: any) {
-     console.log(deck);
-     firebase.database().ref('/games/' + id + '/deck/').set(deck);
-   }
+  //  updateDeck(id: string, deck: any) {
+  //    console.log(deck);
+  //    firebase.database().ref('/games/' + id + '/deck/').set(deck);
+  //  }
 
    updateStacks(id: string, stacks: any) {
      firebase.database().ref('/games/' + id + '/stacks/').update(stacks);
@@ -94,36 +95,18 @@ export class DatabaseService {
      return firebase.database().ref('/games/' + id + '/stacks/' + stack + '/');
    }
 
-  //  addPlayer(id: string, players: any) {
-  //    firebase.database().ref('/players/' + id + '/').set(players);
-  //  }
-
-   update(id: string, val: any): Promise<void> {
-     let playerCount = 0;
-     playerCount += 1;
-     var p = "player";
-     p = "player" + playerCount.toString();
-     return firebase.database().ref('/players/' + id + '/' + p + '/').set({
-      "name": val,
-      "secondsDrank": 0});
+   addPlayer(id: string, name: string, currentPlayer?: boolean) {
+    if (typeof currentPlayer !== 'undefined') {
+      firebase.database().ref('/players/' + id + '/' + name + '/').set({
+        "name": name,
+        "secondsDrank": 0,
+        "currentPlayer": true});
+    } else {
+      firebase.database().ref('/players/' + id + '/' + name + '/').set({
+        "name": name,
+        "secondsDrank": 0});
+    }
    }
-
-  addPlayer(id, name) {
-    // A post entry.
-    var postData = {
-      name: name,
-      seconds: 0
-    };
-  
-    // Get a key for a new Post.
-    var newPostKey = firebase.database().ref('players').child(id).push().key;
-  
-    // Write the new post's data simultaneously in the posts list and the user's post list.
-    var updates = {};
-    updates['/players/' + id + '/' + newPostKey + '/'] = postData;
-  
-    return firebase.database().ref().update(updates);
-  }
 
    deleteGame(id: string): Promise<void> {
      this.deletePlayers(id);

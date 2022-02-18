@@ -41,6 +41,10 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (localStorage.getItem('host') == 'true') {
       this.isHost = true;
+      this.id = this._gameService.getId();
+      this.deck = this._gameService.createDeck();
+      console.log(this.deck);
+      this.stacks = this._gameService.createStacks(this.deck);
     } else {
       this.isHost = false;
     }
@@ -48,17 +52,21 @@ export class GameComponent implements OnInit, OnDestroy {
       console.log("hi");
     }
     // this.getId();
-    this.id = this._gameService.getId();
+
+
+    // this.id = this._gameService.getId();
     // this.deck = this._gameService.createDeck();
     // console.log(this.deck);
-    // this.stacks = this._gameService.createStacks();
-    this.db.getGame(this.id).valueChanges().subscribe(data => {
-      // console.log(data);
-      this.deck = data.deck;
-      // console.log(this.deck);
-      this.stacks = data.stacks;
-      // console.log(this.stacks);
-    });
+    // this.stacks = this._gameService.createStacks(this.deck);
+
+
+    // this.db.getGame(this.id).valueChanges().subscribe(data => {
+    //   console.log(data);
+    //   this.deck = data.deck;
+    //   console.log(this.deck);
+    //   this.stacks = data.stacks;
+    //   console.log(this.stacks);
+    // });
     // this._gameService.getDeck();
     // this.socketService.getDeck().subscribe(x => {
     //   // console.log(x);
@@ -110,8 +118,8 @@ export class GameComponent implements OnInit, OnDestroy {
   addToStack(i, card) {
     // add card to the top of the stack
     this.stacks[i].unshift(card);
-    this.db.updateStacks(this._gameService.getId(), this.stacks);
-    this.db.updateDeck(this._gameService.getId(), this.deck);
+    // this.db.updateStacks(this._gameService.getId(), this.stacks);
+    // this.db.updateDeck(this._gameService.getId(), this.deck);
   }
 
   clickedCard(card: Card) {
@@ -213,7 +221,7 @@ export class GameComponent implements OnInit, OnDestroy {
     });
     this._gameService.shuffle(this.deck);
     console.log(this.stacks);
-    this.db.updateStacks(this.id, this.stacks);
-    this.db.updateDeck(this.id, this.deck);
+    // this.db.updateStacks(this.id, this.stacks);
+    // this.db.updateDeck(this.id, this.deck);
   }
 }

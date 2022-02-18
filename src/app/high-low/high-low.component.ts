@@ -56,7 +56,6 @@ export class HighLowComponent implements OnInit {
     // console.log(this.card);
     this.newCard = data.data.newCrd;
     this.stackLength = data.data.ln;
-    console.log(this.stackLength);
     if (parseInt(this.card.value) <= 10 && parseInt(this.card.value) >= 2) {
       this.title = `Higher or lower than ${this.card.value}?`;
     } else if (parseInt(this.card.value) == 11) {

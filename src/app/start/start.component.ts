@@ -68,10 +68,9 @@ export class StartComponent implements OnInit {
     //   console.log("created new game");
     // });
     console.log(this.game);
-    let deck = this.gameService.createDeck();
-    let stacks = this.gameService.createStacks(deck);
-    console.log(stacks);
-    this.dbService.create(this.game, deck, stacks);
+    // let deck = this.gameService.createDeck();
+    // let stacks = this.gameService.createStacks(deck);
+    this.dbService.create(this.game);
     // this.dbService.addPlayer(this.game.id, this.game.host);
     // this.dbService.addPlayer(this.game.id, [{player: this.game.host, seconds: 0}]);
     localStorage.setItem('user', this.game.host);
