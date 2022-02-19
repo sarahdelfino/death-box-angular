@@ -10,6 +10,7 @@ import { Coord } from 'src/coord';
 import { DatabaseService } from '../database.service';
 import { Player } from '../player';
 import { InfoComponent } from '../info/info.component';
+import { Game } from '../game';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public stacks: any = [];
   public choice = "";
   public turns = 0;
+  public game: Game;
   currentCounter: string;
   id: string;
   newCard: Card;
@@ -41,7 +43,11 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (localStorage.getItem('host') == 'true') {
       this.isHost = true;
-      this.id = this._gameService.getId();
+      // this.id = this._gameService.getId();
+      this.id = this.getId();
+      // this.db.getGame(this.id).valueChanges().subscribe(data => {
+      //   console.log(data);
+      // });
       this.deck = this._gameService.createDeck();
       console.log(this.deck);
       this.stacks = this._gameService.createStacks(this.deck);
@@ -51,28 +57,6 @@ export class GameComponent implements OnInit, OnDestroy {
     if (localStorage.getItem('user') == this.currentCounter) {
       console.log("hi");
     }
-    // this.getId();
-
-
-    // this.id = this._gameService.getId();
-    // this.deck = this._gameService.createDeck();
-    // console.log(this.deck);
-    // this.stacks = this._gameService.createStacks(this.deck);
-
-
-    // this.db.getGame(this.id).valueChanges().subscribe(data => {
-    //   console.log(data);
-    //   this.deck = data.deck;
-    //   console.log(this.deck);
-    //   this.stacks = data.stacks;
-    //   console.log(this.stacks);
-    // });
-    // this._gameService.getDeck();
-    // this.socketService.getDeck().subscribe(x => {
-    //   // console.log(x);
-    //   this.deck.push(x);
-    //   console.log(this.deck);
-    // })
   }
 
   ngOnDestroy() {
@@ -89,11 +73,10 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-  // getId() {
-  //   const id = this.route.snapshot.paramMap.get('id');
-  //   this.socketService.getGame(id).subscribe(id => this.id = id);
-  //   return id;
-  // }
+  getId(): string {
+    const id = this.route.snapshot.paramMap.get('id');
+    return id;
+  }
 
   getCurCounter(event: any) {
     this.currentCounter = event;
@@ -102,13 +85,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   onClick() {
     const dialogConfig = new MatDialogConfig();
-
     const dialogRef = this.dialog.open(InfoComponent);
-  }
-
-  count() {
-    console.log("hey");
-    // this.db.updateSeconds(this.id, this.currentCounter, this.seconds);
   }
 
   getLength(i) {
@@ -118,8 +95,6 @@ export class GameComponent implements OnInit, OnDestroy {
   addToStack(i, card) {
     // add card to the top of the stack
     this.stacks[i].unshift(card);
-    // this.db.updateStacks(this._gameService.getId(), this.stacks);
-    // this.db.updateDeck(this._gameService.getId(), this.deck);
   }
 
   clickedCard(card: Card) {
@@ -183,6 +158,8 @@ export class GameComponent implements OnInit, OnDestroy {
           }
         } else {
           this.seconds = data[3];
+          this.db.updateGameSeconds(this.id, this.seconds);
+          console.log(data);
         }
       }
     )
@@ -221,7 +198,5 @@ export class GameComponent implements OnInit, OnDestroy {
     });
     this._gameService.shuffle(this.deck);
     console.log(this.stacks);
-    // this.db.updateStacks(this.id, this.stacks);
-    // this.db.updateDeck(this.id, this.deck);
   }
 }

@@ -8,8 +8,8 @@
       </button>
     </form>
     <form [formGroup]="joinGameForm" id="join" method="POST">
-      <input id="gameId" formControlName="id" autocomplete="off" placeholder="Game ID" />
-      <input id="name" formControlName="name" autocomplete="off" placeholder="Name" />
+      <input id="gameId" formControlName="id" required autocomplete="off" placeholder="Game ID" />
+      <input id="name" formControlName="name" required autocomplete="off" placeholder="Name" />
       <button (click)="joinGame(joinGameForm.value)" type="submit">
         Join game
       </button>

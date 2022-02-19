@@ -65,9 +65,11 @@ export class LobbyComponent implements OnInit {
 
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
-      this.playerList = data;
-    })
-
+      // this.playerList = data;
+      for(let p in data) {
+        this.playerList.push(data[p]);
+      }
+    });
   }
 
   startGame() {

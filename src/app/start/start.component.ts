@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -15,7 +15,9 @@ import { InfoComponent } from '../info/info.component';
   styleUrls: ['./start.component.css']
 })
 export class StartComponent implements OnInit {
+  // @Output() game = new EventEmitter<Game>();
   game: Game;
+
   createGameForm: FormGroup;
   joinGameForm: FormGroup;
   submitted = false;
@@ -28,16 +30,16 @@ export class StartComponent implements OnInit {
     private dbService: DatabaseService,
     private dialog: MatDialog,
     private gameService: GameService
-    
-    ) { }
+
+  ) { }
 
   ngOnInit() {
     this.createGameForm = this.formBuilder.group({
       host: ['', [Validators.required, Validators.minLength(2)]],
     });
     this.joinGameForm = this.formBuilder.group({
-      id: '',
-      name: ''
+      id: ['', [Validators.required, Validators.minLength(5)]],
+      name: ['', [Validators.required, Validators.minLength(2)]]
     });
     // this.socketService.setupSocketConnection();
   }
@@ -55,47 +57,40 @@ export class StartComponent implements OnInit {
     // stop here if form invalid
     if (this.createGameForm.invalid) {
       return;
+    } else {
+      this.createGame(formData);
     }
-    this.createGame(formData)
   }
 
   createGame(formData) {
     this.createGameId(formData.host);
-    console.log(formData.host);
-    // this.socketService.setupSocketConnection(this.game);
-    // console.log(this.game.players);
-    // this.dbService.create(this.game).then(() => {
-    //   console.log("created new game");
-    // });
     console.log(this.game);
-    // let deck = this.gameService.createDeck();
-    // let stacks = this.gameService.createStacks(deck);
     this.dbService.create(this.game);
-    // this.dbService.addPlayer(this.game.id, this.game.host);
-    // this.dbService.addPlayer(this.game.id, [{player: this.game.host, seconds: 0}]);
     localStorage.setItem('user', this.game.host);
     localStorage.setItem('host', 'true');
     this.router.navigateByUrl(`/lobby/${this.game.id}`);
   }
 
   joinGame(joinFormData) {
-    console.log(joinFormData);
-    // console.log(this.game.players);
-    this.dbService.addPlayer(joinFormData.id, joinFormData.name);
-    localStorage.setItem('user', joinFormData.name);
-    localStorage.setItem('host', 'false');
-    this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
+    if (this.joinGameForm.invalid) {
+      return;
+    } else {
+      console.log(joinFormData);
+      this.dbService.addPlayer(joinFormData.id, joinFormData.name);
+      localStorage.setItem('user', joinFormData.name);
+      localStorage.setItem('host', 'false');
+      this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
+    }
   }
 
   onReset() {
     this.submitted = false;
     this.createGameForm.reset();
-}
+  }
 
-  createGameId(host) {
-    console.log(host);
+  createGameId(host: string) {
     var id = nanoid(5);
-    this.game = new Game(id, host, [host]);
+    this.game = new Game(id, host, false, host);
   }
 
 }

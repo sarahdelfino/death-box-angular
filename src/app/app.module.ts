@@ -30,6 +30,7 @@ import { LobbyComponent } from './lobby/lobby.component';
 import { PlayersComponent } from './players/players.component';
 import { DeckComponent } from './deck/deck.component';
 import { InfoComponent } from './info/info.component';
+import { CountComponent } from './count/count.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { InfoComponent } from './info/info.component';
     PlayersComponent,
     DeckComponent,
     InfoComponent,
+    CountComponent,
   ],
   imports: [
     BrowserModule,

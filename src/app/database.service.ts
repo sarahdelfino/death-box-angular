@@ -14,9 +14,8 @@ import { Player } from './player';
 export class DatabaseService {
 
   private dbPath = '/games';
-  gamesList: AngularFireList<Game> = null;
-  gameRef: AngularFireObject<any> = null;
-  playersList: AngularFireList<Player> = null;
+  gameObj: AngularFireObject<Game> = null;
+  playersObj: AngularFireObject<Player> = null;
   deckList: AngularFireList<Card> = null;
   playersObject: AngularFireObject<Player> = null;
   host = null;
@@ -27,17 +26,15 @@ export class DatabaseService {
 
 
   constructor(private db: AngularFireDatabase) {
-    this.gamesList = db.list('/games/');
     this.database = firebase.database();
     this.gamesRef = firebase.database().ref('games');
     this.playersRef = firebase.database().ref('players');
-    
    }
 
   // Fetch Single Game Object
   getGame(id: string) {
-    this.gameRef = this.db.object('games/' + id);
-    return this.gameRef;
+    this.gameObj = this.db.object('games/' + id);
+    return this.gameObj;
   }
 
   setStart(id: string) {
@@ -47,9 +44,8 @@ export class DatabaseService {
   }
 
   getPlayers(id: string) {
-    // this.playersList = this.db.list('players/' + id);
-    this.playersList = this.db.list('players/' + id);
-    return this.playersList;
+    this.playersObj = this.db.object('players/' + id);
+    return this.playersObj;
   }
 
   updatePlayers(id: string, players: any) {
@@ -60,9 +56,13 @@ export class DatabaseService {
     firebase.database().ref('/players/' + id + '/' + player + '/secondsDrank/').set(seconds);
   }
 
+  updateGameSeconds(id: string, seconds: number) {
+    firebase.database().ref('/games/' + id + '/seconds/').set(seconds);
+  }
+
   getCurrentPlayer(id: string) {
-    this.gameRef = this.db.object('games/' + id + '/currentPlayer/');
-    return this.gameRef;
+    this.gameObj = this.db.object('games/' + id + '/currentPlayer/');
+    return this.gameObj;
   }
 
   setCurrentPlayer(id: string, name: string) {
@@ -110,7 +110,7 @@ export class DatabaseService {
 
    deleteGame(id: string): Promise<void> {
      this.deletePlayers(id);
-     return this.gamesList.remove(id);
+     return this.gameObj.remove();
    }
 
    deletePlayers(id: string): Promise<void> {
@@ -118,7 +118,7 @@ export class DatabaseService {
    }
 
    deleteAll(): Promise<void> {
-     return this.gamesList.remove();
+     return this.gameObj.remove();
    }
 
 }
