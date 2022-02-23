@@ -1,6 +1,4 @@
 <div class="container">
-  <!-- <h2 mat-dialog-title>Higher or Lower?</h2> -->
-  <h2 mat-dialog-title>{{this.title}}</h2>
   <div mat-dialog-content>
     <!-- <app-deck [card]="newCard"></app-deck> -->
     <div class="stack">
@@ -14,17 +12,21 @@
         <img class="fce" [src]="newCard.cardPath" />
       </div>
     </div>
+    <!-- <div class="counting" *ngIf="this.wrongGuess == true" [@fadeViewOut]="this.wrongGuess ? 'in' : 'out'"
+      (@fadeViewOut.done)="finishedAnimations($event)"> -->
+    <div class="counting" @fadeViewOut *ngIf="this.wrongGuess === true"
+      (@fadeViewOut.done)="finishedAnimations($event)">
+      <h2>Wrong! Drink for</h2>
+      <h2 class="counter">{{this.counter}}</h2>
+      <h2>{{this.text}}!</h2>
+    </div>
+    <!-- <div *ngIf="this.wrongGuess == undefined" [@fadeViewIn]="this.wrongGuess ? 'in' : 'out'"> -->
+    <div @fadeViewIn *ngIf="!this.wrongGuess">
+      <h2 mat-dialog-title>{{this.title}}</h2>
+      <mat-dialog-actions align="center">
+        <img class="arrow" mat-button src="../../assets/up-arrow.png" (click)="higher()" />
+        <img class="arrow" mat-button src="../../assets/down-arrow.png" (click)="lower()" />
+      </mat-dialog-actions>
+    </div>
   </div>
-  <mat-dialog-actions align="center">
-    <img class="arrow"
-      mat-button
-      src="../../assets/up-arrow.png"
-      (click)="higher()"
-    />
-    <img class="arrow"
-      mat-button
-      src="../../assets/down-arrow.png"
-      (click)="lower()"
-    />
-  </mat-dialog-actions>
 </div>

@@ -31,9 +31,15 @@ export class StartComponent implements OnInit {
     private dialog: MatDialog,
     private gameService: GameService
 
-  ) { }
+  ) { 
+    this.createForm();
+  }
 
   ngOnInit() {
+
+  }
+
+  createForm(): void {
     this.createGameForm = this.formBuilder.group({
       host: ['', [Validators.required, Validators.minLength(2)]],
     });
@@ -41,7 +47,6 @@ export class StartComponent implements OnInit {
       id: ['', [Validators.required, Validators.minLength(5)]],
       name: ['', [Validators.required, Validators.minLength(2)]]
     });
-    // this.socketService.setupSocketConnection();
   }
 
   get f() { return this.createGameForm.controls; }

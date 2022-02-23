@@ -2,6 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, Inject, OnInit, Input, SimpleChanges } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Card } from '../card/card';
+import { DatabaseService } from '../database.service';
 import { GameService } from '../game.service';
 
 export interface CardData {
@@ -27,11 +28,24 @@ export interface CardData {
           transform: "rotateY(180deg)",
         })
       ),
-      transition("default => flipped", [animate("200ms")]),
-      transition("flipped => default", [animate("400ms")])
-    ])
+      transition("default => flipped", [animate('200ms .2s',)]),
+      transition("flipped => default", [animate("400ms")]),
+    ]),
+    trigger('fadeViewIn', [
+      // state("in", style({ opacity: 1 })),
+      transition(":enter", [
+        style({ opacity: 0 }),
+        animate('4s', style({ opacity: 1 }))]),
+    ]),
+    trigger('fadeViewOut', [
+      // state("out", style({ opacity: 0 })),
+      transition(":leave", [
+        style({ opacity: 1 }),
+        animate('2s 3s', style({ opacity: 0 }))]),
+    ]),
   ]
 })
+
 export class HighLowComponent implements OnInit {
 
   // @Input()
@@ -46,16 +60,22 @@ export class HighLowComponent implements OnInit {
   };
   title: string;
   stackLength: number;
+  counter: number;
+  wrongGuess: boolean;
+  text: string;
+  gameId: string;
 
   constructor(
     public dialogRef: MatDialogRef<HighLowComponent>,
     private gameService: GameService,
+    private db: DatabaseService,
     @Inject(MAT_DIALOG_DATA) data) {
     // console.log(data.data);
     this.card = data.data.crd[0];
     // console.log(this.card);
     this.newCard = data.data.newCrd;
     this.stackLength = data.data.ln;
+    this.gameId = data.data.gameId;
     if (parseInt(this.card.value) <= 10 && parseInt(this.card.value) >= 2) {
       this.title = `Higher or lower than ${this.card.value}?`;
     } else if (parseInt(this.card.value) == 11) {
@@ -70,6 +90,7 @@ export class HighLowComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.db.
 
   }
 
@@ -85,17 +106,68 @@ export class HighLowComponent implements OnInit {
     if ($event.fromState != 'void') {
       let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
       let data = [this.card, this.newCard, compare, this.stackLength];
-      if (compare == true) {
-        this.title = "Correct!";
-      } else if (compare == false && this.stackLength > 1) {
-        this.title = `Wrong! Drink for ${this.stackLength} seconds`;
+      if (compare == false) {
+        // this.counter = this.stackLength;
+        // this.db.updateCounting(this.gameId);
+        // this.db.updateGameSeconds(this.gameId, this.stackLength);
+        this.getGame(this.gameId);
+        // this.db.getGame(this.gameId).valueChanges().subscribe(c => {
+        //   console.log(c);
+        //   this.counter = c.seconds;
+        //   console.log(this.counter);
+        //   if (this.counter != 1) {
+        //     this.text = "seconds";
+        //   } else {
+        //     this.text = "second";
+        //   }
+        //   if (this.counter = 0 && !c.counting) {
+        //     console.log(c);
+        //     let timer = setTimeout(() => {
+        //       this.dialogRef.close(data);
+        //     }, 800);
+        //   }
+        //   // console.log(this.counter);
+        // })
+        this.wrongGuess = true;
+        // console.log("here", this.wrongGuess);
       } else {
-        this.title = `Wrong! Drink for ${this.stackLength} second`;
+        this.title = "Correct!";
+        let timer = setTimeout(() => {
+          this.dialogRef.close(data);
+        }, 1000);
       }
-      let timer = setTimeout(() => {
-        this.dialogRef.close(data);
-      }, 1000);
+      // let timer = setTimeout(() => {
+      //   this.dialogRef.close(data);
+      // }, 1000);
     }
+  }
+
+  getGame(id: string) {
+    this.db.getGame(id).valueChanges().subscribe(c => {
+      console.log(c);
+      this.counter = c.seconds;
+      console.log(this.counter);
+      if (this.counter != 1) {
+        this.text = "seconds";
+      } else {
+        this.text = "second";
+      }
+      if (this.counter = 0 && !c.counting) {
+        console.log(c);
+        let timer = setTimeout(() => {
+          this.dialogRef.close();
+        }, 800);
+      }
+      // console.log(this.counter);
+    })
+  }
+
+  finishedAnimations($event) {
+    console.log($event);
+    // TODO: make call to start counting event
+    this.db.updateCounting(this.gameId);
+    this.db.updateGameSeconds(this.gameId, this.stackLength);
+
   }
 
   higher() {
@@ -107,7 +179,4 @@ export class HighLowComponent implements OnInit {
     this.choice = "lower";
     this.cardFlip();
   }
-
-
-
 }

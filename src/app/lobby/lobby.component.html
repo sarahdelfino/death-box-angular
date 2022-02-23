@@ -4,9 +4,9 @@
   </div>
   <h3>Host: {{ this.host }}</h3>
   <div *ngIf="this.isHost == true">
-  <button (click)="startGame()">Start game</button>
-</div>
-    <h2>Players</h2>
+    <button (click)="startGame()">Start game</button>
+  </div>
+  <h2>Players</h2>
   <div *ngFor="let player of playerList">
     <p>{{ player.name }}</p>
   </div>

@@ -22,4 +22,8 @@ describe('StartComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // it('should create forms', () => {
+  //   expect(this.createGameForm).toBe
+  // })
 });

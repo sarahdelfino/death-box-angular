@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Game } from '../game';
 import { DatabaseService } from '../database.service';
 import { GameService } from '../game.service';
@@ -12,15 +12,15 @@ import { Player } from '../player';
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.css']
 })
-export class LobbyComponent implements OnInit {
+export class LobbyComponent implements OnInit, OnDestroy {
   id: string;
   host: string;
   playerList: Player[] = [];
-  players: Observable<string[]>;
   game: Game | undefined;
   started: boolean;
   isHost: boolean;
   test: any;
+  subscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,29 +28,34 @@ export class LobbyComponent implements OnInit {
     private location: Location,
     private gameService: GameService,
     private db: DatabaseService
-    ) { }
-
-  ngOnInit() {
-    if (localStorage.getItem('host') == 'true') {
-      this.isHost = true;
-    } else {
-      this.isHost = false;
-    }
-    console.log("hst: " + this.isHost);
+  ) {
+    // if (localStorage.getItem('host') == 'true') {
+    //   this.isHost = true;
+    // } else {
+    //   this.isHost = false;
+    // }
     this.getId();
-    // this.id = this.gameService.getId();
-    // this.getHost();
-    this.db.getGame(this.id).valueChanges().subscribe(data => {
+    this.subscription = this.db.getGame(this.id).valueChanges().subscribe(data => {
       // console.log(data);
       this.host = data.host,
-      this.started = data.started
+        this.started = data.started
+      if (localStorage.getItem('user') == this.host) {
+        this.isHost = true;
+      } else {
+        this.isHost = false;
+      }
       if (this.started == true) {
         this.router.navigateByUrl(`/play/${this.id}`);
       }
     })
     this.getPlayers();
-    // this.test.push(localStorage.getItem('user'), 0);
-    // this.db.addPlayer(this.id, this.test);
+  }
+
+  ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   getId(): void {
@@ -65,10 +70,13 @@ export class LobbyComponent implements OnInit {
 
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
-      // this.playerList = data;
-      for(let p in data) {
-        this.playerList.push(data[p]);
+      console.log(data);
+      console.log(JSON.stringify(data));
+      for (let p in data) {
+          this.playerList.push(data[p]);
       }
+      this.playerList = this.playerList.filter((v,i,a)=>a.findIndex(t=>(t.name===v.name))===i);
+      console.log(this.playerList);
     });
   }
 

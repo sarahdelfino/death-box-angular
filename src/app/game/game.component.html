@@ -7,7 +7,9 @@
       </ng-container>
     </div>
   </div>
-  <!-- <app-count *ngIf="this.isHost == false" [player]="currentPlayer" class="container inner"></app-count> -->
+  <div *ngIf="this.isHost == false" class="container">
+    <app-count [player]="currentCounter"></app-count>
+  </div>
   <div class="right">
   <app-players [turn]="turns" [seconds]="seconds" (curCounter)="getCurCounter($event)"></app-players>
   <!-- <app-deck [card]="newCard"></app-deck> -->

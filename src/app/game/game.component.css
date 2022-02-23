@@ -6,8 +6,9 @@ body {
 
 .game {
   display: flex;
-  max-width: 750px;
+  max-width: 900px;
   min-width: 700px;
+  max-height: 90vh;
   padding: 20px;
   background-color: white;
   border-radius: 10px;

@@ -2,6 +2,8 @@ import { ThrowStmt } from '@angular/compiler';
 import { Component, Input, OnInit, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../database.service';
+import { Game } from '../game';
+import { GameService } from '../game.service';
 import { Player } from '../player';
 
 @Component({
@@ -15,21 +17,21 @@ export class PlayersComponent implements OnInit {
   currentPlayer: string;
   changeLog = [];
   isHost: boolean;
+  counter = 0;
 
   @Input() public turn: number;
   @Input() seconds: number;
+
 
   @Output() curCounter = new EventEmitter<string>();
 
 
 
   constructor(private db: DatabaseService,
-    private route: ActivatedRoute
-  ) { }
-
-  ngOnInit() {
+    private route: ActivatedRoute,
+    private gameService: GameService
+  ) {
     this.getId();
-    this.getPlayers();
     if (localStorage.getItem('host') == 'true') {
       this.isHost = true;
     } else {
@@ -37,19 +39,21 @@ export class PlayersComponent implements OnInit {
     }
   }
 
+  ngOnInit() {
+    // this.getId();
+    this.getPlayers();
+  }
+
   ngOnChanges(changes: SimpleChanges) {
-    for (const propName in changes) {
-      const chng = changes[propName];
-      const cur = JSON.stringify(chng.currentValue);
-      console.log(chng);
-      if (chng.firstChange == false &&
-        this.currentPlayer &&
-        cur == '0') {
-        // get new player
-        this.getNextPlayer(this.players.findIndex(p => p.name === this.currentPlayer));
-      }
+    if (!this.seconds &&
+      this.currentPlayer &&
+      this.turn == 0) {
+      this.getNextPlayer(this.players.findIndex(p => p.name === this.currentPlayer));
     }
-    if (this.seconds && this.seconds != 0) {
+    // console.log({ seconds: this.seconds });
+    // console.log({ turns: this.turn });
+    if (this.seconds &&
+      this.seconds != 0) {
       this.setPlayerScore(this.currentPlayer, this.seconds);
     }
   }
@@ -85,19 +89,21 @@ export class PlayersComponent implements OnInit {
   }
 
   getNextPlayer(playerIndex: any) {
-    let newIndex = 0;
+    this.gameService.getNextPlayer(playerIndex, this.players);
+  //   let newIndex = 0;
 
-    delete this.players[playerIndex].currentPlayer;
+  //   delete this.players[playerIndex].currentPlayer;
 
-    if (playerIndex == this.players.length - 1) {
-      this.players[newIndex].currentPlayer = true;
-      // this.currentPlayer = this.players[newIndex];
-    } else {
-      newIndex = playerIndex + 1;
-      this.players[newIndex].currentPlayer = true;
-      // this.currentPlayer = this.players[newIndex];
-    }
-    this.db.updatePlayers(this.id, this.players);
+  //   if (playerIndex == this.players.length - 1) {
+  //     this.players[newIndex].currentPlayer = true;
+  //     // this.currentPlayer = this.players[newIndex];
+  //   } else {
+  //     newIndex = playerIndex + 1;
+  //     this.players[newIndex].currentPlayer = true;
+  //     // this.currentPlayer = this.players[newIndex];
+  //   }
+  //   this.db.updatePlayers(this.id, this.players);
+  // }
+
   }
-
 }

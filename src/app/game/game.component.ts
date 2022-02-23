@@ -21,7 +21,6 @@ import { Game } from '../game';
 })
 export class GameComponent implements OnInit, OnDestroy {
 
-  // public deck: Array<Card>;
   public deck: Array<Card>;
   public stacks: any = [];
   public choice = "";
@@ -43,13 +42,9 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (localStorage.getItem('host') == 'true') {
       this.isHost = true;
-      // this.id = this._gameService.getId();
-      this.id = this.getId();
-      // this.db.getGame(this.id).valueChanges().subscribe(data => {
-      //   console.log(data);
-      // });
+      this.id = this._gameService.getId();
       this.deck = this._gameService.createDeck();
-      console.log(this.deck);
+      console.log("HI: ", this.deck);
       this.stacks = this._gameService.createStacks(this.deck);
     } else {
       this.isHost = false;
@@ -61,7 +56,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (localStorage.getItem('host') == 'true') {
-      this.db.deleteGame(this.id);
+      // this.db.deleteGame(this.id);
+      //  TODO: delete player from game
     }
   }
 
@@ -105,7 +101,7 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.deck.length > 1) {
       this.openHighLow(card);
     } else {
-      this.openRemoveStacks();
+      this.removeStacks();
     }
   }
 
@@ -136,8 +132,9 @@ export class GameComponent implements OnInit, OnDestroy {
     let newCrd = this.deck.pop();
     let i = this.stacks.indexOf(card);
     let ln = this.stacks[i].length;
+    let gameId = this.getId();
 
-    dialogConfig.data = { crd, newCrd, ln };
+    dialogConfig.data = { crd, newCrd, ln, gameId };
     dialogConfig.disableClose = true;
 
     const dialogRef = this.dialog.open(HighLowComponent, {
@@ -156,10 +153,10 @@ export class GameComponent implements OnInit, OnDestroy {
           if (this.turns == 3) {
             this.turns = 0;
           }
-        } else {
-          this.seconds = data[3];
-          this.db.updateGameSeconds(this.id, this.seconds);
-          console.log(data);
+        // } else {
+          // this.seconds = data[3];
+          // this.db.updateGameSeconds(this.id, this.seconds);
+          // console.log(data);
         }
       }
     )

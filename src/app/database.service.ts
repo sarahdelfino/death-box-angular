@@ -43,6 +43,24 @@ export class DatabaseService {
     });
   }
 
+  getSeconds(id: string) {
+    console.log(id);
+    this.secondsRef = this.db.object('games/' + id + '/seconds/');
+    return this.secondsRef;
+  }
+
+  decrementSeconds(id: string) {
+    firebase.database()
+    .ref('games')
+    .child(id)
+    .child('seconds')
+    .set(firebase.database.ServerValue.increment(-1))
+  }
+
+  updateCount(id: string, count: number) {
+    firebase.database().ref('games/' + id + '/count/').update(count);
+  }
+
   getPlayers(id: string) {
     this.playersObj = this.db.object('players/' + id);
     return this.playersObj;
@@ -60,6 +78,14 @@ export class DatabaseService {
     firebase.database().ref('/games/' + id + '/seconds/').set(seconds);
   }
 
+  updateCounting(id: string) {
+    firebase.database().ref('/games/' + id + '/counting/').set(true);
+  }
+
+  deleteCounting(id: string) {
+    firebase.database().ref('/games/' + id + '/counting/').remove();
+  }
+
   getCurrentPlayer(id: string) {
     this.gameObj = this.db.object('games/' + id + '/currentPlayer/');
     return this.gameObj;
@@ -75,24 +101,6 @@ export class DatabaseService {
       started: false
     });
     this.addPlayer(game.id, game.host, true);
-   }
-
-   getDeck(id: string) {
-    this.deckList = this.db.list('/games/' + id + '/deck/');
-    return this.deckList;
-   }
-
-  //  updateDeck(id: string, deck: any) {
-  //    console.log(deck);
-  //    firebase.database().ref('/games/' + id + '/deck/').set(deck);
-  //  }
-
-   updateStacks(id: string, stacks: any) {
-     firebase.database().ref('/games/' + id + '/stacks/').update(stacks);
-   }
-
-   getStack(id: string, stack: any) {
-     return firebase.database().ref('/games/' + id + '/stacks/' + stack + '/');
    }
 
    addPlayer(id: string, name: string, currentPlayer?: boolean) {
