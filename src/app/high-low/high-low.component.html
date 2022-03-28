@@ -14,10 +14,10 @@
     </div>
     <!-- <div class="counting" *ngIf="this.wrongGuess == true" [@fadeViewOut]="this.wrongGuess ? 'in' : 'out'"
       (@fadeViewOut.done)="finishedAnimations($event)"> -->
-    <div class="counting" @fadeViewOut *ngIf="this.wrongGuess === true"
+    <div class="counting" @fadeViewOut *ngIf="this.wrongGuess == true"
       (@fadeViewOut.done)="finishedAnimations($event)">
       <h2>Wrong! Drink for</h2>
-      <h2 class="counter">{{this.counter}}</h2>
+      <h2 class="counter">{{this.stackLength}}</h2>
       <h2>{{this.text}}!</h2>
     </div>
     <!-- <div *ngIf="this.wrongGuess == undefined" [@fadeViewIn]="this.wrongGuess ? 'in' : 'out'"> -->

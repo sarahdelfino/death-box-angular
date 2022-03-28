@@ -62,7 +62,7 @@ export class HighLowComponent implements OnInit {
   stackLength: number;
   counter: number;
   wrongGuess: boolean;
-  text: string;
+  text = '';
   gameId: string;
 
   constructor(
@@ -75,6 +75,7 @@ export class HighLowComponent implements OnInit {
     // console.log(this.card);
     this.newCard = data.data.newCrd;
     this.stackLength = data.data.ln;
+    this.counter = this.stackLength;
     this.gameId = data.data.gameId;
     if (parseInt(this.card.value) <= 10 && parseInt(this.card.value) >= 2) {
       this.title = `Higher or lower than ${this.card.value}?`;
@@ -107,29 +108,20 @@ export class HighLowComponent implements OnInit {
       let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
       let data = [this.card, this.newCard, compare, this.stackLength];
       if (compare == false) {
-        // this.counter = this.stackLength;
-        // this.db.updateCounting(this.gameId);
-        // this.db.updateGameSeconds(this.gameId, this.stackLength);
-        this.getGame(this.gameId);
-        // this.db.getGame(this.gameId).valueChanges().subscribe(c => {
-        //   console.log(c);
-        //   this.counter = c.seconds;
-        //   console.log(this.counter);
-        //   if (this.counter != 1) {
-        //     this.text = "seconds";
-        //   } else {
-        //     this.text = "second";
-        //   }
-        //   if (this.counter = 0 && !c.counting) {
-        //     console.log(c);
-        //     let timer = setTimeout(() => {
-        //       this.dialogRef.close(data);
-        //     }, 800);
-        //   }
-        //   // console.log(this.counter);
-        // })
         this.wrongGuess = true;
-        // console.log("here", this.wrongGuess);
+        if (this.counter = 1) {
+          this.text = "second";
+        } else {
+          this.text = "seconds";
+        }
+        this.db.getGame(this.gameId).valueChanges().subscribe(c => {
+          if (this.counter = 0 && !c.counting) {
+            console.log(c);
+            let timer = setTimeout(() => {
+              this.dialogRef.close();
+            }, 800);
+          }
+        })
       } else {
         this.title = "Correct!";
         let timer = setTimeout(() => {
@@ -142,23 +134,20 @@ export class HighLowComponent implements OnInit {
     }
   }
 
+  // below is dumb. remove logic pertaining to counter. rely on c.counting && stackLength
+
   getGame(id: string) {
     this.db.getGame(id).valueChanges().subscribe(c => {
-      console.log(c);
-      this.counter = c.seconds;
-      console.log(this.counter);
-      if (this.counter != 1) {
-        this.text = "seconds";
-      } else {
-        this.text = "second";
-      }
       if (this.counter = 0 && !c.counting) {
         console.log(c);
         let timer = setTimeout(() => {
           this.dialogRef.close();
         }, 800);
+      } else if (this.counter == 1) {
+        this.text = "second";
+      } else {
+        this.text = "seconds";
       }
-      // console.log(this.counter);
     })
   }
 
