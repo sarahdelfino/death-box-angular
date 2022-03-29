@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Inject, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, Inject, OnInit, Input, SimpleChanges, OnDestroy } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { Card } from '../card/card';
 import { DatabaseService } from '../database.service';
 import { GameService } from '../game.service';
@@ -46,7 +47,7 @@ export interface CardData {
   ]
 })
 
-export class HighLowComponent implements OnInit {
+export class HighLowComponent implements OnInit, OnDestroy {
 
   // @Input()
   // public card: Card;
@@ -64,6 +65,7 @@ export class HighLowComponent implements OnInit {
   wrongGuess: boolean;
   text = '';
   gameId: string;
+  subscription: Subscription;
 
   constructor(
     public dialogRef: MatDialogRef<HighLowComponent>,
@@ -76,6 +78,8 @@ export class HighLowComponent implements OnInit {
     this.newCard = data.data.newCrd;
     this.stackLength = data.data.ln;
     this.counter = this.stackLength;
+    console.log(this.stackLength);
+    console.log(this.counter);
     this.gameId = data.data.gameId;
     if (parseInt(this.card.value) <= 10 && parseInt(this.card.value) >= 2) {
       this.title = `Higher or lower than ${this.card.value}?`;
@@ -88,11 +92,48 @@ export class HighLowComponent implements OnInit {
     } else {
       this.title = "Higher or lower than an ace?"
     }
+    this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
+      console.log(this.counter);
+      if (this.counter && this.counter == 0) {
+      this.counter = c.seconds;
+      console.log(this.counter);
+      console.log(c);
+      if (this.counter == 1) {
+        this.text = "second";
+      } else {
+        this.text = "seconds";
+      }
+      } else if (this.counter = 0 && !c.counting) {
+        console.log(c);
+        let timer = setTimeout(() => {
+          this.dialogRef.close();
+        }, 800);
+      }
+    })
   }
 
   ngOnInit() {
-    // this.db.
+    // this.db.getGame(this.gameId).valueChanges().subscribe(c => {
+    //   console.log(this.counter);
+    //   this.counter = c.seconds;
+    //   console.log(this.counter);
+    //   console.log(c);
+    //   if (this.counter = 0 && !c.counting) {
+    //     console.log(c);
+    //     let timer = setTimeout(() => {
+    //       this.dialogRef.close();
+    //     }, 800);
+    //   } else if (this.counter == 1) {
+    //     this.text = "second";
+    //   } else {
+    //     this.text = "seconds";
+    //   }
+    // })
+  }
 
+  ngOnDestroy() {
+    this.counter = 0;
+    this.subscription.unsubscribe();
   }
 
   cardFlip() {
@@ -109,19 +150,23 @@ export class HighLowComponent implements OnInit {
       let data = [this.card, this.newCard, compare, this.stackLength];
       if (compare == false) {
         this.wrongGuess = true;
-        if (this.counter = 1) {
+        // console.log(this.stackLength);
+        this.counter = this.stackLength;
+        this.db.updateGameSeconds(this.gameId, this.counter);
+        // console.log(this.counter);
+        if (this.counter == 1) {
           this.text = "second";
         } else {
           this.text = "seconds";
         }
-        this.db.getGame(this.gameId).valueChanges().subscribe(c => {
-          if (this.counter = 0 && !c.counting) {
-            console.log(c);
-            let timer = setTimeout(() => {
-              this.dialogRef.close();
-            }, 800);
-          }
-        })
+        // this.db.getGame(this.gameId).valueChanges().subscribe(c => {
+        //   if (this.counter = 0 && !c.counting) {
+        //     console.log(c);
+        //     let timer = setTimeout(() => {
+        //       this.dialogRef.close();
+        //     }, 800);
+        //   }
+        // })
       } else {
         this.title = "Correct!";
         let timer = setTimeout(() => {
@@ -136,27 +181,28 @@ export class HighLowComponent implements OnInit {
 
   // below is dumb. remove logic pertaining to counter. rely on c.counting && stackLength
 
-  getGame(id: string) {
-    this.db.getGame(id).valueChanges().subscribe(c => {
-      if (this.counter = 0 && !c.counting) {
-        console.log(c);
-        let timer = setTimeout(() => {
-          this.dialogRef.close();
-        }, 800);
-      } else if (this.counter == 1) {
-        this.text = "second";
-      } else {
-        this.text = "seconds";
-      }
-    })
-  }
+  // getGame(id: string) {
+  //   this.db.getGame(id).valueChanges().subscribe(c => {
+  //     this.counter = c.seconds;
+  //     if (this.counter = 0 && !c.counting) {
+  //       console.log(c);
+  //       let timer = setTimeout(() => {
+  //         this.dialogRef.close();
+  //       }, 800);
+  //     } else if (this.stackLength == 1) {
+  //       this.text = "second";
+  //     } else {
+  //       this.text = "seconds";
+  //     }
+  //   })
+  // }
 
   finishedAnimations($event) {
     console.log($event);
     // TODO: make call to start counting event
     this.db.updateCounting(this.gameId);
-    this.db.updateGameSeconds(this.gameId, this.stackLength);
-
+    // console.log(this.counter);
+    // this.db.updateGameSeconds(this.gameId, this.counter);
   }
 
   higher() {

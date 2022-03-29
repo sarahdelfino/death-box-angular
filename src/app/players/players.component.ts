@@ -32,6 +32,7 @@ export class PlayersComponent implements OnInit {
     private gameService: GameService
   ) {
     this.getId();
+    this.getPlayers();
     if (localStorage.getItem('host') == 'true') {
       this.isHost = true;
     } else {
@@ -41,7 +42,7 @@ export class PlayersComponent implements OnInit {
 
   ngOnInit() {
     // this.getId();
-    this.getPlayers();
+    // this.getPlayers();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -50,8 +51,6 @@ export class PlayersComponent implements OnInit {
       this.turn == 0) {
       this.getNextPlayer(this.players.findIndex(p => p.name === this.currentPlayer));
     }
-    // console.log({ seconds: this.seconds });
-    // console.log({ turns: this.turn });
     if (this.seconds &&
       this.seconds != 0) {
       this.setPlayerScore(this.currentPlayer, this.seconds);
@@ -65,7 +64,6 @@ export class PlayersComponent implements OnInit {
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
       console.log(data);
-      this.players = []
       for (let x in data) {
         this.players.push(data[x]);
         if (data[x].currentPlayer) {
@@ -90,20 +88,20 @@ export class PlayersComponent implements OnInit {
 
   getNextPlayer(playerIndex: any) {
     this.gameService.getNextPlayer(playerIndex, this.players);
-  //   let newIndex = 0;
+    //   let newIndex = 0;
 
-  //   delete this.players[playerIndex].currentPlayer;
+    //   delete this.players[playerIndex].currentPlayer;
 
-  //   if (playerIndex == this.players.length - 1) {
-  //     this.players[newIndex].currentPlayer = true;
-  //     // this.currentPlayer = this.players[newIndex];
-  //   } else {
-  //     newIndex = playerIndex + 1;
-  //     this.players[newIndex].currentPlayer = true;
-  //     // this.currentPlayer = this.players[newIndex];
-  //   }
-  //   this.db.updatePlayers(this.id, this.players);
-  // }
+    //   if (playerIndex == this.players.length - 1) {
+    //     this.players[newIndex].currentPlayer = true;
+    //     // this.currentPlayer = this.players[newIndex];
+    //   } else {
+    //     newIndex = playerIndex + 1;
+    //     this.players[newIndex].currentPlayer = true;
+    //     // this.currentPlayer = this.players[newIndex];
+    //   }
+    //   this.db.updatePlayers(this.id, this.players);
+    // }
 
   }
 }

@@ -29,21 +29,20 @@ export class LobbyComponent implements OnInit, OnDestroy {
     private gameService: GameService,
     private db: DatabaseService
   ) {
-    // if (localStorage.getItem('host') == 'true') {
-    //   this.isHost = true;
-    // } else {
-    //   this.isHost = false;
-    // }
+    if (localStorage.getItem('host') == 'true') {
+      this.isHost = true;
+    } else {
+      this.isHost = false;
+    }
     this.getId();
     this.subscription = this.db.getGame(this.id).valueChanges().subscribe(data => {
       // console.log(data);
-      this.host = data.host,
         this.started = data.started
-      if (localStorage.getItem('user') == this.host) {
-        this.isHost = true;
-      } else {
-        this.isHost = false;
-      }
+      // if (localStorage.getItem('user') == this.host) {
+      //   this.isHost = true;
+      // } else {
+      //   this.isHost = false;
+      // }
       if (this.started == true) {
         this.router.navigateByUrl(`/play/${this.id}`);
       }
@@ -62,20 +61,19 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.id = this.route.snapshot.paramMap.get('id');
   }
 
-  getHost(): void {
-    this.db.getGame(this.id).valueChanges().subscribe(data => {
-      this.host = data.host;
-    });
-  }
-
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
-      console.log(data);
-      console.log(JSON.stringify(data));
+      // console.log(data);
+      // console.log(JSON.stringify(data));
       for (let p in data) {
           this.playerList.push(data[p]);
       }
       this.playerList = this.playerList.filter((v,i,a)=>a.findIndex(t=>(t.name===v.name))===i);
+      console.log(this.playerList);
+      if (this.playerList[0] && !this.playerList[0].currentPlayer) {
+        this.playerList[0].currentPlayer = true;
+        this.db.updatePlayers(this.id, this.playerList);
+      }
       console.log(this.playerList);
     });
   }

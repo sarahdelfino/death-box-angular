@@ -5,6 +5,10 @@
     text-align: center;
 }
 
+a {
+    color: gray;
+}
+
 h1 {
     color: #e5989b;
     text-align: center;
@@ -37,10 +41,6 @@ hr {
     color: white;
 }
 
-.forms {
-    /* text-align: left; */
-}
-
 input {
     height: 30px;
     /* border-radius: 5px; */
@@ -65,7 +65,7 @@ input {
     width: 600px;
     padding: 30px;
     border-radius: 5px;
-    border: 2px solid #6d6875;
+    /* border: 2px solid #6d6875; */
     height: auto;
     margin-bottom: 10px;
     background-color: white;

@@ -8,6 +8,8 @@ import { MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/d
 import { DatabaseService } from '../database.service';
 import { GameService } from '../game.service';
 import { InfoComponent } from '../info/info.component';
+import { LoginComponent } from '../login/login.component';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-start',
@@ -18,13 +20,15 @@ export class StartComponent implements OnInit {
   // @Output() game = new EventEmitter<Game>();
   game: Game;
 
-  createGameForm: FormGroup;
+  // createGameForm: FormGroup;
   joinGameForm: FormGroup;
   submitted = false;
   name: string;
   currentGame: string;
+  loggedIn: boolean;
 
   constructor(
+    public authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
     private dbService: DatabaseService,
@@ -36,20 +40,19 @@ export class StartComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    if (this.authService.isLoggedIn) {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
   }
 
   createForm(): void {
-    this.createGameForm = this.formBuilder.group({
-      host: ['', [Validators.required, Validators.minLength(2)]],
-    });
     this.joinGameForm = this.formBuilder.group({
       id: ['', [Validators.required, Validators.minLength(5)]],
       name: ['', [Validators.required, Validators.minLength(2)]]
     });
   }
-
-  get f() { return this.createGameForm.controls; }
 
   onClick() {
     const dialogConfig = new MatDialogConfig();
@@ -57,23 +60,20 @@ export class StartComponent implements OnInit {
     const dialogRef = this.dialog.open(InfoComponent);
   }
 
-  onSubmit(formData) {
-    this.submitted = true;
-    // stop here if form invalid
-    if (this.createGameForm.invalid) {
-      return;
-    } else {
-      this.createGame(formData);
-    }
+  createGame() {
+    this.createGameId();
+    localStorage.setItem('host', 'true');
+    console.log(this.game);
+    console.log(localStorage.getItem('host'));
+    this.dbService.create(this.game);
+    this.router.navigateByUrl(`/lobby/${this.game.id}`);
   }
 
-  createGame(formData) {
-    this.createGameId(formData.host);
-    console.log(this.game);
-    this.dbService.create(this.game);
-    localStorage.setItem('user', this.game.host);
-    localStorage.setItem('host', 'true');
-    this.router.navigateByUrl(`/lobby/${this.game.id}`);
+  openModal() {
+    const dialogConfig = new MatDialogConfig();
+    // dialogConfig.disableClose = true;
+
+    const dialogRef = this.dialog.open(LoginComponent, dialogConfig);
   }
 
   joinGame(joinFormData) {
@@ -90,12 +90,11 @@ export class StartComponent implements OnInit {
 
   onReset() {
     this.submitted = false;
-    this.createGameForm.reset();
   }
 
-  createGameId(host: string) {
+  createGameId() {
     var id = nanoid(5);
-    this.game = new Game(id, host, false, host);
+    this.game = new Game(id, false,);
   }
 
 }

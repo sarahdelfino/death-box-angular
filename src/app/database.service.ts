@@ -97,10 +97,8 @@ export class DatabaseService {
 
    create(game: Game): any {
     firebase.database().ref('/games/' + game.id).set({
-      host: game.host,
       started: false
     });
-    this.addPlayer(game.id, game.host, true);
    }
 
    addPlayer(id: string, name: string, currentPlayer?: boolean) {

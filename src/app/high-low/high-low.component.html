@@ -17,8 +17,8 @@
     <div class="counting" @fadeViewOut *ngIf="this.wrongGuess == true"
       (@fadeViewOut.done)="finishedAnimations($event)">
       <h2>Wrong! Drink for</h2>
-      <h2 class="counter">{{this.stackLength}}</h2>
-      <h2>{{this.text}}!</h2>
+      <h2 class="counter">{{ this.counter }}</h2>
+      <h2>{{ this.text }}!</h2>
     </div>
     <!-- <div *ngIf="this.wrongGuess == undefined" [@fadeViewIn]="this.wrongGuess ? 'in' : 'out'"> -->
     <div @fadeViewIn *ngIf="!this.wrongGuess">

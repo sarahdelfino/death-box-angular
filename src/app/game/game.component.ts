@@ -44,7 +44,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.isHost = true;
       this.id = this._gameService.getId();
       this.deck = this._gameService.createDeck();
-      console.log("HI: ", this.deck);
+      // console.log("HI: ", this.deck);
       this.stacks = this._gameService.createStacks(this.deck);
     } else {
       this.isHost = false;

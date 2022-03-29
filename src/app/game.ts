@@ -1,6 +1,5 @@
 export class Game {
     id: string;
-    host?: string;
     started?: boolean;
     currentPlayer?: string;
     seconds?: number;
@@ -8,13 +7,11 @@ export class Game {
 
     constructor(
         id: string,
-        host?: string,
         started?: boolean,
         currentPlayer?: string,
         seconds?: number,
         counting?: boolean) {
         this.id = id;
-        this.host = host;
         this.started = started;
         this.currentPlayer = currentPlayer;
         this.seconds = seconds;
@@ -23,10 +20,6 @@ export class Game {
 
     public getGameId() {
         return this.id;
-    }
-
-    public getHost() {
-        return this.host;
     }
 
 }
