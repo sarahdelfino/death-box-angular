@@ -1,5 +1,3 @@
-import { Coord } from "src/coord";
-
 export class Card {
     value: string;
     suit: string;

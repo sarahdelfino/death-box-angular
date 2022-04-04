@@ -6,11 +6,11 @@ import { HighLowComponent } from '../high-low/high-low.component';
 import { ModalComponent } from '../modal/modal.component';
 import { RemoveStacksComponent } from '../remove-stacks/remove-stacks.component';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Coord } from 'src/coord';
 import { DatabaseService } from '../database.service';
 import { Player } from '../player';
 import { InfoComponent } from '../info/info.component';
 import { Game } from '../game';
+import { AuthService } from '../auth.service';
 
 
 @Component({
@@ -29,7 +29,6 @@ export class GameComponent implements OnInit, OnDestroy {
   currentPlayer: string;
   id: string;
   newCard: Card;
-  pos: Coord;
   isHost: boolean;
   seconds: number;
   players: any = [];
@@ -37,7 +36,8 @@ export class GameComponent implements OnInit, OnDestroy {
   constructor(private _gameService: GameService,
     private db: DatabaseService,
     private dialog: MatDialog,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private auth: AuthService) { }
 
 
   ngOnInit() {
@@ -108,13 +108,6 @@ export class GameComponent implements OnInit, OnDestroy {
       this.openHighLow(card);
     } else {
       this.removeStacks();
-    }
-  }
-
-  xy(i): Coord {
-    return {
-      x: i % 3,
-      y: Math.floor(i / 3)
     }
   }
 

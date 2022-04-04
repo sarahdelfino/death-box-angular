@@ -1,6 +1,5 @@
 export const environment = {
   production: true,
-  // SOCKET_ENDPOINT: 'http://localhost:3000',
   firebase: {
     apiKey: "AIzaSyBgjfSBidyvXk8khmILej32MC1iJu7x89I",
     authDomain: "death-box-28ecf.firebaseapp.com",

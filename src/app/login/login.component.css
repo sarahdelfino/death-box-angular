@@ -37,10 +37,20 @@ img {
     /* text-align: center; */
 }
 
+.forms {
+    display: flex;
+    margin-top: 10px;
+}
+
+.forgotPassword {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .button {
     width: 120px;
     height: 40px;
-    margin-left: 40px;
+    /* margin-left: 40px; */
     background-color: #e5989b;
     border: none;
     border-radius: 5px;
