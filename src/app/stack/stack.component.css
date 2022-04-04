@@ -1,14 +1,14 @@
 img {
   /* max-width: 20vw; */
   /* max-height: 20vh; */
-  max-width: 200px;
-  max-height: 280px;
+  max-width: 20vw;
+  max-height: 28vh;
   /* max-height: 28vw; */
   /* margin: 10px; */
   margin: 10px;
-  border: none;
+  /* border: none;
   border: 2px solid white;
-  border-radius: 13px;
+  border-radius: 13px; */
 }
 /* 
 .selected {
@@ -16,8 +16,9 @@ img {
 } */
 
 img:hover {
-  border: 2px solid gray;
-  border-radius: 13px;
+  /* border: 2px solid white; */
+  /* border-radius: 13px; */
+  cursor: pointer;
 }
 
 /* img.selected {
@@ -35,19 +36,8 @@ img:hover {
   height: 100px;
 }
 
-@media (min-width: 1200px) {
-  img {
-      /* max-width: 25vw; */
-      max-width: 150px;
-      max-height: 180px;
-      margin: 8px;
-  
-  }
-}
-
 @media (max-width: 400px) {
   img {
-      /* max-width: 25vw; */
       max-width: 100px;
       max-height: 150px;
       margin: 2.5px;

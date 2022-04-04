@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/cor
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
 import { Game } from '../game';
 import { MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatabaseService } from '../database.service';
@@ -36,11 +36,11 @@ export class StartComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.authService.isLoggedIn) {
-      this.loggedIn = true;
-    } else {
-      this.loggedIn = false;
-    }
+    // if (this.authService.isLoggedIn) {
+    //   this.loggedIn = true;
+    // } else {
+    //   this.loggedIn = false;
+    // }
   }
 
   createForm(): void {
@@ -55,14 +55,14 @@ export class StartComponent implements OnInit {
     const dialogRef = this.dialog.open(InfoComponent);
   }
 
-  createGame() {
-    this.createGameId();
-    sessionStorage.setItem('host', 'true');
-    console.log(this.game);
-    console.log(sessionStorage.getItem('host'));
-    this.dbService.create(this.game);
-    this.router.navigateByUrl(`/lobby/${this.game.id}`);
-  }
+  // createGame() {
+  //   this.createGameId();
+  //   sessionStorage.setItem('host', 'true');
+  //   console.log(this.game);
+  //   console.log(sessionStorage.getItem('host'));
+  //   this.dbService.create(this.game);
+  //   this.router.navigateByUrl(`/lobby/${this.game.id}`);
+  // }
 
   openModal() {
     const dialogConfig = new MatDialogConfig();
@@ -87,9 +87,9 @@ export class StartComponent implements OnInit {
     this.submitted = false;
   }
 
-  createGameId() {
-    var id = nanoid(5);
-    this.game = new Game(id, false,);
-  }
+  // createGameId() {
+  //   var id = nanoid(5);
+  //   this.game = new Game(id, false,);
+  // }
 
 }
