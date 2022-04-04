@@ -6,23 +6,35 @@ body {
 
 .game {
   display: flex;
-  max-width: 900px;
+  max-width: 80vw;
   min-width: 700px;
-  max-height: 90vh;
+  height: 90vh;
   padding: 20px;
-  background-color: white;
-  border-radius: 10px;
+  background-color: gray;
+  border-radius: 5px;
   margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
+  border-top: 3px solid #6d6875;
+  border-left: 3px solid #6d6875;
+  border-bottom: 1px solid #6d6875;
+  box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
+-webkit-box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
+-moz-box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
 }
 
  .card-container {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 33%);
-  grid-template-rows: repeat(3, 33%);
+  grid-template-columns: repeat(3, 30%);
+  /* grid-template-rows: repeat(3, 35%); */
+  /* border: 1px solid white; */
+}
+
+.grid-item {
+  width: 100%;
+  height: auto;
 }
 
 .info {
@@ -40,12 +52,12 @@ body {
     max-width: 750px;
 } */
 
-.container {
+.container, .counterContainer {
     /* max-width: 1200px; */
-    width: auto;
+    width: 80vw;
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    /* padding: 10px; */
     /* margin: auto; */
 }
 
@@ -67,23 +79,45 @@ button:hover {
   margin-right: auto;
 }
 
-/* @media (min-width: 1200px) {
-  .container {
+@media (max-width: 1500px) {
+  .right {
+    max-width: 400px;
+  }
+  /* .container {
     width: 400px;
     max-height: 700px;
   }
   .card-container {
     max-width: 400px;
-  }
+  } */
 }
 
-@media (max-width: 400px) {
+@media (max-width: 860px) {
   .container {
-    width: 330px;
-    max-height: 550px;
+    width: 200px;
+    height: 500px;
+  }
+  .counterContainer {
+    width: auto;
+    
+  }
+  .game {
+    max-width: 500px;
+    min-width: 200px;
+    flex-direction: column-reverse;
+    justify-content: end;
+    align-items: center;
+  }
+  .right {
+    max-width: 200px;
+    margin: 0;
   }
   .card-container {
     max-width: 330px;
   }
-} */
+  .info {
+    top: 30px;
+    right: 20px;
+  }
+}
 

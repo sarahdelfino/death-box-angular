@@ -1,0 +1,78 @@
+input {
+    height: 30px;
+    /* border-radius: 5px; */
+    /* border: 0.5px solid gray; */
+    border-bottom: 4px solid #ffcdb2;
+    border-left: 3px solid #ffcdb2;
+    /* border-bottom: 3px solid #ffcdb2; */
+    /* border: none; */
+    border-top: none;
+    /* border-left: none; */
+    border-right: none;
+    margin-right: 10px;
+    padding: 5px;
+    background-color: gray;
+}
+
+::placeholder {
+    color: #ffcdb2;
+    /* font-weight: 500; */
+    font-size: 16px;
+    letter-spacing: 1px;
+    font-style: bold;
+}
+
+img {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+    display: block;
+}
+
+.contents {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: auto;
+    padding-right: auto;
+    /* text-align: center; */
+}
+
+.button {
+    width: 120px;
+    height: 40px;
+    margin-left: 40px;
+    background-color: #e5989b;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 1px;
+    font-size: 16px;
+
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: white;
+    color: #e5989b;
+    border: 2px solid #6d6875;
+    font-weight: 500;
+}
+
+ .displayTable {
+    width: 600px;
+    padding: 30px;
+    border-radius: 5px;
+    border-top: 2px solid #6d6875;
+    border-left: 2px solid #6d6875;
+    border-bottom: 1px solid #6d6875;
+    height: auto;
+    margin-bottom: 10px;
+    margin-top: 50px;
+    background-color: gray;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
+-webkit-box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
+-moz-box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
+}

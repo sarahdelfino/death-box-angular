@@ -1,13 +1,9 @@
 <div class="container">
-  <img class="logo" src="./assets/Death.svg" />
-  <h3 (click)="openModal()">Login</h3>
-  <h3>or sign up to create a game</h3>
+  <!-- <img class="logo" src="./assets/Death.svg" /> -->
+  <app-login></app-login>
+  <!-- <h3 (click)="openModal()">Login</h3> -->
+  <!-- <h3>or sign up to create a game</h3> -->
   <div class="forms">
-    <div class="createGame" *ngIf="this.loggedIn == true">
-      <button (click)="createGame()" type="submit">
-        Create game
-      </button>
-    </div>
     <form [formGroup]="joinGameForm" id="join" method="POST">
       <input
         id="gameId"

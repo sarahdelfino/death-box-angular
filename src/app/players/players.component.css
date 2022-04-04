@@ -1,7 +1,7 @@
 .players {
     margin: 20px;
-    width: 300px;
-    height: 300px;
+    width: 600px;
+    height: auto;
     margin-left: auto;
     margin-right: auto;
 }
@@ -18,17 +18,20 @@ table {
     margin-left: auto;
     margin-right: auto;
     padding: 5px;
-    border-radius: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid white;
+}
+
+.row {
+    /* margin-top: 10px;
+    margin-bottom: 10px; */
 }
 
 .current-player {
     background-color: #e5989b;
     color: white;
     /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px; */
-}
-
-.players-containers {
-    border: 1px solid white;
 }
 
 .flex-item {
@@ -54,9 +57,15 @@ td {
     border: 1px solid white;
 } */
 
-@media (max-width: 1200px) {
+@media (max-width: 1500px) {
+    .players {
+        width: 400px;
+    }
+}
+
+@media (max-width: 860px) {
     .players {
         width: 200px;
-        margin: 10px;
+        margin-bottom: 100px;
     }
 }
