@@ -49,14 +49,10 @@ export class PlayersComponent implements OnInit {
     if (!this.seconds &&
       this.currentPlayer &&
       this.turn == 0) {
-      // this.getNextPlayer(this.players.findIndex(p => p.name === this.currentPlayer));
-      console.log(this.players);
-      console.log("index of current player: ", this.players.findIndex(p => p.name === this.currentPlayer), 'getting next player......');
       this.getNextPlayer(this.players.findIndex(p => p.name === this.currentPlayer));
     }
     if (this.seconds &&
       this.seconds != 0) {
-        console.log("SETTING SCORE......", this.players);
       this.setPlayerScore(this.currentPlayer, this.seconds);
 
     }
@@ -64,9 +60,7 @@ export class PlayersComponent implements OnInit {
 
   ngAfterContentChecked() {
     if (this.players && this.players[0].name && !this.currentPlayer) {
-      console.log(this.players);
       this.players[0].currentPlayer = true;
-      console.log(this.players);
     this.currentPlayer = this.players[0].name;
     this.curPlayer.emit(this.currentPlayer);
     this.db.setCurrentPlayer(this.id, this.currentPlayer);
@@ -94,12 +88,9 @@ export class PlayersComponent implements OnInit {
   }
 
   setPlayerScore(player: string, seconds: number) {
-    console.log(this.players);
     for (let p in this.players) {
       if (this.players[p].name == player) {
-        console.log("EX: " + this.players[p].secondsDrank + " SEC: " + seconds);
         this.players[p].secondsDrank = this.players[p].secondsDrank + seconds;
-        console.log(this.players);
         this.db.updatePlayers(this.id, this.players);
         this.seconds = 0;
       }
@@ -107,7 +98,6 @@ export class PlayersComponent implements OnInit {
   }
 
   getNextPlayer(playerIndex: any) {
-    console.log(this.players);
     this.gameService.getNextPlayer(playerIndex, this.players);
   }
 }

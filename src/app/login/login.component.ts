@@ -33,8 +33,6 @@ export class LoginComponent {
   createGame() {
     this.createGameId();
     sessionStorage.setItem('host', 'true');
-    console.log(this.game);
-    console.log(sessionStorage.getItem('host'));
     this.dbService.create(this.game);
     this.router.navigateByUrl(`/lobby/${this.game.id}`);
   }

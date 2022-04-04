@@ -49,9 +49,6 @@ export class GameComponent implements OnInit, OnDestroy {
     } else {
       this.isHost = false;
     }
-    if (sessionStorage.getItem('user') == this.currentPlayer) {
-      console.log("hi");
-    }
   }
 
   ngOnDestroy() {
@@ -76,12 +73,10 @@ export class GameComponent implements OnInit, OnDestroy {
 
   getCurPlayer(event: any) {
     this.currentPlayer = event;
-    console.log("current player: " + this.currentPlayer);
   }
 
   getPlayerList(event: any) {
     this.players = event;
-    console.log(this.players);
   }
 
   onClick() {
@@ -95,7 +90,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
   addToStack(i, card) {
     // add card to the top of the stack
-    console.log(card);
     this.stacks[i].unshift(card);
   }
 
@@ -137,8 +131,6 @@ export class GameComponent implements OnInit, OnDestroy {
     dialogConfig.data = { crd, newCrd, ln, gameId, curP };
     dialogConfig.disableClose = true;
 
-    console.log(dialogConfig.data);
-
     const dialogRef = this.dialog.open(HighLowComponent, {
       width: 'auto',
       height: 'auto',
@@ -147,14 +139,12 @@ export class GameComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(
       data => {
-        console.log(data);
         var cardIndex = this.stacks.indexOf(card);
         // get index of current card and add to stack
         if (data.newCrd) {
           this.addToStack(cardIndex, data.newCrd);
         }
         if (data.comp) {
-          console.log("TURN: ", this.turns);
           this.turns += 1;
           if (this.turns == 3) {
             this.turns = 0;

@@ -75,7 +75,6 @@ export class StartComponent implements OnInit {
     if (this.joinGameForm.invalid) {
       return;
     } else {
-      console.log(joinFormData);
       this.dbService.addPlayer(joinFormData.id, joinFormData.name);
       sessionStorage.setItem('user', joinFormData.name);
       sessionStorage.setItem('host', 'false');
