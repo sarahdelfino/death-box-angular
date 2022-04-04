@@ -1,26 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Game } from '../game';
 import { DatabaseService } from '../database.service';
 import { GameService } from '../game.service';
-import { Player } from '../player';
 
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.css']
 })
-export class LobbyComponent implements OnInit {
+export class LobbyComponent implements OnInit, OnDestroy {
   id: string;
   host: string;
-  playerList: Player[] = [];
-  players: Observable<string[]>;
+  playerList = [];
   game: Game | undefined;
   started: boolean;
   isHost: boolean;
   test: any;
+  subscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,51 +27,46 @@ export class LobbyComponent implements OnInit {
     private location: Location,
     private gameService: GameService,
     private db: DatabaseService
-    ) { }
-
-  ngOnInit() {
-    if (localStorage.getItem('host') == 'true') {
+  ) {
+    if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
     } else {
       this.isHost = false;
     }
-    console.log("hst: " + this.isHost);
     this.getId();
-    // this.id = this.gameService.getId();
-    // this.getHost();
-    this.db.getGame(this.id).valueChanges().subscribe(data => {
-      // console.log(data);
-      this.host = data.host,
-      this.started = data.started
+    this.subscription = this.db.getGame(this.id).valueChanges().subscribe(data => {
+        this.started = data.started
       if (this.started == true) {
         this.router.navigateByUrl(`/play/${this.id}`);
       }
     })
+  }
+
+  ngOnInit() {
     this.getPlayers();
-    // this.test.push(localStorage.getItem('user'), 0);
-    // this.db.addPlayer(this.id, this.test);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   getId(): void {
     this.id = this.route.snapshot.paramMap.get('id');
   }
 
-  getHost(): void {
-    this.db.getGame(this.id).valueChanges().subscribe(data => {
-      this.host = data.host;
-    });
-  }
-
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
-      this.playerList = data;
-    })
-
+      for (let p in data) {
+          this.playerList.push(data[p].name);
+      }
+      this.playerList = this.playerList.filter(function(elem, index, self) {
+        return index === self.indexOf(elem);
+      });
+    });
   }
 
   startGame() {
     this.db.setStart(this.id);
-    // this.router.navigateByUrl(`/play/${this.id}`);
   }
 
 }

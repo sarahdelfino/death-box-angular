@@ -1,6 +1,4 @@
 <div class="players">
-  <!-- <th>Players</th>
-  <th>Seconds</th> -->
   <div
     *ngFor="let player of players"
     [ngClass]="currentPlayer === player.name
@@ -9,11 +7,6 @@
     "
   >
     <p>{{ player.name }}</p>
-    <p class="flex-item">{{ player.seconds }}</p>
-    <!-- <tr *ngFor="let player of players" class="players-containers"> -->
-    <!-- <tr *ngFor="let player of players" [ngClass]="this.currentPlayer.name == player.name ? 'current-player' : 'players-containers'">
-            <td>{{ player.name }}</td>
-            <td>{{ player.seconds }}</td>
-        </tr> -->
+    <p class="flex-item">{{ player.secondsDrank }}</p>
   </div>
 </div>

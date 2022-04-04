@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -8,6 +8,8 @@ import { MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/d
 import { DatabaseService } from '../database.service';
 import { GameService } from '../game.service';
 import { InfoComponent } from '../info/info.component';
+import { LoginComponent } from '../login/login.component';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-start',
@@ -15,88 +17,79 @@ import { InfoComponent } from '../info/info.component';
   styleUrls: ['./start.component.css']
 })
 export class StartComponent implements OnInit {
+
   game: Game;
-  createGameForm: FormGroup;
   joinGameForm: FormGroup;
   submitted = false;
   name: string;
   currentGame: string;
+  loggedIn: boolean;
 
   constructor(
+    public authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
     private dbService: DatabaseService,
     private dialog: MatDialog,
-    private gameService: GameService
-    
-    ) { }
-
-  ngOnInit() {
-    this.createGameForm = this.formBuilder.group({
-      host: ['', [Validators.required, Validators.minLength(2)]],
-    });
-    this.joinGameForm = this.formBuilder.group({
-      id: '',
-      name: ''
-    });
-    // this.socketService.setupSocketConnection();
+  ) { 
+    this.createForm();
   }
 
-  get f() { return this.createGameForm.controls; }
+  ngOnInit() {
+    if (this.authService.isLoggedIn) {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+  }
 
-  onClick() {
+  createForm(): void {
+    this.joinGameForm = this.formBuilder.group({
+      id: ['', [Validators.required, Validators.minLength(5)]],
+      name: ['', [Validators.required, Validators.minLength(2)]]
+    });
+  }
+
+  infoClick() {
     const dialogConfig = new MatDialogConfig();
-
     const dialogRef = this.dialog.open(InfoComponent);
   }
 
-  onSubmit(formData) {
-    this.submitted = true;
-    // stop here if form invalid
-    if (this.createGameForm.invalid) {
-      return;
-    }
-    this.createGame(formData)
-  }
-
-  createGame(formData) {
-    this.createGameId(formData.host);
-    console.log(formData.host);
-    // this.socketService.setupSocketConnection(this.game);
-    // console.log(this.game.players);
-    // this.dbService.create(this.game).then(() => {
-    //   console.log("created new game");
-    // });
+  createGame() {
+    this.createGameId();
+    sessionStorage.setItem('host', 'true');
     console.log(this.game);
-    let deck = this.gameService.createDeck();
-    let stacks = this.gameService.createStacks(deck);
-    console.log(stacks);
-    this.dbService.create(this.game, deck, stacks);
-    // this.dbService.addPlayer(this.game.id, this.game.host);
-    // this.dbService.addPlayer(this.game.id, [{player: this.game.host, seconds: 0}]);
-    localStorage.setItem('user', this.game.host);
-    localStorage.setItem('host', 'true');
+    console.log(sessionStorage.getItem('host'));
+    this.dbService.create(this.game);
     this.router.navigateByUrl(`/lobby/${this.game.id}`);
   }
 
+  openModal() {
+    const dialogConfig = new MatDialogConfig();
+    // dialogConfig.disableClose = true;
+
+    const dialogRef = this.dialog.open(LoginComponent, dialogConfig);
+  }
+
   joinGame(joinFormData) {
-    console.log(joinFormData);
-    // console.log(this.game.players);
-    this.dbService.addPlayer(joinFormData.id, joinFormData.name);
-    localStorage.setItem('user', joinFormData.name);
-    localStorage.setItem('host', 'false');
-    this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
+    if (this.joinGameForm.invalid) {
+      return;
+    } else {
+      console.log(joinFormData);
+      this.dbService.addPlayer(joinFormData.id, joinFormData.name);
+      sessionStorage.setItem('user', joinFormData.name);
+      sessionStorage.setItem('host', 'false');
+      this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
+    }
   }
 
   onReset() {
     this.submitted = false;
-    this.createGameForm.reset();
-}
+  }
 
-  createGameId(host) {
-    console.log(host);
+  createGameId() {
     var id = nanoid(5);
-    this.game = new Game(id, host, [host]);
+    this.game = new Game(id, false,);
   }
 
 }

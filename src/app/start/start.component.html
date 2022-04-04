@@ -1,19 +1,32 @@
 <div class="container">
-  <img src="./assets/Death.svg" />
-  <img class="info" src="./assets/information.png" (click)="onClick()"/>
+  <img class="logo" src="./assets/Death.svg" />
+  <h3 (click)="openModal()">Login</h3>
+  <h3>or sign up to create a game</h3>
   <div class="forms">
-    <form [formGroup]="createGameForm" id="create" method="POST" (ngSubmit)="onSubmit(createGameForm.value)">
-      <input formControlName="host" required id="host" type="text" autocomplete="off" placeholder="Name"/>
-      <button (click)="onSubmit(createGameForm.value)" type="submit">
+    <div class="createGame" *ngIf="this.loggedIn == true">
+      <button (click)="createGame()" type="submit">
         Create game
       </button>
-    </form>
+    </div>
     <form [formGroup]="joinGameForm" id="join" method="POST">
-      <input id="gameId" formControlName="id" autocomplete="off" placeholder="Game ID" />
-      <input id="name" formControlName="name" autocomplete="off" placeholder="Name" />
+      <input
+        id="gameId"
+        formControlName="id"
+        required
+        autocomplete="off"
+        placeholder="Game ID"
+      />
+      <input
+        id="name"
+        formControlName="name"
+        required
+        autocomplete="off"
+        placeholder="Name"
+      />
       <button (click)="joinGame(joinGameForm.value)" type="submit">
         Join game
       </button>
     </form>
   </div>
+  <img class="info" src="./assets/information.png" (click)="infoClick()" />
 </div>

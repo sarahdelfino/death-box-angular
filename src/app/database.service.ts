@@ -14,9 +14,8 @@ import { Player } from './player';
 export class DatabaseService {
 
   private dbPath = '/games';
-  gamesList: AngularFireList<Game> = null;
-  gameRef: AngularFireObject<any> = null;
-  playersList: AngularFireList<Player> = null;
+  gameObj: AngularFireObject<Game> = null;
+  playersObj: AngularFireObject<Player> = null;
   deckList: AngularFireList<Card> = null;
   playersObject: AngularFireObject<Player> = null;
   host = null;
@@ -27,17 +26,15 @@ export class DatabaseService {
 
 
   constructor(private db: AngularFireDatabase) {
-    this.gamesList = db.list('/games/');
     this.database = firebase.database();
     this.gamesRef = firebase.database().ref('games');
     this.playersRef = firebase.database().ref('players');
-    
    }
 
   // Fetch Single Game Object
   getGame(id: string) {
-    this.gameRef = this.db.object('games/' + id);
-    return this.gameRef;
+    this.gameObj = this.db.object('games/' + id);
+    return this.gameObj;
   }
 
   setStart(id: string) {
@@ -46,88 +43,100 @@ export class DatabaseService {
     });
   }
 
-  getPlayers(id: string) {
-    // this.playersList = this.db.list('players/' + id);
-    this.playersList = this.db.list('players/' + id);
-    return this.playersList;
+  getSeconds(id: string) {
+    this.secondsRef = this.db.object('games/' + id + '/seconds/');
+    return this.secondsRef;
   }
 
-  updateSeconds(id: string, players: any) {
+  decrementSeconds(id: string) {
+    firebase.database()
+    .ref('games')
+    .child(id)
+    .child('seconds')
+    .set(firebase.database.ServerValue.increment(-1))
+  }
+
+  incrementSeconds(id: string, player: any, seconds: number) {
+    firebase.database()
+    .ref('players')
+    .child(id)
+    .child(player)
+    .child('secondsDrank')
+    .set(seconds)
+  }
+
+  getPlayers(id: string) {
+    this.playersObj = this.db.object('players/' + id);
+    return this.playersObj;
+  }
+
+  updatePlayers(id: string, players: any) {
     firebase.database().ref('/players/' + id + '/').set(players);
   }
 
+  updatePlayerSeconds(id: string, player: string, seconds: number) {
+    firebase.database().ref('/players/' + id + '/' + player + '/secondsDrank/').set(seconds);
+  }
+
+  updateGameSeconds(id: string, seconds: number) {
+    firebase.database().ref('/games/' + id + '/seconds/').set(seconds);
+  }
+
+  updateCounting(id: string) {
+    firebase.database().ref('/games/' + id + '/counting/').set(true);
+  }
+
+  endCounting(id: string) {
+    firebase.database().ref('/games/' + id + '/'). update({
+      "/counting/": null,
+      "/seconds/": null,
+      "/counter/": null,
+    });
+  }
+
+  deleteCounting(id: string) {
+    firebase.database().ref('/games/' + id + '/counting/').remove();
+  }
+
+  deleteSeconds(id: string) {
+    firebase.database().ref('/games/' + id + '/seconds/').remove();
+  }
+
   getCurrentPlayer(id: string) {
-    this.gameRef = this.db.object('games/' + id + '/currentPlayer/');
-    return this.gameRef;
+    this.gameObj = this.db.object('games/' + id + '/currentPlayer/');
+    return this.gameObj;
   }
 
   setCurrentPlayer(id: string, name: string) {
     firebase.database().ref('/games/' + id + '/currentPlayer/').set(name);
   }
 
-   create(game: Game, deck, stacks): any {
+  setCounter(id: string, name: string) {
+    firebase.database().ref('/games/' + id + '/counter').set(name);
+  }
+
+   create(game: Game): any {
     firebase.database().ref('/games/' + game.id).set({
-      host: game.host,
-      currentPlayer: game.host,
-      deck: deck,
-      stacks: stacks,
       started: false
     });
-    this.addPlayer(game.id, game.host);
    }
 
-   getDeck(id: string) {
-    this.deckList = this.db.list('/games/' + id + '/deck/');
-    return this.deckList;
+   addPlayer(id: string, name: string, currentPlayer?: boolean) {
+    if (typeof currentPlayer !== 'undefined') {
+      firebase.database().ref('/players/' + id + '/' + name + '/').set({
+        "name": name,
+        "secondsDrank": 0,
+        "currentPlayer": true});
+    } else {
+      firebase.database().ref('/players/' + id + '/' + name + '/').set({
+        "name": name,
+        "secondsDrank": 0});
+    }
    }
-
-   updateDeck(id: string, deck: any) {
-     console.log(deck);
-     firebase.database().ref('/games/' + id + '/deck/').set(deck);
-   }
-
-   updateStacks(id: string, stacks: any) {
-     firebase.database().ref('/games/' + id + '/stacks/').update(stacks);
-   }
-
-   getStack(id: string, stack: any) {
-     return firebase.database().ref('/games/' + id + '/stacks/' + stack + '/');
-   }
-
-  //  addPlayer(id: string, players: any) {
-  //    firebase.database().ref('/players/' + id + '/').set(players);
-  //  }
-
-   update(id: string, val: any): Promise<void> {
-     let playerCount = 0;
-     playerCount += 1;
-     var p = "player";
-     p = "player" + playerCount.toString();
-     return firebase.database().ref('/players/' + id + '/' + p + '/').set({
-      "name": val,
-      "secondsDrank": 0});
-   }
-
-  addPlayer(id, name) {
-    // A post entry.
-    var postData = {
-      name: name,
-      seconds: 0
-    };
-  
-    // Get a key for a new Post.
-    var newPostKey = firebase.database().ref('players').child(id).push().key;
-  
-    // Write the new post's data simultaneously in the posts list and the user's post list.
-    var updates = {};
-    updates['/players/' + id + '/' + newPostKey + '/'] = postData;
-  
-    return firebase.database().ref().update(updates);
-  }
 
    deleteGame(id: string): Promise<void> {
      this.deletePlayers(id);
-     return this.gamesList.remove(id);
+     return this.gameObj.remove();
    }
 
    deletePlayers(id: string): Promise<void> {
@@ -135,7 +144,7 @@ export class DatabaseService {
    }
 
    deleteAll(): Promise<void> {
-     return this.gamesList.remove();
+     return this.gameObj.remove();
    }
 
 }

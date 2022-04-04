@@ -12,9 +12,9 @@ import { StackComponent } from './stack/stack.component';
 import { RemoveStacksComponent } from './remove-stacks/remove-stacks.component';
 import { HighLowComponent } from './high-low/high-low.component';
 import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
-
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
@@ -30,6 +30,12 @@ import { LobbyComponent } from './lobby/lobby.component';
 import { PlayersComponent } from './players/players.component';
 import { DeckComponent } from './deck/deck.component';
 import { InfoComponent } from './info/info.component';
+import { CountComponent } from './count/count.component';
+import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
+import { AuthService } from './auth.service';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +51,11 @@ import { InfoComponent } from './info/info.component';
     PlayersComponent,
     DeckComponent,
     InfoComponent,
+    CountComponent,
+    LoginComponent,
+    SignupComponent,
+    ForgotPasswordComponent,
+    VerifyEmailComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +67,7 @@ import { InfoComponent } from './info/info.component';
     MatProgressSpinnerModule,
     MatFormFieldModule,
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
     AngularFireDatabaseModule,
     MatInputModule,
     MatRippleModule,
@@ -69,7 +81,8 @@ import { InfoComponent } from './info/info.component';
     BrowserAnimationsModule
   ],
   providers: [
-    GameService
+    GameService,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

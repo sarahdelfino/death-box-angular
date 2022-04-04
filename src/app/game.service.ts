@@ -37,10 +37,7 @@ export class GameService {
         this.deck.push(new Card(v.toString(), s));
       }
     });
-    // this.socketService.emitDeck(this.deck);
     this.shuffle(this.deck);
-    // console.log(this.deck);
-    // this.db.updateDeck(this.getId(), this.deck);
     return this.deck;
   }
 
@@ -62,30 +59,15 @@ export class GameService {
     return id;
   }
 
-  getDeck() {
-    this.db.getDeck(this.getId()).valueChanges().subscribe(data => {
-      this.deck = data;
-      console.log(this.deck);
-    })
-  }
-
   createStacks(deck) {
     for (let i = 0; i < 9; i++) {
       var stack = new Array();
       stack.push(deck.pop());
       this.stacks.push(stack);
     }
-    // this.socketService.emitStacks(this.stacks);
-    // this.db.updateStacks(this.getId(), this.stacks);
     return this.stacks;
   }
-
-  addToStack(i, card) {
-    // add card to the top of the stack
-    this.stacks[i].unshift(card);
-    return this.stacks;
-  }
-
+  
   public stackIndex() {
     return this.table.stacks;
   }
@@ -119,6 +101,24 @@ openModal(data: any) {
       dialogRef.close();
     }, timeout)
   })
+}
+
+getNextPlayer(playerIndex: number, playerList: any) {
+  let newIndex = 0;
+
+  console.log(playerList);
+  delete playerList[playerIndex].currentPlayer;
+
+  if (playerIndex == playerList.length - 1) {
+    playerList[newIndex].currentPlayer = true;
+    console.log(playerList);
+  } else {
+    newIndex = playerIndex + 1;
+    playerList[newIndex].currentPlayer = true;
+    console.log(playerList);
+  }
+  console.log(playerList);
+  this.db.updatePlayers(this.getId(), playerList);
 }
 
 }

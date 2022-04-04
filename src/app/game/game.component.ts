@@ -10,6 +10,7 @@ import { Coord } from 'src/coord';
 import { DatabaseService } from '../database.service';
 import { Player } from '../player';
 import { InfoComponent } from '../info/info.component';
+import { Game } from '../game';
 
 
 @Component({
@@ -20,17 +21,18 @@ import { InfoComponent } from '../info/info.component';
 })
 export class GameComponent implements OnInit, OnDestroy {
 
-  // public deck: Array<Card>;
   public deck: Array<Card>;
   public stacks: any = [];
   public choice = "";
   public turns = 0;
-  currentCounter: string;
+  public game: Game;
+  currentPlayer: string;
   id: string;
   newCard: Card;
   pos: Coord;
   isHost: boolean;
   seconds: number;
+  players: any = [];
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
@@ -39,37 +41,24 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    if (localStorage.getItem('host') == 'true') {
+    if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
+      this.id = this._gameService.getId();
+      this.deck = this._gameService.createDeck();
+      this.stacks = this._gameService.createStacks(this.deck);
     } else {
       this.isHost = false;
     }
-    if (localStorage.getItem('user') == this.currentCounter) {
+    if (sessionStorage.getItem('user') == this.currentPlayer) {
       console.log("hi");
     }
-    // this.getId();
-    this.id = this._gameService.getId();
-    // this.deck = this._gameService.createDeck();
-    // console.log(this.deck);
-    // this.stacks = this._gameService.createStacks();
-    this.db.getGame(this.id).valueChanges().subscribe(data => {
-      // console.log(data);
-      this.deck = data.deck;
-      // console.log(this.deck);
-      this.stacks = data.stacks;
-      // console.log(this.stacks);
-    });
-    // this._gameService.getDeck();
-    // this.socketService.getDeck().subscribe(x => {
-    //   // console.log(x);
-    //   this.deck.push(x);
-    //   console.log(this.deck);
-    // })
   }
 
   ngOnDestroy() {
-    if (localStorage.getItem('host') == 'true') {
+    sessionStorage.clear();
+    if (sessionStorage.getItem('host') == 'true') {
       this.db.deleteGame(this.id);
+      //  TODO: delete player from game
     }
   }
 
@@ -77,30 +66,27 @@ export class GameComponent implements OnInit, OnDestroy {
     for (const propName in changes) {
       const chng = changes[propName];
       const cur = JSON.stringify(chng.currentValue);
-      // console.log(chng.currentValue);
     }
   }
 
-  // getId() {
-  //   const id = this.route.snapshot.paramMap.get('id');
-  //   this.socketService.getGame(id).subscribe(id => this.id = id);
-  //   return id;
-  // }
+  getId(): string {
+    const id = this.route.snapshot.paramMap.get('id');
+    return id;
+  }
 
-  getCurCounter(event: any) {
-    this.currentCounter = event;
-    console.log("counter: " + this.currentCounter);
+  getCurPlayer(event: any) {
+    this.currentPlayer = event;
+    console.log("current player: " + this.currentPlayer);
+  }
+
+  getPlayerList(event: any) {
+    this.players = event;
+    console.log(this.players);
   }
 
   onClick() {
     const dialogConfig = new MatDialogConfig();
-
     const dialogRef = this.dialog.open(InfoComponent);
-  }
-
-  count() {
-    console.log("hey");
-    // this.db.updateSeconds(this.id, this.currentCounter, this.seconds);
   }
 
   getLength(i) {
@@ -109,9 +95,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
   addToStack(i, card) {
     // add card to the top of the stack
+    console.log(card);
     this.stacks[i].unshift(card);
-    this.db.updateStacks(this._gameService.getId(), this.stacks);
-    this.db.updateDeck(this._gameService.getId(), this.deck);
   }
 
   clickedCard(card: Card) {
@@ -122,7 +107,7 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.deck.length > 1) {
       this.openHighLow(card);
     } else {
-      this.openRemoveStacks();
+      this.removeStacks();
     }
   }
 
@@ -153,9 +138,13 @@ export class GameComponent implements OnInit, OnDestroy {
     let newCrd = this.deck.pop();
     let i = this.stacks.indexOf(card);
     let ln = this.stacks[i].length;
+    let gameId = this.getId();
+    let curP = this.players;
 
-    dialogConfig.data = { crd, newCrd, ln };
+    dialogConfig.data = { crd, newCrd, ln, gameId, curP };
     dialogConfig.disableClose = true;
+
+    console.log(dialogConfig.data);
 
     const dialogRef = this.dialog.open(HighLowComponent, {
       width: 'auto',
@@ -165,16 +154,18 @@ export class GameComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(
       data => {
+        console.log(data);
         var cardIndex = this.stacks.indexOf(card);
         // get index of current card and add to stack
-        this.addToStack(cardIndex, data[1]);
-        if (data[2] == true) {
+        if (data.newCrd) {
+          this.addToStack(cardIndex, data.newCrd);
+        }
+        if (data.comp) {
+          console.log("TURN: ", this.turns);
           this.turns += 1;
           if (this.turns == 3) {
             this.turns = 0;
           }
-        } else {
-          this.seconds = data[3];
         }
       }
     )
@@ -213,7 +204,5 @@ export class GameComponent implements OnInit, OnDestroy {
     });
     this._gameService.shuffle(this.deck);
     console.log(this.stacks);
-    this.db.updateStacks(this.id, this.stacks);
-    this.db.updateDeck(this.id, this.deck);
   }
 }

@@ -5,6 +5,10 @@
     text-align: center;
 }
 
+a {
+    color: gray;
+}
+
 h1 {
     color: #e5989b;
     text-align: center;
@@ -21,9 +25,9 @@ img {
 }
 
 .info {
-    /* margin-left: 20px; */
-    position: relative;
-    left: 75px;
+    position: absolute;
+    right: 10px;
+    margin: 0;
 }
 
 .info:hover {
@@ -35,10 +39,6 @@ hr {
     margin-top: 50px;
     margin-bottom: 50px;
     color: white;
-}
-
-.forms {
-    text-align: left;
 }
 
 input {
@@ -61,15 +61,11 @@ input {
     font-size: 16px;
 }
 
-#host {
-    /* margin-bottom: 50px; */
-}
-
 #create, #join {
     width: 600px;
     padding: 30px;
     border-radius: 5px;
-    border: 2px solid #6d6875;
+    /* border: 2px solid #6d6875; */
     height: auto;
     margin-bottom: 10px;
     background-color: white;
@@ -110,14 +106,15 @@ mat-label.mat-label {
     h1 {
         font-size: 55px;
     }
-    img {
-        width: 350px;
-        margin-top: -20px;
-        /* height: auto; */
-    }
     .logo {
         margin: 0;
-        height: 300px;
+        margin-bottom: 10px;
+        /* width: 300px; */
+        /* height: 300px; */
+    }
+    input {
+        max-width: 100px;
+        padding: 0;
     }
     button {
         width: 75px;
@@ -128,6 +125,10 @@ mat-label.mat-label {
     }
     form {
         padding-left: 20px;
+    }
+    #create, #join {
+        max-width: 350px;
+        padding: 10px;
     }
     mat-form-field.mat-form-field {
         width: 150px;
