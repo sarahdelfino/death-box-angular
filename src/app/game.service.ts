@@ -67,13 +67,7 @@ export class GameService {
     }
     return this.stacks;
   }
-
-  // addToStack(i, card) {
-  //   // add card to the top of the stack
-  //   this.stacks[i].unshift(card);
-  //   return this.stacks;
-  // }
-
+  
   public stackIndex() {
     return this.table.stacks;
   }
@@ -110,22 +104,20 @@ openModal(data: any) {
 }
 
 getNextPlayer(playerIndex: number, playerList: any) {
-  console.log(playerIndex);
-  console.log(playerList);
   let newIndex = 0;
 
-  delete playerList[playerIndex].currentPlayer;
-
   console.log(playerList);
+  delete playerList[playerIndex].currentPlayer;
 
   if (playerIndex == playerList.length - 1) {
     playerList[newIndex].currentPlayer = true;
-    // this.currentPlayer = this.players[newIndex];
+    console.log(playerList);
   } else {
     newIndex = playerIndex + 1;
     playerList[newIndex].currentPlayer = true;
-    // this.currentPlayer = this.players[newIndex];
+    console.log(playerList);
   }
+  console.log(playerList);
   this.db.updatePlayers(this.getId(), playerList);
 }
 

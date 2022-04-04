@@ -1,10 +1,5 @@
 <div class="container">
   <img class="logo" src="./assets/Death.svg" />
-  <!-- <div class="createGame" *ngIf="this.loggedIn == true">
-    <button (click)="onSubmit(createGameForm.value)" type="submit">
-      Create game
-    </button>
-  </div> -->
   <h3 (click)="openModal()">Login</h3>
   <h3>or sign up to create a game</h3>
   <div class="forms">
@@ -12,12 +7,6 @@
       <button (click)="createGame()" type="submit">
         Create game
       </button>
-    <!-- <form [formGroup]="createGameForm" id="create" method="POST" (ngSubmit)="onSubmit(createGameForm.value)">
-      <input formControlName="host" required id="host" type="text" autocomplete="off" placeholder="Name"/>
-      <button (click)="onSubmit(createGameForm.value)" type="submit">
-        Create game
-      </button>
-    </form> -->
     </div>
     <form [formGroup]="joinGameForm" id="join" method="POST">
       <input
@@ -39,5 +28,5 @@
       </button>
     </form>
   </div>
-  <img class="info" src="./assets/information.png" (click)="onClick()" />
+  <img class="info" src="./assets/information.png" (click)="infoClick()" />
 </div>

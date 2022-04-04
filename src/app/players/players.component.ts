@@ -1,5 +1,5 @@
 import { ThrowStmt } from '@angular/compiler';
-import { Component, Input, OnInit, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, Output, EventEmitter, AfterContentChecked } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../database.service';
 import { Game } from '../game';
@@ -23,7 +23,8 @@ export class PlayersComponent implements OnInit {
   @Input() seconds: number;
 
 
-  @Output() curCounter = new EventEmitter<string>();
+  @Output() curPlayer = new EventEmitter<string>();
+  @Output() playerList = new EventEmitter<string[]>();
 
 
 
@@ -33,7 +34,7 @@ export class PlayersComponent implements OnInit {
   ) {
     this.getId();
     this.getPlayers();
-    if (localStorage.getItem('host') == 'true') {
+    if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
     } else {
       this.isHost = false;
@@ -41,19 +42,35 @@ export class PlayersComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.getId();
-    // this.getPlayers();
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!this.seconds &&
       this.currentPlayer &&
       this.turn == 0) {
+      // this.getNextPlayer(this.players.findIndex(p => p.name === this.currentPlayer));
+      console.log(this.players);
+      console.log("index of current player: ", this.players.findIndex(p => p.name === this.currentPlayer), 'getting next player......');
       this.getNextPlayer(this.players.findIndex(p => p.name === this.currentPlayer));
     }
     if (this.seconds &&
       this.seconds != 0) {
+        console.log("SETTING SCORE......", this.players);
       this.setPlayerScore(this.currentPlayer, this.seconds);
+
+    }
+  }
+
+  ngAfterContentChecked() {
+    if (this.players && this.players[0].name && !this.currentPlayer) {
+      console.log(this.players);
+      this.players[0].currentPlayer = true;
+      console.log(this.players);
+    this.currentPlayer = this.players[0].name;
+    this.curPlayer.emit(this.currentPlayer);
+    this.db.setCurrentPlayer(this.id, this.currentPlayer);
+    this.db.updatePlayers(this.id, this.players);
     }
   }
 
@@ -63,13 +80,16 @@ export class PlayersComponent implements OnInit {
 
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
-      console.log(data);
+      this.players = [];
       for (let x in data) {
         this.players.push(data[x]);
         if (data[x].currentPlayer) {
           this.currentPlayer = data[x].name;
+          this.curPlayer.emit(this.currentPlayer);
+          this.db.setCurrentPlayer(this.id, this.currentPlayer);
         }
       }
+      this.playerList.emit(this.players);
     });
   }
 
@@ -87,21 +107,7 @@ export class PlayersComponent implements OnInit {
   }
 
   getNextPlayer(playerIndex: any) {
+    console.log(this.players);
     this.gameService.getNextPlayer(playerIndex, this.players);
-    //   let newIndex = 0;
-
-    //   delete this.players[playerIndex].currentPlayer;
-
-    //   if (playerIndex == this.players.length - 1) {
-    //     this.players[newIndex].currentPlayer = true;
-    //     // this.currentPlayer = this.players[newIndex];
-    //   } else {
-    //     newIndex = playerIndex + 1;
-    //     this.players[newIndex].currentPlayer = true;
-    //     // this.currentPlayer = this.players[newIndex];
-    //   }
-    //   this.db.updatePlayers(this.id, this.players);
-    // }
-
   }
 }

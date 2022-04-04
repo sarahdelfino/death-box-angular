@@ -26,12 +26,13 @@ export class GameComponent implements OnInit, OnDestroy {
   public choice = "";
   public turns = 0;
   public game: Game;
-  currentCounter: string;
+  currentPlayer: string;
   id: string;
   newCard: Card;
   pos: Coord;
   isHost: boolean;
   seconds: number;
+  players: any = [];
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
@@ -40,23 +41,23 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    if (localStorage.getItem('host') == 'true') {
+    if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
       this.id = this._gameService.getId();
       this.deck = this._gameService.createDeck();
-      // console.log("HI: ", this.deck);
       this.stacks = this._gameService.createStacks(this.deck);
     } else {
       this.isHost = false;
     }
-    if (localStorage.getItem('user') == this.currentCounter) {
+    if (sessionStorage.getItem('user') == this.currentPlayer) {
       console.log("hi");
     }
   }
 
   ngOnDestroy() {
-    if (localStorage.getItem('host') == 'true') {
-      // this.db.deleteGame(this.id);
+    sessionStorage.clear();
+    if (sessionStorage.getItem('host') == 'true') {
+      this.db.deleteGame(this.id);
       //  TODO: delete player from game
     }
   }
@@ -65,7 +66,6 @@ export class GameComponent implements OnInit, OnDestroy {
     for (const propName in changes) {
       const chng = changes[propName];
       const cur = JSON.stringify(chng.currentValue);
-      // console.log(chng.currentValue);
     }
   }
 
@@ -74,9 +74,14 @@ export class GameComponent implements OnInit, OnDestroy {
     return id;
   }
 
-  getCurCounter(event: any) {
-    this.currentCounter = event;
-    console.log("counter: " + this.currentCounter);
+  getCurPlayer(event: any) {
+    this.currentPlayer = event;
+    console.log("current player: " + this.currentPlayer);
+  }
+
+  getPlayerList(event: any) {
+    this.players = event;
+    console.log(this.players);
   }
 
   onClick() {
@@ -90,6 +95,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   addToStack(i, card) {
     // add card to the top of the stack
+    console.log(card);
     this.stacks[i].unshift(card);
   }
 
@@ -133,9 +139,12 @@ export class GameComponent implements OnInit, OnDestroy {
     let i = this.stacks.indexOf(card);
     let ln = this.stacks[i].length;
     let gameId = this.getId();
+    let curP = this.players;
 
-    dialogConfig.data = { crd, newCrd, ln, gameId };
+    dialogConfig.data = { crd, newCrd, ln, gameId, curP };
     dialogConfig.disableClose = true;
+
+    console.log(dialogConfig.data);
 
     const dialogRef = this.dialog.open(HighLowComponent, {
       width: 'auto',
@@ -145,18 +154,18 @@ export class GameComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(
       data => {
+        console.log(data);
         var cardIndex = this.stacks.indexOf(card);
         // get index of current card and add to stack
-        this.addToStack(cardIndex, data[1]);
-        if (data[2] == true) {
+        if (data.newCrd) {
+          this.addToStack(cardIndex, data.newCrd);
+        }
+        if (data.comp) {
+          console.log("TURN: ", this.turns);
           this.turns += 1;
           if (this.turns == 3) {
             this.turns = 0;
           }
-        // } else {
-          // this.seconds = data[3];
-          // this.db.updateGameSeconds(this.id, this.seconds);
-          // console.log(data);
         }
       }
     )

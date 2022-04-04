@@ -17,10 +17,8 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./start.component.css']
 })
 export class StartComponent implements OnInit {
-  // @Output() game = new EventEmitter<Game>();
-  game: Game;
 
-  // createGameForm: FormGroup;
+  game: Game;
   joinGameForm: FormGroup;
   submitted = false;
   name: string;
@@ -33,8 +31,6 @@ export class StartComponent implements OnInit {
     private router: Router,
     private dbService: DatabaseService,
     private dialog: MatDialog,
-    private gameService: GameService
-
   ) { 
     this.createForm();
   }
@@ -54,17 +50,16 @@ export class StartComponent implements OnInit {
     });
   }
 
-  onClick() {
+  infoClick() {
     const dialogConfig = new MatDialogConfig();
-
     const dialogRef = this.dialog.open(InfoComponent);
   }
 
   createGame() {
     this.createGameId();
-    localStorage.setItem('host', 'true');
+    sessionStorage.setItem('host', 'true');
     console.log(this.game);
-    console.log(localStorage.getItem('host'));
+    console.log(sessionStorage.getItem('host'));
     this.dbService.create(this.game);
     this.router.navigateByUrl(`/lobby/${this.game.id}`);
   }
@@ -82,8 +77,8 @@ export class StartComponent implements OnInit {
     } else {
       console.log(joinFormData);
       this.dbService.addPlayer(joinFormData.id, joinFormData.name);
-      localStorage.setItem('user', joinFormData.name);
-      localStorage.setItem('host', 'false');
+      sessionStorage.setItem('user', joinFormData.name);
+      sessionStorage.setItem('host', 'false');
       this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
     }
   }

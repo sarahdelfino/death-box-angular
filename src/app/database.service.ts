@@ -44,7 +44,6 @@ export class DatabaseService {
   }
 
   getSeconds(id: string) {
-    console.log(id);
     this.secondsRef = this.db.object('games/' + id + '/seconds/');
     return this.secondsRef;
   }
@@ -57,8 +56,13 @@ export class DatabaseService {
     .set(firebase.database.ServerValue.increment(-1))
   }
 
-  updateCount(id: string, count: number) {
-    firebase.database().ref('games/' + id + '/count/').update(count);
+  incrementSeconds(id: string, player: any, seconds: number) {
+    firebase.database()
+    .ref('players')
+    .child(id)
+    .child(player)
+    .child('secondsDrank')
+    .set(seconds)
   }
 
   getPlayers(id: string) {
@@ -70,7 +74,7 @@ export class DatabaseService {
     firebase.database().ref('/players/' + id + '/').set(players);
   }
 
-  updateSeconds(id: string, player: string, seconds: number) {
+  updatePlayerSeconds(id: string, player: string, seconds: number) {
     firebase.database().ref('/players/' + id + '/' + player + '/secondsDrank/').set(seconds);
   }
 
@@ -82,8 +86,20 @@ export class DatabaseService {
     firebase.database().ref('/games/' + id + '/counting/').set(true);
   }
 
+  endCounting(id: string) {
+    firebase.database().ref('/games/' + id + '/'). update({
+      "/counting/": null,
+      "/seconds/": null,
+      "/counter/": null,
+    });
+  }
+
   deleteCounting(id: string) {
     firebase.database().ref('/games/' + id + '/counting/').remove();
+  }
+
+  deleteSeconds(id: string) {
+    firebase.database().ref('/games/' + id + '/seconds/').remove();
   }
 
   getCurrentPlayer(id: string) {
@@ -92,7 +108,11 @@ export class DatabaseService {
   }
 
   setCurrentPlayer(id: string, name: string) {
-    firebase.database().ref('/players/' + id + '/currentPlayer/').set(name);
+    firebase.database().ref('/games/' + id + '/currentPlayer/').set(name);
+  }
+
+  setCounter(id: string, name: string) {
+    firebase.database().ref('/games/' + id + '/counter').set(name);
   }
 
    create(game: Game): any {

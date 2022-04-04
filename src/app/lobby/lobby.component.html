@@ -2,9 +2,14 @@
   <div class="gameId">
     <h1>{{ this.id }}</h1>
   </div>
+  <div *ngIf="this.isHost">
     <button (click)="startGame()">Start game</button>
+  </div>
+  <div *ngIf="!this.isHost">
+    <h3>Waiting on host to start the game...</h3>
+  </div>
   <h2>Players</h2>
   <div *ngFor="let player of playerList">
-    <p>{{ player.name }}</p>
+    <p>{{ player }}</p>
   </div>
 </div>

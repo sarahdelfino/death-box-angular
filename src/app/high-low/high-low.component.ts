@@ -33,13 +33,11 @@ export interface CardData {
       transition("flipped => default", [animate("400ms")]),
     ]),
     trigger('fadeViewIn', [
-      // state("in", style({ opacity: 1 })),
       transition(":enter", [
         style({ opacity: 0 }),
         animate('4s', style({ opacity: 1 }))]),
     ]),
     trigger('fadeViewOut', [
-      // state("out", style({ opacity: 0 })),
       transition(":leave", [
         style({ opacity: 1 }),
         animate('2s 3s', style({ opacity: 0 }))]),
@@ -48,9 +46,6 @@ export interface CardData {
 })
 
 export class HighLowComponent implements OnInit, OnDestroy {
-
-  // @Input()
-  // public card: Card;
 
   public card: Card;
   public choice: string;
@@ -61,26 +56,25 @@ export class HighLowComponent implements OnInit, OnDestroy {
   };
   title: string;
   stackLength: number;
-  counter: number;
+  count: number;
   wrongGuess: boolean;
   text = '';
   gameId: string;
   subscription: Subscription;
+  uiCounter: number;
+  players: any = [];
 
   constructor(
     public dialogRef: MatDialogRef<HighLowComponent>,
     private gameService: GameService,
     private db: DatabaseService,
     @Inject(MAT_DIALOG_DATA) data) {
-    // console.log(data.data);
     this.card = data.data.crd[0];
-    // console.log(this.card);
     this.newCard = data.data.newCrd;
     this.stackLength = data.data.ln;
-    this.counter = this.stackLength;
-    console.log(this.stackLength);
-    console.log(this.counter);
+    this.count = this.stackLength;
     this.gameId = data.data.gameId;
+    this.players = data.data.curP;
     if (parseInt(this.card.value) <= 10 && parseInt(this.card.value) >= 2) {
       this.title = `Higher or lower than ${this.card.value}?`;
     } else if (parseInt(this.card.value) == 11) {
@@ -93,46 +87,27 @@ export class HighLowComponent implements OnInit, OnDestroy {
       this.title = "Higher or lower than an ace?"
     }
     this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
-      console.log(this.counter);
-      if (this.counter && this.counter == 0) {
-      this.counter = c.seconds;
-      console.log(this.counter);
-      console.log(c);
-      if (this.counter == 1) {
+      this.uiCounter = c.seconds;
+      if (this.uiCounter == 1) {
         this.text = "second";
       } else {
         this.text = "seconds";
       }
-      } else if (this.counter = 0 && !c.counting) {
-        console.log(c);
+      if (this.uiCounter == 0) {
         let timer = setTimeout(() => {
-          this.dialogRef.close();
-        }, 800);
+          let data = {crd: this.card, newCrd: this.newCard, ln: this.stackLength};
+          this.dialogRef.close(data);
+        }, 1000);
       }
     })
   }
 
   ngOnInit() {
-    // this.db.getGame(this.gameId).valueChanges().subscribe(c => {
-    //   console.log(this.counter);
-    //   this.counter = c.seconds;
-    //   console.log(this.counter);
-    //   console.log(c);
-    //   if (this.counter = 0 && !c.counting) {
-    //     console.log(c);
-    //     let timer = setTimeout(() => {
-    //       this.dialogRef.close();
-    //     }, 800);
-    //   } else if (this.counter == 1) {
-    //     this.text = "second";
-    //   } else {
-    //     this.text = "seconds";
-    //   }
-    // })
   }
 
   ngOnDestroy() {
-    this.counter = 0;
+    // end counting & delete seconds
+    this.db.endCounting(this.gameId);
     this.subscription.unsubscribe();
   }
 
@@ -145,64 +120,46 @@ export class HighLowComponent implements OnInit, OnDestroy {
   }
 
   flipEnd($event) {
-    if ($event.fromState != 'void') {
+    if ($event.fromState != 'void' && $event.toState != 'void') {
       let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
-      let data = [this.card, this.newCard, compare, this.stackLength];
-      if (compare == false) {
+      let data = {crd: this.card, newCrd: this.newCard, comp: compare, ln: this.stackLength};
+      let seconds = 0;
+      if (!compare) {
         this.wrongGuess = true;
-        // console.log(this.stackLength);
-        this.counter = this.stackLength;
-        this.db.updateGameSeconds(this.gameId, this.counter);
-        // console.log(this.counter);
-        if (this.counter == 1) {
-          this.text = "second";
+        this.count = this.stackLength;
+        this.db.updateGameSeconds(this.gameId, this.count);
+        // get index of current player
+        let i = this.players.findIndex(i => i.currentPlayer == true);
+        // if current player found..
+        if (i != -1) {
+        seconds = this.players[i].secondsDrank;
         } else {
-          this.text = "seconds";
+          i = 0;
+          seconds = this.players[i].secondsDrank;
         }
-        // this.db.getGame(this.gameId).valueChanges().subscribe(c => {
-        //   if (this.counter = 0 && !c.counting) {
-        //     console.log(c);
-        //     let timer = setTimeout(() => {
-        //       this.dialogRef.close();
-        //     }, 800);
-        //   }
-        // })
+        let newSeconds = seconds + this.count;
+        this.db.updatePlayerSeconds(this.gameId, i, newSeconds);
+        if (this.count == 0) {
+          let timer = setTimeout(() => {
+            this.dialogRef.close(data);
+          }, 1000);
+        }
       } else {
         this.title = "Correct!";
         let timer = setTimeout(() => {
           this.dialogRef.close(data);
         }, 1000);
       }
-      // let timer = setTimeout(() => {
-      //   this.dialogRef.close(data);
-      // }, 1000);
     }
   }
 
-  // below is dumb. remove logic pertaining to counter. rely on c.counting && stackLength
-
-  // getGame(id: string) {
-  //   this.db.getGame(id).valueChanges().subscribe(c => {
-  //     this.counter = c.seconds;
-  //     if (this.counter = 0 && !c.counting) {
-  //       console.log(c);
-  //       let timer = setTimeout(() => {
-  //         this.dialogRef.close();
-  //       }, 800);
-  //     } else if (this.stackLength == 1) {
-  //       this.text = "second";
-  //     } else {
-  //       this.text = "seconds";
-  //     }
-  //   })
-  // }
-
   finishedAnimations($event) {
-    console.log($event);
-    // TODO: make call to start counting event
-    this.db.updateCounting(this.gameId);
-    // console.log(this.counter);
-    // this.db.updateGameSeconds(this.gameId, this.counter);
+    if ($event.fromState === 'void' && $event.triggerName === 'fadeViewOut') {
+      this.db.updateCounting(this.gameId);
+      this.count = this.stackLength;
+      this.db.updateGameSeconds(this.gameId, this.count);
+      // this.db.updatePlayerSeconds(this.gameId, this.player, this.count);
+    }
   }
 
   higher() {

@@ -9,60 +9,65 @@ import { GameService } from '../game.service';
 })
 export class CountComponent implements OnInit {
 
-  // @Input() player: string;
-  public player: string;
+  @Input() counter: string;
   public id: string;
   public counting: boolean;
+  public currentPlayer = sessionStorage.getItem('user');
+  public filteredPlayers = [];
 
   constructor(private db: DatabaseService,
-    private gameService: GameService) { }
+    private gameService: GameService) {
+      
+     }
 
   ngOnInit() {
     this.id = this.gameService.getId();
     this.db.getPlayers(this.gameService.getId()).valueChanges().subscribe(data => {
-      console.log(data);
+      this.filteredPlayers = [];
       for (let d in data) {
-        if (data[d].currentPlayer) {
-          console.log(data[d]);
-          console.log(data[d].name);
-          this.player = data[d].name;
+        if (!data[d].currentPlayer) {
+          this.filteredPlayers.push(data[d]);
+          this.counter = this.filteredPlayers[0].name;
         }
       }
     });
     this.db.getGame(this.id).valueChanges().subscribe(gameData => {
-      console.log(gameData);
       if (gameData.counting && gameData.seconds) {
         this.counting = true;
+        if (gameData.counter) {
+          this.counter = gameData.counter;
+        }
       }
     })
-    // console.log(localStorage.getItem('user'));
-    // if (localStorage.getItem('user') == this.player) {
-    //   console.log("hey!!!!!");
-    // }
-    // console.log(this.player);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
       const chng = changes[propName];
       const cur = JSON.stringify(chng.currentValue);
-      console.log(chng);
     }
-    console.log(this.player);
   }
 
 
   count() {
-    // console.log("hello");
-    console.log(this.counting);
-    if (localStorage.getItem('user') == this.player && this.counting == true) {
-      console.log("hey!!!!!");
+    if (sessionStorage.getItem('user') == this.counter && this.counting == true) {
       this.db.decrementSeconds(this.id);
-      this.counting = false;
-      console.log(this.counting);
-      this.db.deleteCounting(this.id);
-      // count 
+      if (this.filteredPlayers.length > 1) {
+        this.getNextCounter();
+      }
     }
+  }
+
+  getNextCounter() {
+    let curCountIndex = this.filteredPlayers.map(function(e) { return e.name; }).indexOf(this.counter);
+    console.log(curCountIndex);
+    console.log(curCountIndex);
+    let newIndex = curCountIndex + 1;
+    if (newIndex == this.filteredPlayers.length) {
+      newIndex = 0;
+    }
+    this.counter = this.filteredPlayers[newIndex].name;
+    this.db.setCounter(this.id, this.counter);
   }
 
 }
