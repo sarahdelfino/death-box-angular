@@ -1,6 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { Coord } from 'src/coord';
 import { Card } from '../card/card';
 import { GameService } from '../game.service';
 
@@ -41,8 +40,6 @@ export interface CardData {
 export class DeckComponent implements OnInit {
   @Input()
   public card: Card;
-
-  pos: Coord = null;
 
   data: CardData = {
     imageId: "",

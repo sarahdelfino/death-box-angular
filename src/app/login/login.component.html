@@ -3,7 +3,8 @@
     <img class="logo" src="./assets/Death.svg" />
     <div class="displayTableCell">
       <div class="authBlock" *ngIf="this.loggedIn == false">
-        <h3>Sign In</h3>
+        <h3>Please sign in to create a game</h3>
+        <div class="forms">
         <div class="formGroup">
           <input
             type="text"
@@ -31,16 +32,7 @@
             (click)="authService.SignIn(userName.value, userPassword.value)"
           />
         </div>
-        <div class="formGroup">
-          <span class="or"><span class="orInner">Or</span></span>
-        </div>
-        <!-- Calling GoogleAuth Api from AuthService -->
-        <!-- <div class="formGroup">
-          <button type="button" class="btn googleBtn" (click)="authService.GoogleAuth()">
-            <i class="fab fa-google-plus-g"></i>
-            Log in with Google
-          </button>
-        </div> -->
+      </div>
         <div class="forgotPassword">
           <span routerLink="/forgot-password">Forgot Password?</span>
         </div>
