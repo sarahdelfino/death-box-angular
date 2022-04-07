@@ -92,7 +92,6 @@ openModal(data: any) {
   const dialogConfig = new MatDialogConfig();
   const timeout = 1000;
   dialogConfig.data = data;
-  console.log("DIALOGCONFIG: ", dialogConfig.data);
 
   const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
 
@@ -106,18 +105,14 @@ openModal(data: any) {
 getNextPlayer(playerIndex: number, playerList: any) {
   let newIndex = 0;
 
-  console.log(playerList);
   delete playerList[playerIndex].currentPlayer;
 
   if (playerIndex == playerList.length - 1) {
     playerList[newIndex].currentPlayer = true;
-    console.log(playerList);
   } else {
     newIndex = playerIndex + 1;
     playerList[newIndex].currentPlayer = true;
-    console.log(playerList);
   }
-  console.log(playerList);
   this.db.updatePlayers(this.getId(), playerList);
 }
 

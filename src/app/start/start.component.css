@@ -25,10 +25,10 @@ img {
 }
 
 .info {
-    position: absolute;
+    /* position: absolute;
     right: 30px;
     top: 30px;
-    margin: 0;
+    margin: 0; */
 }
 
 .info:hover {

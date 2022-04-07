@@ -14,7 +14,6 @@ export class ModalComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) data) {
-      console.log(data);
     this.title = data.title;
     this.body = data.body;
     this.currentPlayer = data.currentPlayer;

@@ -16,15 +16,14 @@ export class CountComponent implements OnInit {
   public filteredPlayers = [];
 
   constructor(private db: DatabaseService,
-    private gameService: GameService) {
-      
-     }
+    private gameService: GameService) { 
+    }
 
   ngOnInit() {
     this.id = this.gameService.getId();
     this.db.getPlayers(this.gameService.getId()).valueChanges().subscribe(data => {
       this.filteredPlayers = [];
-      for (let d in data) {
+      for (const d in data) {
         if (!data[d].currentPlayer) {
           this.filteredPlayers.push(data[d]);
           this.counter = this.filteredPlayers[0].name;
@@ -39,7 +38,7 @@ export class CountComponent implements OnInit {
         }
       }
     })
-  }
+  };
 
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
@@ -50,7 +49,7 @@ export class CountComponent implements OnInit {
 
 
   count() {
-    if (sessionStorage.getItem('user') == this.counter && this.counting == true) {
+    if (sessionStorage.getItem('user') === this.counter && this.counting === true) {
       this.db.decrementSeconds(this.id);
       if (this.filteredPlayers.length > 1) {
         this.getNextCounter();
@@ -59,9 +58,7 @@ export class CountComponent implements OnInit {
   }
 
   getNextCounter() {
-    let curCountIndex = this.filteredPlayers.map(function(e) { return e.name; }).indexOf(this.counter);
-    console.log(curCountIndex);
-    console.log(curCountIndex);
+    const curCountIndex = this.filteredPlayers.map(function(e) { return e.name; }).indexOf(this.counter);
     let newIndex = curCountIndex + 1;
     if (newIndex == this.filteredPlayers.length) {
       newIndex = 0;

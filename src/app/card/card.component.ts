@@ -20,8 +20,8 @@ export class CardComponent implements OnInit {
   private clickedCardEmitter: EventEmitter<Card> = new EventEmitter();
   constructor() { }
   ngOnInit() {
-    if(this.card == null) {
-      this.card = new Card("undefined", "undefined");
+    if(this.card == null) { 
+      this.card = new Card('undefined', 'undefined');
     }
   }
 
