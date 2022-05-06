@@ -1,14 +1,13 @@
 <div class="displayTable">
-  <div class="contents">
-    <img class="logo" src="./assets/Death.svg" />
+  <div class="contents">    
+    <!-- <img class="logo" src="./assets/Death.svg" /> -->
     <div class="displayTableCell">
       <div class="authBlock" *ngIf="this.loggedIn == false">
-        <h3>Please sign in to create a game</h3>
+        <h3>Please log in or sign up to create a game</h3>
         <div class="forms">
         <div class="formGroup">
           <input
             type="text"
-            class="formControl"
             placeholder="Username"
             #userName
             required
@@ -17,7 +16,6 @@
         <div class="formGroup">
           <input
             type="password"
-            class="formControl"
             placeholder="Password"
             #userPassword
             required

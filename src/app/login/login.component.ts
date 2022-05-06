@@ -5,6 +5,7 @@ import { AuthService } from '../auth.service';
 import { DatabaseService } from '../database.service';
 import { Game } from '../game';
 import { nanoid } from "nanoid";
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-login',

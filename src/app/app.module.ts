@@ -19,6 +19,7 @@ import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -63,6 +64,7 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatTabsModule,
     MatDialogModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,

@@ -1,27 +1,3 @@
-input {
-    height: 30px;
-    /* border-radius: 5px; */
-    /* border: 0.5px solid gray; */
-    border-bottom: 4px solid #ffcdb2;
-    border-left: 3px solid #ffcdb2;
-    /* border-bottom: 3px solid #ffcdb2; */
-    /* border: none; */
-    border-top: none;
-    /* border-left: none; */
-    border-right: none;
-    margin-right: 10px;
-    padding: 5px;
-    background-color: gray;
-}
-
-::placeholder {
-    color: #ffcdb2;
-    /* font-weight: 500; */
-    font-size: 16px;
-    letter-spacing: 1px;
-    font-style: bold;
-}
-
 img {
     margin-left: auto;
     margin-right: auto;
@@ -79,7 +55,7 @@ img {
     height: auto;
     margin-bottom: 10px;
     margin-top: 50px;
-    background-color: gray;
+    /* background-color: gray; */
     margin-left: auto;
     margin-right: auto;
     box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);

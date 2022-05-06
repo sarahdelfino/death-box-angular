@@ -1,6 +1,13 @@
 <img class="info" src="./assets/information.png" (click)="infoClick()" />
 <div class="container">
-  <app-login></app-login>
+  <mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Login">
+      <app-login></app-login>
+    </mat-tab>
+    <mat-tab label="Sign Up">
+      <app-signup></app-signup>
+    </mat-tab>
+  </mat-tab-group>
   <div class="forms">
     <form [formGroup]="joinGameForm" id="join" method="POST">
       <input
