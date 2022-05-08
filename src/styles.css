@@ -2,7 +2,7 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 html, body { height: 100%; }
 /* body { margin: 0; font-family: 'Inconsolata', monospace; background-color: #ffcdb2; color: #e5989b;} */
-body { font-family: 'Inconsolata', monospace; background-color: gray; color: #e5989b;}
+body { font-family: 'Inconsolata', monospace; color: #e5989b;}
 
 .card-container {
   max-width: 50vw;
@@ -18,25 +18,36 @@ h1 {
 }
 
 input {
+  width: 200px;
+  border: 1px solid gray;
+  border-radius: 3px;
   height: 30px;
-  /* border-radius: 5px; */
-  /* border: 0.5px solid gray; */
-  border-bottom: 4px solid #ffcdb2;
-  border-left: 3px solid #ffcdb2;
-  /* border-bottom: 3px solid #ffcdb2; */
-  /* border: none; */
-  border-top: none;
-  /* border-left: none; */
-  border-right: none;
-  margin-right: 10px;
-  padding: 5px;
-  background-color: gray;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 ::placeholder {
-  color: #ffcdb2;
-  /* font-weight: 500; */
-  font-size: 16px;
+  font-size: 1rem;
+}
+
+button, .button {
+  width: 222px;
+  height: 40px;
+  /* margin-left: 40px; */
+  background-color: #e5989b;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: 500;
   letter-spacing: 1px;
-  font-style: bold;
+  font-size: 16px;
+
+}
+
+button:hover, .button:hover {
+  cursor: pointer;
+  background-color: white;
+  color: #e5989b;
+  border: 2px solid #6d6875;
+  font-weight: 500;
 }

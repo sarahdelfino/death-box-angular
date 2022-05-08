@@ -1,32 +1,19 @@
-<img class="info" src="./assets/information.png" (click)="infoClick()" />
 <div class="container">
   <mat-tab-group mat-align-tabs="center">
-    <mat-tab label="Login">
+    <mat-tab label="Join Game">
+      <form [formGroup]="joinGameForm" id="join" method="POST">
+        <h3>Already have a game set up?</h3>
+        <div class="inputs">
+          <input id="gameId" formControlName="id" required autocomplete="off" placeholder="Game ID" />
+          <input id="name" formControlName="name" required autocomplete="off" placeholder="Name" />
+        </div>
+        <button (click)="joinGame(joinGameForm.value)" type="submit">
+          Join game
+        </button>
+      </form>
+    </mat-tab>
+    <mat-tab label="Create Game">
       <app-login></app-login>
     </mat-tab>
-    <mat-tab label="Sign Up">
-      <app-signup></app-signup>
-    </mat-tab>
   </mat-tab-group>
-  <div class="forms">
-    <form [formGroup]="joinGameForm" id="join" method="POST">
-      <input
-        id="gameId"
-        formControlName="id"
-        required
-        autocomplete="off"
-        placeholder="Game ID"
-      />
-      <input
-        id="name"
-        formControlName="name"
-        required
-        autocomplete="off"
-        placeholder="Name"
-      />
-      <button (click)="joinGame(joinGameForm.value)" type="submit">
-        Join game
-      </button>
-    </form>
-  </div>
 </div>

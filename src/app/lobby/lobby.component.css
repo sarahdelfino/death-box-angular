@@ -10,10 +10,9 @@
     border-top: 2px solid #6d6875;
     border-left: 2px solid #6d6875;
     border-bottom: 1px solid #6d6875;
-    background-color: gray;
-    box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
--webkit-box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
--moz-box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
+    box-shadow: 5px 5px 2.5px 0px rgba(109,104,117,0.75);
+-webkit-box-shadow: 5px 5px 2.5px 0px  rgba(109,104,117,0.75);
+-moz-box-shadow: 5px 5px 2.5px 0px  rgba(109,104,117,0.75);
 }
 
 .gameId {

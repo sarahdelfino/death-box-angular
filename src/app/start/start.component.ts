@@ -24,6 +24,7 @@ export class StartComponent implements OnInit {
   name: string;
   currentGame: string;
   loggedIn: boolean;
+  mobile: boolean;
 
   constructor(
     public authService: AuthService,
@@ -31,7 +32,7 @@ export class StartComponent implements OnInit {
     private router: Router,
     private dbService: DatabaseService,
     private dialog: MatDialog,
-  ) { 
+  ) {
     this.createForm();
   }
 
@@ -42,6 +43,7 @@ export class StartComponent implements OnInit {
     //   this.loggedIn = false;
     // }
   }
+
 
   createForm(): void {
     this.joinGameForm = this.formBuilder.group({

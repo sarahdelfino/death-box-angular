@@ -5,17 +5,14 @@ img {
     display: block;
 }
 
-.contents {
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: auto;
-    padding-right: auto;
-    /* text-align: center; */
+.login {
+    display: flex;
+    flex-direction: column;
 }
 
-.forms {
-    display: flex;
-    margin-top: 10px;
+input {
+    width: 200px;
+    border-radius: 3px;
 }
 
 .forgotPassword {
@@ -23,42 +20,19 @@ img {
     margin-bottom: 10px;
 }
 
-.button {
-    width: 120px;
-    height: 40px;
-    /* margin-left: 40px; */
-    background-color: #e5989b;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    font-weight: 500;
-    letter-spacing: 1px;
-    font-size: 16px;
-
-}
-
-.button:hover {
-    cursor: pointer;
-    background-color: white;
-    color: #e5989b;
-    border: 2px solid #6d6875;
-    font-weight: 500;
-}
-
  .displayTable {
-    width: 600px;
+    width: 500px;
     padding: 30px;
+    border: 1px solid #6d6875;
     border-radius: 5px;
-    border-top: 2px solid #6d6875;
-    border-left: 2px solid #6d6875;
-    border-bottom: 1px solid #6d6875;
-    height: auto;
+    height: 50vh;
     margin-bottom: 10px;
     margin-top: 50px;
-    /* background-color: gray; */
     margin-left: auto;
     margin-right: auto;
-    box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
--webkit-box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
--moz-box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
+}
+
+.displayTableCell {
+    margin-left: auto;
+    margin-right: auto;
 }

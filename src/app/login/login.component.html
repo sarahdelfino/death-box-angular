@@ -1,52 +1,26 @@
 <div class="displayTable">
-  <div class="contents">    
-    <!-- <img class="logo" src="./assets/Death.svg" /> -->
     <div class="displayTableCell">
       <div class="authBlock" *ngIf="this.loggedIn == false">
         <h3>Please log in or sign up to create a game</h3>
-        <div class="forms">
-        <div class="formGroup">
-          <input
-            type="text"
-            placeholder="Username"
-            #userName
-            required
-          />
-        </div>
-        <div class="formGroup">
-          <input
-            type="password"
-            placeholder="Password"
-            #userPassword
-            required
-          />
+        <div class="login">
+          <input type="text" placeholder="Email" #userName required />
+          <input type="password" placeholder="Password" #userPassword required />
         </div>
         <!-- Calling SignIn Api from AuthService -->
         <div class="formGroup">
-          <input
-            type="button"
-            class="button"
-            value="Log in"
-            (click)="authService.SignIn(userName.value, userPassword.value)"
-          />
+          <button (click)="authService.SignIn(userName.value, userPassword.value)">Log In</button>
         </div>
-      </div>
         <div class="forgotPassword">
           <span routerLink="/forgot-password">Forgot Password?</span>
         </div>
-      </div>
-      <div class="createGame" *ngIf="this.loggedIn == true">
-        <button (click)="createGame()" type="submit" class="button">
-          Create game
-        </button>
-      </div>
-      <div class="redirectToLogin" *ngIf="this.loggedIn == false">
-        <span
-          >Don't have an account?<span class="redirect" routerLink="/signup">
-            Sign Up</span
-          ></span
-        >
+        <span routerLink="/sign-up">
+          Sign Up</span>
       </div>
     </div>
+    <div class="createGame" *ngIf="this.loggedIn == true">
+      <h3>Thanks for joining!</h3>
+      <button (click)="createGame()" type="submit" class="button">
+        Create game
+      </button>
+    </div>
   </div>
-</div>
