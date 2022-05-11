@@ -6,6 +6,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DatabaseService } from '../database.service';
 import { InfoComponent } from '../info/info.component';
 import { nanoid } from "nanoid";
+import { GoogleAnalyticsService } from 'ngx-google-analytics';
 
 @Component({
   selector: 'app-start',
@@ -28,19 +29,16 @@ export class StartComponent implements OnInit {
     private router: Router,
     private dbService: DatabaseService,
     private dialog: MatDialog,
+    protected $gaService: GoogleAnalyticsService
   ) { 
     this.createForm();
   }
 
   ngOnInit() {
+    this.$gaService.pageView('/', 'home page load');
     if (window.innerWidth < 500) {
       this.isMobile = true;
     }
-    // if (this.authService.isLoggedIn) {
-    //   this.loggedIn = true;
-    // } else {
-    //   this.loggedIn = false;
-    // }
   }
 
   createForm(): void {

@@ -61,7 +61,7 @@ import { CountComponent } from './count/count.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireDatabaseModule,
-    NgxGoogleAnalyticsModule.forRoot('G-RMWB0565QP'),
+    NgxGoogleAnalyticsModule.forRoot(environment.firebase.measurementId),
     NgxGoogleAnalyticsRouterModule,
     MatInputModule,
     MatRippleModule,

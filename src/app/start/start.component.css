@@ -24,7 +24,7 @@ h1 {
     margin-left: 20px;
 }
 
-h3 {
+.topInfo {
     text-align: right;
     position: absolute;
     top: 0;

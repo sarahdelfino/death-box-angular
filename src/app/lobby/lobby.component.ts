@@ -5,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Game } from '../game';
 import { DatabaseService } from '../database.service';
 import { GameService } from '../game.service';
+import { GoogleAnalyticsService } from 'ngx-google-analytics';
 
 @Component({
   selector: 'app-lobby',
@@ -24,9 +25,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location,
-    private gameService: GameService,
-    private db: DatabaseService
+    private db: DatabaseService,
+    protected $gaService: GoogleAnalyticsService
   ) {
     if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
@@ -43,6 +43,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.$gaService.pageView('/lobby', 'lobby');
     this.getPlayers();
   }
 
