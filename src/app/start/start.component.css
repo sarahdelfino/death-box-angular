@@ -54,6 +54,7 @@ button {
 
 .buttonContainer {
     max-width: 600px;
+    height: auto;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -61,10 +62,6 @@ button {
 
 .info:hover {
     cursor: pointer;
-}
-
-.form {
-    
 }
 
 .playButton {
@@ -80,6 +77,9 @@ mat-label.mat-label {
 }
 
 @media (max-width: 400px) {
+    .container {
+        height: 90vh;
+    }
     h1 {
         font-size: 45px;
         margin-left: 5px;
@@ -89,15 +89,17 @@ mat-label.mat-label {
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
+        margin-bottom: 10px;
+        height: 100px;
     }
     button {
         width: 170px;
         margin: 5px;
-        height: 100px;
+        height: 80px;
     }
     .logo {
         max-width: 380px;
-        margin-top: -20px;
+        margin-top: -25px;
     }
     .form {
         margin-top: 20px;
