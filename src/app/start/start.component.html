@@ -1,5 +1,8 @@
 <div class="container">
   <mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Create Game">
+      <app-login></app-login>
+    </mat-tab>
     <mat-tab label="Join Game">
       <form [formGroup]="joinGameForm" id="join" method="POST">
         <h3>Already have a game set up?</h3>
@@ -11,9 +14,6 @@
           Join game
         </button>
       </form>
-    </mat-tab>
-    <mat-tab label="Create Game">
-      <app-login></app-login>
     </mat-tab>
   </mat-tab-group>
 </div>
