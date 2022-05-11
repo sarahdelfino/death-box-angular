@@ -1,9 +1,9 @@
 <div class="container">
     <h1>Death Box</h1>
-    <h3 gaEvent="button_click" gaAction="info" class="topInfo" *ngIf="!this.isMobile" (click)="infoClick()">How to play</h3>
     <div class="logoContainer">
       <img class="logo" src="../../assets/DeathBox.png">
   </div>
+  <h3 gaEvent="button_click" gaAction="info" class="info" (click)="infoClick()">How to play</h3>
   <div class="buttonContainer">
     <div class="placeholder" *ngIf="!this.joinClicked && this.isMobile"></div>
     <button gaEvent gaAction="mobile_play_game" *ngIf="this.joinClicked && this.isMobile" class="playButton" (click)="joinGame(joinGameForm.value)" type="submit">
@@ -12,7 +12,6 @@
     <button gaEvent gaAction="create_game" *ngIf="!this.isMobile" (click)="createGame()" type="submit">Create game</button>
     <button gaEvent gaAction="join_trigger" (click)="joinTrigger()">Join game</button>
   </div>
-  <h3 gaEvent="button_click" gaAction="mobile_info" *ngIf="this.isMobile" (click)="infoClick()">How to play</h3>
   <div class="form" *ngIf="this.joinClicked">
     <form [formGroup]="joinGameForm" id="join" method="POST">
       <input id="gameId" formControlName="id" required autocomplete="off" placeholder="Game ID" />
