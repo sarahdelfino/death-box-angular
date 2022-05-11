@@ -64,10 +64,6 @@ button {
     cursor: pointer;
 }
 
-.playButton {
-    margin-left: 20px;
-}
-
 mat-form-field.mat-form-field {
     margin-right: 10px;
 }
@@ -81,16 +77,20 @@ mat-label.mat-label {
         height: 90vh;
     }
     h1 {
-        font-size: 45px;
-        margin-left: 5px;
+        font-size: 40px;
+        margin-left: 0px;
         text-align: center;
     }
     .buttonContainer {
         display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
+        justify-content: space-around;
         margin-bottom: 10px;
         height: 100px;
+    }
+    .placeholder {
+        width: 170px;
+        height: 100px;
+        margin: 5px;
     }
     button {
         width: 170px;
@@ -99,7 +99,7 @@ mat-label.mat-label {
     }
     .logo {
         max-width: 380px;
-        margin-top: -25px;
+        margin-top: -30px;
     }
     .form {
         margin-top: 20px;
