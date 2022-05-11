@@ -2,20 +2,54 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 html, body { height: 100%; }
 /* body { margin: 0; font-family: 'Inconsolata', monospace; background-color: #ffcdb2; color: #e5989b;} */
-body { font-family: 'Inconsolata', monospace; background-color: gray; color: #e5989b;}
+body { margin: 0; font-family: 'Inconsolata', monospace; color: #FF6666;}
 
 .card-container {
   max-width: 50vw;
   margin-left: 5%;
 }
 
-.background {
-  position: relative;
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-image: url(assets/green-background.jpg);
-  background-size: cover;
+input {
+  width: 200px;
+  border: 1px solid gray;
+  border-radius: 3px;
+  height: 30px;
+  padding: 10px;
+  margin-bottom: 10px;
+  margin: 10px;
+}
+
+::placeholder {
+  font-size: 1rem;
+}
+
+button, .button {
+  width: 222px;
+  height: 40px;
+  margin: 10px;
+  background-color: #FF6666;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: 500;
+  letter-spacing: 1px;
+  font-size: 16px;
+
+}
+
+button:hover, .button:hover {
+  cursor: pointer;
+  background-color: white;
+  color: #FF6666;
+  border: 2px solid #4D4D4D;
+  font-weight: 500;
+}
+
+@media (max-width: 400px) {
+  button {
+      width: 170px;
+      margin: 5px;
+      height: 120px;
+      margin-bottom: 40px;
+  }
 }

@@ -1,16 +1,14 @@
 import { Component, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { MatDialog, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
 import { HighLowComponent } from '../high-low/high-low.component';
 import { ModalComponent } from '../modal/modal.component';
 import { RemoveStacksComponent } from '../remove-stacks/remove-stacks.component';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../database.service';
-import { Player } from '../player';
 import { InfoComponent } from '../info/info.component';
 import { Game } from '../game';
-import { AuthService } from '../auth.service';
 
 
 @Component({
@@ -37,7 +35,7 @@ export class GameComponent implements OnInit, OnDestroy {
     private db: DatabaseService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private auth: AuthService) { }
+  ) { }
 
 
   ngOnInit() {

@@ -6,21 +6,14 @@ body {
 
 .game {
   display: flex;
-  max-width: 80vw;
+  /* max-width: 80vw; */
   min-width: 700px;
   height: 90vh;
-  padding: 20px;
-  background-color: gray;
-  border-radius: 5px;
-  margin-top: 20px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
-  border-top: 3px solid #6d6875;
-  border-left: 3px solid #6d6875;
-  border-bottom: 1px solid #6d6875;
-  box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
--webkit-box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
--moz-box-shadow: 10px 10px 5px 0px rgba(109,104,117,0.75);
 }
 
  .card-container {

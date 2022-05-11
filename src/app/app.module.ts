@@ -31,11 +31,6 @@ import { PlayersComponent } from './players/players.component';
 import { DeckComponent } from './deck/deck.component';
 import { InfoComponent } from './info/info.component';
 import { CountComponent } from './count/count.component';
-import { LoginComponent } from './login/login.component';
-import { SignupComponent } from './signup/signup.component';
-import { AuthService } from './auth.service';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 @NgModule({
   declarations: [
@@ -52,10 +47,6 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
     DeckComponent,
     InfoComponent,
     CountComponent,
-    LoginComponent,
-    SignupComponent,
-    ForgotPasswordComponent,
-    VerifyEmailComponent,
   ],
   imports: [
     BrowserModule,
@@ -82,7 +73,6 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
   ],
   providers: [
     GameService,
-    AuthService
   ],
   bootstrap: [AppComponent]
 })
