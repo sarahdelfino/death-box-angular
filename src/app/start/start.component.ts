@@ -7,6 +7,7 @@ import { DatabaseService } from '../database.service';
 import { InfoComponent } from '../info/info.component';
 import { nanoid } from "nanoid";
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-start',
@@ -78,8 +79,12 @@ export class StartComponent implements OnInit {
   joinTrigger() {
     if (this.joinClicked) {
       this.joinClicked = false;
+      let el = document.getElementById('container');
+      el.scrollIntoView();
     } else {
       this.joinClicked = true;
+      let el = document.getElementById('join');
+      el.scrollIntoView();
     }
   }
 

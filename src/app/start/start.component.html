@@ -1,4 +1,4 @@
-<div class="container">
+<div id="container" class="container">
     <h1>Death Box</h1>
     <div class="logoContainer">
       <img class="logo" src="../../assets/DeathBox.png">
@@ -12,8 +12,8 @@
     <button gaEvent gaAction="create_game" *ngIf="!this.isMobile" (click)="createGame()" type="submit">Create game</button>
     <button gaEvent gaAction="join_trigger" (click)="joinTrigger()">Join game</button>
   </div>
-  <div class="form" *ngIf="this.joinClicked">
-    <form [formGroup]="joinGameForm" id="join" method="POST">
+  <div id="join">
+    <form class="form" *ngIf="this.joinClicked" [formGroup]="joinGameForm" id="join" method="POST">
       <input id="gameId" formControlName="id" required autocomplete="off" placeholder="Game ID" />
       <input id="name" formControlName="name" required autocomplete="off" placeholder="Name" />
       <button gaEvent gaAction="play_game" *ngIf="!this.isMobile" class="playButton" (click)="joinGame(joinGameForm.value)" type="submit">
