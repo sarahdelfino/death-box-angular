@@ -26,10 +26,10 @@ export interface CardData {
       state(
         "flipped",
         style({
-          transform: "rotateY(180deg)",
+          transform: "rotateY(180deg) translate(-150px, 0px)",
         })
       ),
-      transition("default => flipped", [animate('200ms .2s',)]),
+      transition("default => flipped", [animate('500ms',)]),
       transition("flipped => default", [animate("400ms")]),
     ]),
     trigger('fadeViewIn', [

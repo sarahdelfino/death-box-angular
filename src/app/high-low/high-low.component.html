@@ -1,28 +1,58 @@
 <div class="container">
   <div mat-dialog-content>
-    <div class="stack">
-      <img class="s" src="../../assets/cards/back3.png" />
-    </div>
-    <div class="card" [@cardFlip]="data.state" (@cardFlip.done)="flipEnd($event)">
-      <div class="face back">
-        <img class="back" src="../../assets/cards/back3.png" />
+    <div class="card">
+      <img class="stack" src="../../assets/cards/back.svg">
+      <div class="flip-card">
+        <div
+          class="flip-card-inner"
+          [@cardFlip]="data.state"
+          (@cardFlip.done)="flipEnd($event)"
+        >
+          <div class="flip-card-front">
+            <img
+              src="../../assets/cards/back.svg"
+              alt="deck"
+              style="width: 300px; height: 300px"
+            />
+          </div>
+          <div class="flip-card-back">
+            <img
+              class="card-face"
+              [src]="newCard.cardPath"
+              style="width: 300px; height: 300px"
+            />
+          </div>
+        </div>
       </div>
-      <div class="face front">
-        <img class="fce" [src]="newCard.cardPath" />
+    </div>
+    <div class="text">
+      <div
+        class="counting"
+        @fadeViewOut
+        *ngIf="this.wrongGuess == true"
+        (@fadeViewOut.done)="finishedAnimations($event)"
+      >
+        <h2>Wrong! Drink for</h2>
+        <h2 class="counter">{{ this.uiCounter }}</h2>
+        <h2>{{ this.text }}!</h2>
       </div>
-    </div>
-    <div class="counting" @fadeViewOut *ngIf="this.wrongGuess == true"
-      (@fadeViewOut.done)="finishedAnimations($event)">
-      <h2>Wrong! Drink for</h2>
-      <h2 class="counter">{{ this.uiCounter }}</h2>
-      <h2>{{ this.text }}!</h2>
-    </div>
-    <div @fadeViewIn *ngIf="!this.wrongGuess">
-      <h2 mat-dialog-title>{{this.title}}</h2>
-      <mat-dialog-actions align="center">
-        <img class="arrow" mat-button src="../../assets/up-arrow.png" (click)="higher()" />
-        <img class="arrow" mat-button src="../../assets/down-arrow.png" (click)="lower()" />
-      </mat-dialog-actions>
+      <div @fadeViewIn *ngIf="!this.wrongGuess">
+        <h2 mat-dialog-title>{{ this.title }}</h2>
+        <mat-dialog-actions align="center">
+          <img
+            class="arrow"
+            mat-button
+            src="../../assets/up-arrow.png"
+            (click)="higher()"
+          />
+          <img
+            class="arrow"
+            mat-button
+            src="../../assets/down-arrow.png"
+            (click)="lower()"
+          />
+        </mat-dialog-actions>
+      </div>
     </div>
   </div>
 </div>

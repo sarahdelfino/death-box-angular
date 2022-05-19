@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { GameService } from '../game.service';
 
@@ -36,6 +36,8 @@ export class CountComponent implements OnInit {
         if (gameData.counter) {
           this.counter = gameData.counter;
         }
+      } else if (!gameData.counting) {
+        this.counting = false;
       }
     })
   };
@@ -44,6 +46,7 @@ export class CountComponent implements OnInit {
     for (const propName in changes) {
       const chng = changes[propName];
       const cur = JSON.stringify(chng.currentValue);
+      console.log(cur);
     }
   }
 

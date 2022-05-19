@@ -46,6 +46,7 @@ export class PlayersComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
     if (!this.seconds &&
       this.currentPlayer &&
       this.turn == 0) {

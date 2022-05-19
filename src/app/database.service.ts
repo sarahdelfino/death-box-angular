@@ -53,7 +53,7 @@ export class DatabaseService {
     .ref('games')
     .child(id)
     .child('seconds')
-    .set(firebase.database.ServerValue.increment(-1))
+    .set(firebase.database.ServerValue.increment(-1));
   }
 
   incrementSeconds(id: string, player: any, seconds: number) {

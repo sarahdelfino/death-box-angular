@@ -4,6 +4,7 @@
     height: auto;
     margin-left: auto;
     margin-right: auto;
+    font-size: 1.5rem;
 }
 
 table {
@@ -13,7 +14,7 @@ table {
 
 .current-player, .players-containers {
     display: flex;
-    max-width: 180px;
+    /* max-width: 180px; */
     justify-content: space-around;
     margin-left: auto;
     margin-right: auto;
@@ -23,15 +24,16 @@ table {
     border: 1px solid white;
 }
 
-.row {
-    /* margin-top: 10px;
-    margin-bottom: 10px; */
-}
-
 .current-player {
     background-color: #FF6666;
     color: white;
-    /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px; */
+    animation-name: add-highlight;
+    animation-duration: .5s;
+}
+
+@keyframes add-highlight {
+    from {background-color: white; color: #FF6666;}
+    to {background-color: #FF6666; color: white;}
 }
 
 .flex-item {
@@ -39,7 +41,6 @@ table {
 }
 
 th {
-    /* font-size: 30px; */
     width: 100%;
 }
 
@@ -47,15 +48,6 @@ td {
     text-align: center;
     font-size: 18px;
 }
-
-/* #players .current-player, #players .current-player {
-    border: 1px solid #ddd;
-    padding: 8px;
-} */
-
-/* .players-containers td, .players-containers th {
-    border: 1px solid white;
-} */
 
 @media (max-width: 1500px) {
     .players {

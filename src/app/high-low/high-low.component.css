@@ -1,7 +1,23 @@
 .container {
-    width: 500px;
-    height: 500px;
+    width: 700px;
+    height: 600px;
     padding-top: 20px;
+}
+
+.card {
+    height: 300px;
+    padding-left: 50px;
+}
+
+.stack {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    z-index: 0;
+}
+
+.text {
+    margin-top: 20px;
 }
 
 .counting {
@@ -16,7 +32,6 @@
 
 .mat-dialog-content {
     width: auto;
-    /* height: 300px; */
     overflow: visible;
     height: 100%;
     margin-left: auto;
@@ -30,93 +45,56 @@
 .arrow {
     width: 100px;
     margin: 10px;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
-.s {
-    max-width: 200px;
-    max-height: 200px;
-
-}
-
-:host {
-    display: block;
-    /* perspective: 600px; */
-}
-
-.card {
-    position: relative;
-    top: -180px;
-    left: 0;
-    /* top: 0px;
-    left: 0px;
-    z-index: 99;  */
-    transform-style: preserve-3d;
-}
-
-.face {
-    display: block;
-    position: absolute;
-    top: 0px;
-    /* left: 50px; */
-    backface-visibility: hidden;
-    /* border: solid red 1px; */
-}
-
-.fce {
-    display: block;
-    position: absolute;
-    left: 150px;
+.card-face {
     max-width: 180px;
-    max-height: 180px;
 }
 
-.back {
-    max-width: 300px;
-    max-height: 300px;
-}
 
-.front {
-    transform: rotateY(180deg);
-}
-
-@media (min-width: 1200px) {
-    .stack {
-        max-width: 150px;
-        max-height: 180px;
-    }
-    .back {
-        max-width: 200px;
-        max-height: 200px;
-    }
-    .face {
-        max-width: 180px;
-        max-height: 180px;
-
-    }
-    .front {
-        right: 100px;
-        top: 5px;
-    }
-  }
-
-  @media (min-width: 600px) {
-    .stack {
-        max-width: 150px;
-        max-height: 180px;
-    }
-    .back {
-        max-width: 200px;
-        max-height: 200px;
-    }
-    .face {
-        max-width: 180px;
-        max-height: 180px;
-
-    }
-    .front {
-        right: 100px;
-        top: 5px;
-    }
+/* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+.flip-card {
+    background-color: transparent;
+    width: 300px;
+    height: 200px;
+    z-index: 2;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
   }
   
+  /* This container is needed to position the front and back side */
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+  
+  /* Do an horizontal flip when you move the mouse over the flip box container */
+  .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+  
+  /* Position the front and back side */
+  .flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+  }
+  
+  /* Style the front side (fallback if image is missing) */
+  /* .flip-card-front {
+    background-color: #bbb;
+    color: black;
+  } */
+  
+  /* Style the back side */
+  .flip-card-back {
+    max-width: 180px;
+    max-height: 180px;
+    transform: rotateY(180deg);
+  }

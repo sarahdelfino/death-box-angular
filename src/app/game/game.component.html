@@ -2,7 +2,7 @@
   <div *ngIf="this.isHost == true" class="container">
     <div class="card-container">
       <ng-container *ngFor="let stack of stacks">
-        <app-stack class="grid-item" [cards]="stack" (clickedCardEmitter)="clickedCard($event)"
+        <app-stack [cards]="stack" (clickedCardEmitter)="clickedCard($event)"
           (click)="chooseCard(stack)"></app-stack>
       </ng-container>
     </div>
@@ -12,7 +12,6 @@
   </div>
   <div class="right">
   <app-players [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players>
-  <!-- <app-deck [card]="newCard"></app-deck> -->
   </div>
 </div>
 <img class="info" src="./assets/information.png" (click)="onClick()"/>
