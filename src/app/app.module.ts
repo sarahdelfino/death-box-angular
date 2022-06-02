@@ -32,6 +32,7 @@ import { PlayersComponent } from './players/players.component';
 import { DeckComponent } from './deck/deck.component';
 import { InfoComponent } from './info/info.component';
 import { CountComponent } from './count/count.component';
+import { MobileHighLowComponent } from './mobile-high-low/mobile-high-low.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { CountComponent } from './count/count.component';
     DeckComponent,
     InfoComponent,
     CountComponent,
+    MobileHighLowComponent,
   ],
   imports: [
     BrowserModule,

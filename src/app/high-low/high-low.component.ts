@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Inject, OnInit, Input, SimpleChanges, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, Input, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { Card } from '../card/card';
@@ -47,13 +47,13 @@ export interface CardData {
 
 export class HighLowComponent implements OnInit, OnDestroy {
 
+  @Output() isFinished = new EventEmitter<boolean>();
+
   public card: Card;
   public choice: string;
   newCard: Card;
-  data: CardData = {
-    imageId: "",
-    state: "default"
-  };
+  @Input() data: any;
+  cardNum: string;
   title: string;
   stackLength: number;
   count: number;
@@ -63,18 +63,24 @@ export class HighLowComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   uiCounter: number;
   players: any = [];
+  arrowClick: boolean;
 
   constructor(
-    public dialogRef: MatDialogRef<HighLowComponent>,
+    // public dialogRef: MatDialogRef<HighLowComponent>,
     private gameService: GameService,
-    private db: DatabaseService,
-    @Inject(MAT_DIALOG_DATA) data) {
-    this.card = data.data.crd[0];
-    this.newCard = data.data.newCrd;
-    this.stackLength = data.data.ln;
+    private db: DatabaseService,) {
+    //   @Inject(MAT_DIALOG_DATA) data) {
+
+  }
+
+  ngOnInit() {
+    console.log(this.data);
+    this.card = this.data.crd[0];
+    this.newCard = this.data.newCrd;
+    this.stackLength = this.data.ln;
     this.count = this.stackLength;
-    this.gameId = data.data.gameId;
-    this.players = data.data.curP;
+    this.gameId = this.data.gameId;
+    this.players = this.data.curP;
     if (parseInt(this.card.value) <= 10 && parseInt(this.card.value) >= 2) {
       this.title = `Higher or lower than ${this.card.value}?`;
     } else if (parseInt(this.card.value) == 11) {
@@ -95,14 +101,10 @@ export class HighLowComponent implements OnInit, OnDestroy {
       }
       if (this.uiCounter == 0) {
         let timer = setTimeout(() => {
-          let data = {crd: this.card, newCrd: this.newCard, ln: this.stackLength};
-          this.dialogRef.close(data);
+          let outboundData = { crd: this.card, newCrd: this.newCard, ln: this.stackLength };
         }, 1000);
       }
     })
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy() {
@@ -111,48 +113,36 @@ export class HighLowComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  cardFlip() {
-    if (this.data.state === "default") {
-      this.data.state = "flipped";
-    } else {
-      this.data.state = "default";
-    }
-  }
-
-  flipEnd($event) {
-    if ($event.fromState != 'void' && $event.toState != 'void') {
-      let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
-      let data = {crd: this.card, newCrd: this.newCard, comp: compare, ln: this.stackLength};
-      let seconds = 0;
-      if (!compare) {
-        this.wrongGuess = true;
-        this.count = this.stackLength;
-        this.db.updateGameSeconds(this.gameId, this.count);
-        // get index of current player
-        let i = this.players.findIndex(i => i.currentPlayer == true);
-        // if current player found..
-        if (i != -1) {
+  flipEnd() {
+    let compare = this.gameService.compare(this.choice, this.data.crd[0].value, this.data.newCrd.value);
+    let data = { crd: this.card, newCrd: this.newCard, comp: compare, ln: this.stackLength };
+    let seconds = 0;
+    if (!compare) {
+      this.wrongGuess = true;
+      this.count = this.stackLength;
+      this.db.updateGameSeconds(this.gameId, this.count);
+      // get index of current player
+      let i = this.players.findIndex(i => i.currentPlayer == true);
+      // if current player found..
+      if (i != -1) {
         seconds = this.players[i].secondsDrank;
-        } else {
-          i = 0;
-          seconds = this.players[i].secondsDrank;
-        }
-        console.log("SECONDS: ", seconds);
-        console.log("new: ", this.count);
-        let newSeconds = seconds + this.count;
-        console.log(this.gameId, this.players[i].name, newSeconds);
-        this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
-        if (this.count == 0) {
-          let timer = setTimeout(() => {
-            this.dialogRef.close(data);
-          }, 1000);
-        }
       } else {
-        this.title = "Correct!";
-        let timer = setTimeout(() => {
-          this.dialogRef.close(data);
-        }, 1000);
+        i = 0;
+        seconds = this.players[i].secondsDrank;
       }
+      console.log("SECONDS: ", seconds);
+      console.log("new: ", this.count);
+      let newSeconds = seconds + this.count;
+      console.log(this.gameId, this.players[i].name, newSeconds);
+      this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
+      if (this.count == 0) {
+        console.log(data);
+      }
+    } else {
+      this.title = "Correct!";
+      let timer = setTimeout(() => {
+        this.isFinished.emit(false);
+      }, 1000);
     }
   }
 
@@ -165,13 +155,13 @@ export class HighLowComponent implements OnInit, OnDestroy {
     }
   }
 
-  higher() {
-    this.choice = "higher";
-    this.cardFlip();
-  }
-
-  lower() {
-    this.choice = "lower";
-    this.cardFlip();
+  arrowChoice(choice: string) {
+    console.log(this.data);
+    this.choice = choice;
+    document.getElementById("scene").addEventListener("transitionend", function (e) {
+      e.preventDefault();
+    });
+    this.flipEnd();
+    this.arrowClick = true;
   }
 }

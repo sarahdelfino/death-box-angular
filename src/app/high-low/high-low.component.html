@@ -1,58 +1,36 @@
 <div class="container">
-  <div mat-dialog-content>
-    <div class="card">
-      <img class="stack" src="../../assets/cards/back.svg">
-      <div class="flip-card">
-        <div
-          class="flip-card-inner"
-          [@cardFlip]="data.state"
-          (@cardFlip.done)="flipEnd($event)"
-        >
-          <div class="flip-card-front">
-            <img
-              src="../../assets/cards/back.svg"
-              alt="deck"
-              style="width: 300px; height: 300px"
-            />
-          </div>
-          <div class="flip-card-back">
-            <img
-              class="card-face"
-              [src]="newCard.cardPath"
-              style="width: 300px; height: 300px"
-            />
-          </div>
-        </div>
-      </div>
+  <h2>{{ this.title }}</h2>
+  <div id="scene" class="scene scene--card">
+    <div [ngClass]="this.arrowClick ? 'is-flipped' : null" class="card">
+      <img
+        id="card"
+        class="stack card__face card__face--front"
+        src="../../assets/cards/back.svg"
+      />
+      <img
+        id="card"
+        class="stack card__face card__face--back"
+        src="{{ this.newCard.cardPath }}"
+      />
     </div>
-    <div class="text">
-      <div
-        class="counting"
-        @fadeViewOut
-        *ngIf="this.wrongGuess == true"
-        (@fadeViewOut.done)="finishedAnimations($event)"
-      >
-        <h2>Wrong! Drink for</h2>
-        <h2 class="counter">{{ this.uiCounter }}</h2>
-        <h2>{{ this.text }}!</h2>
-      </div>
-      <div @fadeViewIn *ngIf="!this.wrongGuess">
-        <h2 mat-dialog-title>{{ this.title }}</h2>
-        <mat-dialog-actions align="center">
-          <img
-            class="arrow"
-            mat-button
-            src="../../assets/up-arrow.png"
-            (click)="higher()"
-          />
-          <img
-            class="arrow"
-            mat-button
-            src="../../assets/down-arrow.png"
-            (click)="lower()"
-          />
-        </mat-dialog-actions>
-      </div>
+  </div>
+  <div class="text">
+    <div class="counting" *ngIf="this.wrongGuess == true">
+      <h2>Wrong! Drink for {{ this.uiCounter }} {{ this.text }}!</h2>
+    </div>
+    <div class="arrows" *ngIf="!this.wrongGuess">
+      <img
+        class="arrow"
+        mat-button
+        src="../../assets/up-arrow.png"
+        (click)="arrowChoice('higher')"
+      />
+      <img
+        class="arrow"
+        mat-button
+        src="../../assets/down-arrow.png"
+        (click)="arrowChoice('lower')"
+      />
     </div>
   </div>
 </div>

@@ -7,11 +7,12 @@
       </ng-container>
     </div>
   </div>
-  <div *ngIf="this.isHost == false" class="counterContainer">
+  <div class="right">
+  <app-players [ngClass]="this.isMobile ? 'disabled' : 'enabled'" [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players>
+  <div class="counterContainer">
     <app-count [counter]="currentCounter"></app-count>
   </div>
-  <div class="right" *ngIf="!this.isMobile">
-  <app-players [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players>
   </div>
 </div>
+<app-high-low [@openClose]="this.openMobile ? 'open' : 'closed'" [data]="clickedData" *ngIf="this.isMobile && this.openMobile" class="mobile-hl" (isFinished)="endHighLow($event)"></app-high-low>
 <!-- <img class="info" src="./assets/information.png" (click)="onClick()"/> -->

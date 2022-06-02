@@ -1,0 +1,14 @@
+img {
+    height: 200px;
+}
+
+.arrows {
+    width: 100vw;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+img.arrow {
+    height: 50px;
+}
