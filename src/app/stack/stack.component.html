@@ -1,5 +1,12 @@
+<div class="stack">
 <img
   [src]="cards[0].cardPath"
   (click)="onCardClick(cards)"
+  (mouseover)="setStackCount(cards)"
+  (mouseout)="removeStackCount()"
   [class.selected]="cards === selectedStack"
 />
+<div [ngClass]="this.stackVisibility ? 'enabled' : 'disabled'" class="number">
+  {{this.stackCount}}
+</div>
+</div>

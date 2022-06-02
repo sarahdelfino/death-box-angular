@@ -18,6 +18,14 @@ a {
     color: #e5989b;
 }
 
+.content {
+    height: 225px;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    justify-content: flex-end;
+}
+
 h1 {
     color: #FF6666;
     text-align: center;
@@ -35,15 +43,25 @@ h3:hover {
 }
 
 button {
-    width: 200px;
-    height: 80px;
-    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 2px;
 }
 
 .placeholder {
     width: 170px;
     height: 120px;
     margin: 10px;
+}
+
+button.createGameButton, button.playButton {
+    width: 100px;
+    background-color: #6A985C;
+}
+
+button.createGameButton:hover, button.playButton:hover {
+    color: #6A985C;
+    background-color: #fff;
+    border: 1px solid #6A985C
 }
 
 .logo {
@@ -61,10 +79,12 @@ button {
 
 .buttonContainer {
     max-width: 600px;
+    height: 100px;
     height: auto;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    align-self: flex-end;
 }
 
 .info:hover {
@@ -79,13 +99,17 @@ mat-label.mat-label {
     border: 1px solid red;
 }
 
-#join {
-    height: 200px;
-}
-
 .form {
     animation-name: reveal-form;
     animation-duration: .5s;
+}
+
+.enabled {
+    display: block;
+}
+
+.disabled {
+    display: none;
 }
 
 @keyframes reveal-form {

@@ -1,24 +1,97 @@
 <div id="container" class="container">
-    <h1>Death Box</h1>
-    <div class="logoContainer">
-      <img class="logo" src="../../assets/DeathBox.png">
+  <h1>Death Box</h1>
+  <div class="logoContainer">
+    <img class="logo" src="../../assets/DeathBox.png" />
   </div>
-  <h3 gaEvent="button_click" gaAction="info" class="info" (click)="infoClick()">How to play</h3>
+  <h3 gaEvent="button_click" gaAction="info" class="info" (click)="infoClick()">
+    How to play
+  </h3>
+  <div class="content">
+  <div
+    [ngClass]="this.joinClicked || this.createClicked ? 'enabled' : 'disabled'"
+  >
+    <div id="create">
+      <form
+        class="form"
+        *ngIf="this.createClicked"
+        [formGroup]="createGameForm"
+        id="create"
+        method="POST"
+      >
+        <input
+          id="name"
+          formControlName="name"
+          required
+          autocomplete="off"
+          placeholder="Name"
+        />
+        <button
+          gaEvent
+          gaAction="create_game"
+          class="createGameButton"
+          (click)="createGame(createGameForm.value)"
+          type="submit"
+        >
+          Play
+        </button>
+      </form>
+    </div>
+    <div id="join">
+      <form
+        class="form"
+        *ngIf="this.joinClicked"
+        [formGroup]="joinGameForm"
+        id="join"
+        method="POST"
+      >
+        <input
+          id="gameId"
+          formControlName="id"
+          required
+          autocomplete="off"
+          placeholder="Game ID"
+        />
+        <input
+          id="name"
+          formControlName="name"
+          required
+          autocomplete="off"
+          placeholder="Name"
+        />
+        <button
+          gaEvent
+          gaAction="play_game"
+          class="playButton"
+          (click)="joinGame(joinGameForm.value)"
+          type="submit"
+        >
+          Play
+        </button>
+      </form>
+    </div>
+  </div>
   <div class="buttonContainer">
-    <div class="placeholder" *ngIf="!this.joinClicked && this.isMobile"></div>
-    <button gaEvent gaAction="mobile_play_game" *ngIf="this.joinClicked && this.isMobile" class="playButton" (click)="joinGame(joinGameForm.value)" type="submit">
+    <button
+      gaEvent
+      gaAction="mobile_play_game"
+      *ngIf="this.joinClicked && this.isMobile"
+      class="playButton"
+      (click)="joinGame(joinGameForm.value)"
+      type="submit"
+    >
       Play
     </button>
-    <button gaEvent gaAction="create_game" *ngIf="!this.isMobile" (click)="createGame()" type="submit">Create game</button>
-    <button gaEvent gaAction="join_trigger" (click)="joinTrigger()">Join game</button>
+    <button
+      gaEvent
+      gaAction="create_game"
+      (click)="createTrigger()"
+      type="submit"
+    >
+      Create game
+    </button>
+    <button gaEvent gaAction="join_trigger" (click)="joinTrigger()">
+      Join game
+    </button>
   </div>
-  <div id="join">
-    <form class="form" *ngIf="this.joinClicked" [formGroup]="joinGameForm" id="join" method="POST">
-      <input id="gameId" formControlName="id" required autocomplete="off" placeholder="Game ID" />
-      <input id="name" formControlName="name" required autocomplete="off" placeholder="Name" />
-      <button gaEvent gaAction="play_game" *ngIf="!this.isMobile" class="playButton" (click)="joinGame(joinGameForm.value)" type="submit">
-        Play
-      </button>
-    </form>
-  </div>
+</div>
 </div>

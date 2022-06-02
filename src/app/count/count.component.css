@@ -3,9 +3,9 @@ button {
     height: 100px;
     /* margin-left: 300px; */
     background-color: #4E4E4E;
-    border: 1px solid white;
+    border: 1px solid #fff;
     border-radius: 5px;
-    color: white;
+    color: #fff;
     font-weight: 500;
     font-size: 16px;
   }
@@ -42,7 +42,7 @@ button {
   .enabled:hover {
     cursor: pointer;
     color: #FE6765ff;
-    background-color: white;
+    background-color: #fff;
     border: 2px solid #FE6765ff;
   }
 

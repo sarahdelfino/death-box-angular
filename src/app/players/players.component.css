@@ -21,19 +21,19 @@ table {
     padding: 5px;
     border-radius: 5px;
     margin-bottom: 20px;
-    border: 1px solid white;
+    border: 1px solid #fff;
 }
 
 .current-player {
     background-color: #FF6666;
-    color: white;
+    color: #fff;
     animation-name: add-highlight;
     animation-duration: .5s;
 }
 
 @keyframes add-highlight {
-    from {background-color: white; color: #FF6666;}
-    to {background-color: #FF6666; color: white;}
+    from {background-color: #fff; color: #FF6666;}
+    to {background-color: #FF6666; color: #fff;}
 }
 
 .flex-item {

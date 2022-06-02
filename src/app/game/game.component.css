@@ -58,7 +58,7 @@ body {
 
 button:hover {
   cursor: pointer;
-  background-color: white;
+  background-color: #fff;
   color: #e5989b;
   border: 2px solid #6d6875;
   font-weight: 500;

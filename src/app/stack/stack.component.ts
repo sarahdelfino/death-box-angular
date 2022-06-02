@@ -16,6 +16,8 @@ export class StackComponent implements OnInit {
   // public cards: any = [];
   selectedStack: Card;
   wasClicked = false;
+  stackCount = 1;
+  stackVisibility = false;
 
   @Input()
   public cards: any = [];
@@ -26,14 +28,6 @@ export class StackComponent implements OnInit {
   constructor(private _gameService: GameService) { }
 
   ngOnInit() {
-    // console.log(this.cards);
-    // for (let c in this.cards) {
-    //   var stack = new Array();
-    //   let t = this.cards[c].split('');
-    //   let ln = t.length;
-    //   console.log(t[ln-1]);
-      // stack.push(new Card(this.cards[], this.cards[]))
-    // }
 
   }
 
@@ -45,6 +39,15 @@ export class StackComponent implements OnInit {
     // this.wasClicked = !this.wasClicked;
     this.selectedStack = stack;
     this.clickedCardEmitter.emit(this.cards[0].cardName);
+  }
+
+  setStackCount(stack: Card[]) {
+    this.stackCount = stack.length;
+    this.stackVisibility = true;
+  }
+
+  removeStackCount() {
+    this.stackVisibility = false;
   }
 
 }

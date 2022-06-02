@@ -137,8 +137,11 @@ export class HighLowComponent implements OnInit, OnDestroy {
           i = 0;
           seconds = this.players[i].secondsDrank;
         }
+        console.log("SECONDS: ", seconds);
+        console.log("new: ", this.count);
         let newSeconds = seconds + this.count;
-        this.db.updatePlayerSeconds(this.gameId, i, newSeconds);
+        console.log(this.gameId, this.players[i].name, newSeconds);
+        this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
         if (this.count == 0) {
           let timer = setTimeout(() => {
             this.dialogRef.close(data);
