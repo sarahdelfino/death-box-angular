@@ -10,8 +10,8 @@
   <div *ngIf="this.isHost == false" class="counterContainer">
     <app-count [counter]="currentCounter"></app-count>
   </div>
-  <div class="right">
+  <div class="right" *ngIf="!this.isMobile">
   <app-players [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players>
   </div>
 </div>
-<img class="info" src="./assets/information.png" (click)="onClick()"/>
+<!-- <img class="info" src="./assets/information.png" (click)="onClick()"/> -->

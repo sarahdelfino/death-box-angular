@@ -27,6 +27,7 @@ export class GameComponent implements OnInit, OnDestroy {
   currentPlayer: string;
   id: string;
   newCard: Card;
+  isMobile: boolean;
   isHost: boolean;
   seconds: number;
   players: any = [];
@@ -39,6 +40,10 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    if (window.innerWidth < 500) {
+      this.isMobile = true;
+      console.log(this.isMobile);
+    }
     if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
       this.id = this._gameService.getId();
