@@ -63,6 +63,8 @@ export class HighLowComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   uiCounter: number;
   players: any = [];
+  arrowClick: boolean;
+
 
   constructor(
     public dialogRef: MatDialogRef<HighLowComponent>,
@@ -119,8 +121,7 @@ export class HighLowComponent implements OnInit, OnDestroy {
     }
   }
 
-  flipEnd($event) {
-    if ($event.fromState != 'void' && $event.toState != 'void') {
+  flipEnd() {
       let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
       let data = {crd: this.card, newCrd: this.newCard, comp: compare, ln: this.stackLength};
       let seconds = 0;
@@ -153,7 +154,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
           this.dialogRef.close(data);
         }, 1000);
       }
-    }
   }
 
   finishedAnimations($event) {
@@ -163,6 +163,16 @@ export class HighLowComponent implements OnInit, OnDestroy {
       this.db.updateGameSeconds(this.gameId, this.count);
       // this.db.updatePlayerSeconds(this.gameId, this.player, this.count);
     }
+  }
+
+  arrowChoice(choice: string) {
+    console.log(this.data);
+    this.choice = choice;
+    document.getElementById("scene").addEventListener("transitionend", function (e) {
+      e.preventDefault();
+    });
+    this.flipEnd();
+    this.arrowClick = true;
   }
 
   higher() {

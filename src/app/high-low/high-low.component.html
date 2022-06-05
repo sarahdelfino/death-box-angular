@@ -1,4 +1,41 @@
 <div class="container">
+  <h2>{{ this.title }}</h2>
+  <div id="scene" class="scene scene--card">
+    <div [ngClass]="this.arrowClick ? 'is-flipped' : null" class="card">
+      <img
+        id="card"
+        class="stack card__face card__face--front"
+        src="../../assets/cards/back.svg"
+      />
+      <img
+        id="card"
+        class="stack card__face card__face--back"
+        src="{{ this.newCard.cardPath }}"
+      />
+    </div>
+  </div>
+  <div class="text">
+    <div class="counting" *ngIf="this.wrongGuess == true">
+      <h2>Wrong! Drink for {{ this.uiCounter }} {{ this.text }}!</h2>
+    </div>
+    <div class="arrows" *ngIf="!this.wrongGuess">
+      <img
+        class="arrow"
+        mat-button
+        src="../../assets/up-arrow.png"
+        (click)="arrowChoice('higher')"
+      />
+      <img
+        class="arrow"
+        mat-button
+        src="../../assets/down-arrow.png"
+        (click)="arrowChoice('lower')"
+      />
+    </div>
+  </div>
+</div>
+
+<!-- <div class="container">
   <div mat-dialog-content>
     <div class="card">
       <img class="stack" src="../../assets/cards/back.svg">
@@ -12,14 +49,14 @@
             <img
               src="../../assets/cards/back.svg"
               alt="deck"
-              style="width: 300px; height: 300px"
+              style="width: 150px; height: 150px"
             />
           </div>
           <div class="flip-card-back">
             <img
               class="card-face"
               [src]="newCard.cardPath"
-              style="width: 300px; height: 300px"
+              style="width: 150px; height: 150px"
             />
           </div>
         </div>
@@ -55,4 +92,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
