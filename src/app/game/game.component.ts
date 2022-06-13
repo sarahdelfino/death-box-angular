@@ -20,22 +20,22 @@ import { NONE_TYPE } from '@angular/compiler';
   animations: [
     trigger('openClose', [
       state('open', style({
-        transform: 'translateY(0px)'
+        transform: 'translateX(0px)'
       })),
       state('closed', style({
-        transform: 'translateY(400px)'
+        transform: 'translateX(400px)'
       })),
       state('void', style({
-        transform: 'translateY(400px)'
+        transform: 'translateX(400px)'
       })),
       transition('open <=> closed', [
-        animate('.5s')
+        animate('.25s')
       ]),
       transition(':enter', [
-        animate('.5s ease-in')
+        animate('.25s ease-in')
       ]),
       transition(':leave', [
-        animate('1s .5s ease-out')
+        animate('.25s .25s ease-out')
       ]),
     ]),
   ],
@@ -45,7 +45,6 @@ export class GameComponent implements OnInit, OnDestroy {
   public deck: Array<Card>;
   data = {state: "open"};
   public stacks: any = [];
-  public choice = "";
   public turns = 0;
   public game: Game;
   currentPlayer: string;
@@ -58,6 +57,7 @@ export class GameComponent implements OnInit, OnDestroy {
   players: any = [];
   openMobile: boolean;
   clickedData;
+  choice: string;
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
@@ -124,7 +124,13 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   clickedCard(card: Card) {
-    this._gameService.clickedCard(card);
+    // this._gameService.clickedCard(card);
+    this.chooseCard(card);
+  }
+
+  cardChoice(ch: string) {
+    console.log(ch);
+    this.choice = ch;
   }
 
   chooseCard(card: Card) {
@@ -160,10 +166,12 @@ export class GameComponent implements OnInit, OnDestroy {
     let ln = this.stacks[i].length;
     let gameId = this.getId();
     let curP = this.players;
-    this.clickedData = { crd, newCrd, ln, gameId, curP };
+    let c = this.choice;
+    this.clickedData = { crd, newCrd, ln, gameId, c };
     console.log(this.clickedData);
     if (this.clickedData) {
       this.openMobile = true;
+      console.log(this.openMobile);
     }
 
     // dialogConfig.data = { crd, newCrd, ln, gameId, curP };

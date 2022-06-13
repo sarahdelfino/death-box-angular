@@ -1,18 +1,20 @@
+<app-navbar></app-navbar>
 <div class="game">
   <div *ngIf="this.isHost == true" class="container">
     <div class="card-container">
       <ng-container *ngFor="let stack of stacks">
-        <app-stack [cards]="stack" (clickedCardEmitter)="clickedCard($event)"
+        <app-stack [cards]="stack" (clickedCardEmitter)="clickedCard($event)" (cardChoiceEmitter)="cardChoice($event)"
           (click)="chooseCard(stack)"></app-stack>
       </ng-container>
     </div>
   </div>
   <div class="right">
-  <app-players [ngClass]="this.isMobile ? 'disabled' : 'enabled'" [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players>
+  <!-- <app-players [ngClass]="this.isMobile ? 'disabled' : 'enabled'" [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players> -->
   <div class="counterContainer">
-    <app-count [counter]="currentCounter"></app-count>
+    <!-- <app-count [counter]="currentCounter"></app-count> -->
   </div>
+  <!-- <app-high-low [@openClose]="this.openMobile ? 'open' : 'closed'" [data]="clickedData" *ngIf="this.openMobile" class="mobile-hl" (isFinished)="endHighLow($event)"></app-high-low> -->
+  <app-deck class="deckView" [clickData]="clickedData"></app-deck>
   </div>
 </div>
-<app-high-low [@openClose]="this.openMobile ? 'open' : 'closed'" [data]="clickedData" *ngIf="this.isMobile && this.openMobile" class="mobile-hl" (isFinished)="endHighLow($event)"></app-high-low>
 <!-- <img class="info" src="./assets/information.png" (click)="onClick()"/> -->

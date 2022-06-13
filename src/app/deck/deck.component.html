@@ -1,12 +1,30 @@
-<div class="stack">
-    <img class="s" src="../../assets/cards/back.svg" />
-  </div>
-  <div class="card" [@cardFlip]="data.state">
-    <div class="face back">
-      <img class="back" src="../../assets/cards/back.svg" />
+<div class="container">
+  <!-- <div class="content"> -->
+  <!-- <div id="scene" class="scene scene--card"> -->
+    <!-- <div [ngClass]="this.arrowClick ? 'is-flipped' : null" class="card"> -->
+      <div class="text">
+  <h2>{{ this.title }}</h2>
+    <div class="counting" *ngIf="this.isWrongGuess == true">
+      <h2>Wrong! Drink for {{ this.uiCounter }} {{ this.text }}!</h2>
     </div>
-    <div class="face front">
-      <img class="fce" [src]="card.cardPath" />
-    </div>
   </div>
-  
+      <img
+      id="deck-card-bottom"
+      src="../../assets/cards/back.svg"
+    />
+    <div id="scene" class="scene card" [@cardFlip]="this.clickData ? 'flipped' : null">
+      <div class="card">
+      <img
+        id="deck-card"
+        class="stack card__face card__face--front"
+        src="../../assets/cards/back.svg"
+      />
+      <img
+        id="deck-card"
+        class="stack card__face card__face--back"
+        src="{{ this.clickData.newCrd.cardPath }}"
+      />
+    </div>
+    <!-- </div> -->
+  </div>
+</div>

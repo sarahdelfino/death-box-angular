@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { stringify } from 'querystring';
 import { AppComponent } from '../app.component';
 import { Card } from '../card/card';
 import { GameService } from '../game.service';
@@ -16,14 +17,16 @@ export class StackComponent implements OnInit {
   // public cards: any = [];
   selectedStack: Card;
   wasClicked = false;
-  stackCount = 1;
   stackVisibility = false;
+  choice: string;
 
   @Input()
   public cards: any = [];
 
   @Output()
   private clickedCardEmitter: EventEmitter<Card> = new EventEmitter();
+  
+  @Output() public cardChoiceEmitter: EventEmitter<string> = new EventEmitter();
 
   constructor(private _gameService: GameService) { }
 
@@ -36,18 +39,24 @@ export class StackComponent implements OnInit {
   }
 
   onCardClick(stack: Card) {
-    // this.wasClicked = !this.wasClicked;
     this.selectedStack = stack;
     this.clickedCardEmitter.emit(this.cards[0].cardName);
   }
 
-  setStackCount(stack: Card[]) {
-    this.stackCount = stack.length;
+  enableArrowVisibility() {
     this.stackVisibility = true;
   }
 
-  removeStackCount() {
-    this.stackVisibility = false;
+  disableArrowVisibility($event) {
+    if (!$event.relatedTarget.className || $event.relatedTarget.className !== 'arrow') {
+      this.stackVisibility = false;
+    }
+  }
+
+  arrowClick(choice: string) {
+    // console.log(choice);
+    this.choice = choice;
+    this.cardChoiceEmitter.emit(this.choice);
   }
 
 }

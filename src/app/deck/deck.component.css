@@ -1,94 +1,82 @@
-/* .stack {
-    position: relative;
-    z-index: 1;
-    top: 178px;
-    left: 50px;
-} */
-
-.s {
-    max-width: 200px;
-    max-height: 200px;
-
-}
-
-:host {
-    display: block;
-    /* perspective: 600px; */
-}
-
-.card {
-    position: relative;
-    top: -150px;
-    left: 0;
-    /* top: 0px;
-    left: 0px;
-    z-index: 99;
-    transform-style: preserve-3d; */
-}
-
-.face {
-    display: block;
-    position: absolute;
-    top: 0px;
-    /* left: 50px; */
-    backface-visibility: hidden;
-    /* border: solid red 1px; */
-}
-
-.fce {
-    display: block;
-    position: absolute;
-    left: 0;
-    max-width: 180px;
-    max-height: 180px;
-}
-
-.back {
-    max-width: 300px;
-    max-height: 300px;
-}
-
-.front {
-    transform: rotateY(180deg);
-}
-
-@media (min-width: 1200px) {
-    .stack {
-        max-width: 150px;
-        max-height: 180px;
-    }
-    .back {
-        max-width: 200px;
-        max-height: 200px;
-    }
-    .face {
-        max-width: 180px;
-        max-height: 180px;
-
-    }
-    .front {
-        right: 100px;
-        top: 5px;
-    }
+.container {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    /* border: 2px solid green; */
+    justify-content: center;
   }
 
-  @media (min-width: 600px) {
-    .stack {
-        max-width: 100px;
-        max-height: 150px;
-    }
-    .back {
-        max-width: 200px;
-        max-height: 200px;
-    }
-    .face {
-        max-width: 200px;
-        max-height: 200px;
+  h2 {
+    font-size: 1.25rem;
+  }
 
-    }
-    .front {
-        right: 30px;
-        top: 5px;
-    }
+  .counting {
+    display: flex;
+  }
+
+  .deckView {
+    align-self: center;
+  }
+
+  .content {
+    /* width: 100%; */
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: right;
+  }
+
+  img#deck-card {
+      width: 180px;
+      position: absolute;
+      right: 0px;
+  }
+
+  .scene {
+    width: 200px;
+    height: 260px;
+    perspective: 600px;
+    right: 0px;
+    padding: 10px;
+  }
+
+  img#deck-card-bottom {
+    z-index: -1;
+    position: absolute;
+    width: 180px;
+    /* right: 50px; */
+  }
+
+  .card {
+    /* width: 100%;
+    height: 100%; */
+    position: relative;
+    transition: transform 1s;
+    transform-style: preserve-3d;
+  }
+
+  .card__face {
+    position: absolute;
+    /* width: 100%;
+    height: 100%; */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  .card__face--front {
+    /* border: 2px solid purple; */
+  }
+  
+  .card__face--back {
+    transform: rotateY( 180deg );
+    /* transform: translateY(150px, 0); */
+    max-width: 100px;
+  }
+
+  .card.is-flipped {
+    /* transform: rotateY(180deg); */
   }
   
