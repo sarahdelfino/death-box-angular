@@ -10,11 +10,11 @@
   </div>
   <div class="right">
   <!-- <app-players [ngClass]="this.isMobile ? 'disabled' : 'enabled'" [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players> -->
-  <div class="counterContainer">
-    <!-- <app-count [counter]="currentCounter"></app-count> -->
-  </div>
+  <!-- <div class="counterContainer">
+    <app-count [counter]="currentCounter"></app-count>
+  </div> -->
   <!-- <app-high-low [@openClose]="this.openMobile ? 'open' : 'closed'" [data]="clickedData" *ngIf="this.openMobile" class="mobile-hl" (isFinished)="endHighLow($event)"></app-high-low> -->
-  <app-deck class="deckView" [clickData]="clickedData"></app-deck>
+  <app-deck class="deckView" (endCompareEmitter)="handleCompareResults($event)" [clickData]="clickedData"></app-deck>
   </div>
 </div>
 <!-- <img class="info" src="./assets/information.png" (click)="onClick()"/> -->

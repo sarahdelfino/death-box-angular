@@ -1,8 +1,8 @@
-.container {
+.deck-container {
     padding: 10px;
     display: flex;
     flex-direction: column;
-    height: 500px;
+    height: 100%;
     margin-left: auto;
     margin-right: auto;
     /* border: 2px solid green; */
@@ -11,6 +11,11 @@
 
   h2 {
     font-size: 1.25rem;
+    margin: 0px;
+  }
+
+  .text {
+    height: 200px;
   }
 
   .counting {
@@ -36,25 +41,24 @@
   }
 
   .scene {
-    width: 200px;
-    height: 260px;
+    width: 180px;
+    height: 180px;
     perspective: 600px;
-    right: 0px;
-    padding: 10px;
+    margin-top: -180px;
   }
 
   img#deck-card-bottom {
     z-index: -1;
-    position: absolute;
+    /* position: absolute; */
     width: 180px;
-    /* right: 50px; */
+    /* right: 0px; */
   }
 
   .card {
     /* width: 100%;
     height: 100%; */
     position: relative;
-    transition: transform 1s;
+    /* transition: transform .75s; */
     transform-style: preserve-3d;
   }
 
@@ -67,13 +71,14 @@
   }
 
   .card__face--front {
-    /* border: 2px solid purple; */
+
   }
   
   .card__face--back {
     transform: rotateY( 180deg );
     /* transform: translateY(150px, 0); */
     max-width: 100px;
+    margin-top: 12px;
   }
 
   .card.is-flipped {

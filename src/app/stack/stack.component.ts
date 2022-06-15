@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import { stringify } from 'querystring';
 import { AppComponent } from '../app.component';
 import { Card } from '../card/card';
@@ -8,8 +9,20 @@ import { GameService } from '../game.service';
   selector: 'app-stack',
   templateUrl: './stack.component.html',
   styleUrls: ['./stack.component.css'],
-  // providers: [GameService]
-  // providers: [AppComponent]
+  animations: [
+    trigger('stackAdd', [
+      state('added', style({
+        //
+      })),
+      transition('* => added',
+      animate('800ms', keyframes([
+        style({'box-shadow': 'none', offset: 0}),
+        style({'box-shadow': 'rgba(106, 152, 92, 0.4) 5px 5px, rgba(106, 152, 92, 0.3) 10px 10px, rgba(106, 152, 92, 0.2) 15px 15px, rgba(106, 152, 92, 0.1) 20px 20px, rgba(106, 152, 92, 0.05) 25px 25px', offset: 0.4}),
+        style({'box-shadow': 'rgba(106, 152, 92, 0.4) 5px 5px, rgba(106, 152, 92, 0.3) 10px 10px, rgba(106, 152, 92, 0.2) 15px 15px, rgba(106, 152, 92, 0.1) 20px 20px, rgba(106, 152, 92, 0.05) 25px 25px', offset: 0.8}),
+        style({'box-shadow': 'none', offset: 1.0}),
+      ]))),
+    ]),
+  ]
 })
 export class StackComponent implements OnInit {
 
@@ -19,6 +32,7 @@ export class StackComponent implements OnInit {
   wasClicked = false;
   stackVisibility = false;
   choice: string;
+  added: boolean;
 
   @Input()
   public cards: any = [];
@@ -32,6 +46,18 @@ export class StackComponent implements OnInit {
 
   ngOnInit() {
 
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+    if (changes.cards.currentValue.length > 1) {
+      this.added = true;
+    }
+    // for (const propName in changes) {
+    //   const chng = changes[propName];
+    //   const cur = JSON.stringify(chng.currentValue);
+    //   console.log(cur);
+    // }
   }
 
   public add(card: Card) {

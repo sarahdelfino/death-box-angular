@@ -1,5 +1,5 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, OnInit, SimpleChanges, OnDestroy } from '@angular/core';
+import { animate, keyframes, query, sequence, state, style, transition, trigger } from '@angular/animations';
+import { Component, Input, OnInit, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Card } from '../card/card';
 import { DatabaseService } from '../database.service';
@@ -17,19 +17,16 @@ export interface CardData {
   animations: [
     trigger('cardFlip', [
       state('flipped', style({
-        transform: 'translateX(-150px) rotateY(180deg)'
-      })),
-      state('void', style({
-        transform: 'translateX(0px)'
+        transform: 'translateX(-100px) rotateY(180deg)',
       })),
       transition(':enter', [
-        animate('.25s ease-in')
+        animate('500ms ease-in')
       ]),
-      transition(':leave', [
-        animate('.25s .25s ease-out')
+      transition('* => flipped', [
+        animate('500ms')
       ]),
-    ]),
-  ],
+  ]),
+]
 })
 export class DeckComponent implements OnInit, OnDestroy {
   @Input()
@@ -37,6 +34,8 @@ export class DeckComponent implements OnInit, OnDestroy {
 
   @Input()
   public clickData: any;
+
+  @Output() endCompareEmitter: EventEmitter<any> = new EventEmitter();
 
   public choice: string;
   title: string;
@@ -46,6 +45,8 @@ export class DeckComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   gameId: string;
   stackLength: number;
+  position;
+  phaseName;
 
   data: CardData = {
     imageId: "",
@@ -59,16 +60,16 @@ export class DeckComponent implements OnInit, OnDestroy {
     private db: DatabaseService) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
+    // console.log(changes);
     if (this.clickData && changes.clickData.currentValue !== undefined) {
       console.log(this.clickData);
       this.gameId = this.clickData.gameId;
       this.choice = this.clickData.c;
       this.stackLength = this.clickData.ln;
-      document.getElementById("scene").addEventListener("transitionend", function (e) {
-        e.preventDefault();
-      });
-      this.flipEnd();
+      // document.getElementById("scene").addEventListener("transitionend", function (e) {
+      //   e.preventDefault();
+      // });
+      // this.flipEnd();
       this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
         this.uiCounter = c.seconds;
         if (this.uiCounter == 1) {
@@ -81,7 +82,7 @@ export class DeckComponent implements OnInit, OnDestroy {
         //     let outboundData = { crd: this.card, newCrd: this.newCard, ln: this.stackLength };
         //   }, 1000);
         // }
-      })
+      });
     }
   }
 
@@ -100,9 +101,9 @@ export class DeckComponent implements OnInit, OnDestroy {
   }
 
   flipEnd() {
-    let compare = this.gameService.compare(this.choice, this.clickData.crd[0].value, this.clickData.newCrd.value);
-    // let data = { crd: this.card, newCrd: this.newCard, comp: compare, ln: this.stackLength };
-    console.log(compare);
+    let compare = this.gameService.compare(this.clickData.c, this.clickData.crd[0].value, this.clickData.newCrd.value);
+    let data = { stackCard: this.clickData.crd, newCard: this.clickData.newCrd, comp: compare, ln: this.clickData.ln };
+    this.endCompareEmitter.emit(data);
     let seconds = 0;
     if (!compare) {
       this.isWrongGuess = true;
@@ -127,19 +128,11 @@ export class DeckComponent implements OnInit, OnDestroy {
     } else {
       this.title = '';
       this.title = "Correct!";
-    //   let timer = setTimeout(() => {
-    //     this.isFinished.emit(false);
-    //   }, 1000);
+      let timer = setTimeout(() => {
+        this.title = '';
+        this.clickData = null;
+      }, 1500);
     }
-  }
-
-
-  cardFlip() {
-    // if (this.data.state === "default") {
-    //   this.data.state = "flipped";
-    // } else {
-    //   this.data.state = "moved";
-    // }
   }
 
 }

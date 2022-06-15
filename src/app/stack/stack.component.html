@@ -1,6 +1,7 @@
 <div class="stack">
 <img
 [ngClass]="this.stackVisibility ? 'img-disabled' : 'img-enabled'"
+[@stackAdd]="this.added ? 'added' : null"
   class="playing-card"
   id="playing-card"
   [src]="cards[0].cardPath"

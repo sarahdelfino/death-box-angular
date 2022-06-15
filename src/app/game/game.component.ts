@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../database.service';
 import { InfoComponent } from '../info/info.component';
 import { Game } from '../game';
+import { StackComponent } from '../stack/stack.component';
 import { NONE_TYPE } from '@angular/compiler';
 
 @Component({
@@ -40,7 +41,9 @@ import { NONE_TYPE } from '@angular/compiler';
     ]),
   ],
 })
-export class GameComponent implements OnInit, OnDestroy {
+export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  @ViewChild(StackComponent) stackChild: StackComponent;
 
   public deck: Array<Card>;
   data = {state: "open"};
@@ -58,6 +61,7 @@ export class GameComponent implements OnInit, OnDestroy {
   openMobile: boolean;
   clickedData;
   choice: string;
+  added: boolean;
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
@@ -79,6 +83,10 @@ export class GameComponent implements OnInit, OnDestroy {
     } else {
       this.isHost = false;
     }
+  }
+
+  ngAfterViewInit() {
+    // console.log(this.stackChild.addToStack('hi'));
   }
 
   ngOnDestroy() {
@@ -120,7 +128,10 @@ export class GameComponent implements OnInit, OnDestroy {
 
   addToStack(i, card) {
     // add card to the top of the stack
-    this.stacks[i].unshift(card);
+    // this.stacks[i].unshift(card);
+    console.log(this.stacks);
+    this.stacks[i] = [card, ...this.stacks[i]];
+    console.log(this.stacks);
   }
 
   clickedCard(card: Card) {
@@ -168,10 +179,10 @@ export class GameComponent implements OnInit, OnDestroy {
     let curP = this.players;
     let c = this.choice;
     this.clickedData = { crd, newCrd, ln, gameId, c };
-    console.log(this.clickedData);
+    // console.log(this.clickedData);
     if (this.clickedData) {
       this.openMobile = true;
-      console.log(this.openMobile);
+      // console.log(this.openMobile);
     }
 
     // dialogConfig.data = { crd, newCrd, ln, gameId, curP };
@@ -202,6 +213,22 @@ export class GameComponent implements OnInit, OnDestroy {
     //   console.log("hello");
     // }
   }
+
+  handleCompareResults(data: any) {
+    console.log(data);
+    var cardIndex = this.stacks.indexOf(data.stackCard);
+    console.log(cardIndex);
+        // get index of current card and add to stack
+        if (data.newCard) {
+          this.addToStack(cardIndex, data.newCard);
+        }
+        if (data.comp) {
+          this.turns += 1;
+          if (this.turns == 3) {
+            this.turns = 0;
+          }
+        }
+      }
 
   endHighLow(event) {
     this.openMobile = false;

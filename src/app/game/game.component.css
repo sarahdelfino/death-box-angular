@@ -86,8 +86,11 @@ body {
 }
 
 .right {
-  align-self: center;
+  width: 700px;
+  align-self: baseline;
   justify-content: flex-end;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 button:hover {
