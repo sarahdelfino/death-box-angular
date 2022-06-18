@@ -23,7 +23,7 @@ describe('StartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should create forms', () => {
-  //   expect(this.createGameForm).toBe
-  // })
+  it('should load image', () => {
+    expect(document.querySelector('.logo'));
+  });
 });

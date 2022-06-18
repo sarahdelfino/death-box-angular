@@ -39,7 +39,8 @@ export class CountComponent implements OnInit {
       } else if (!gameData.counting) {
         this.counting = false;
       }
-    })
+    });
+    console.log(this.counting);
   };
 
   ngOnChanges(changes: SimpleChanges) {
@@ -52,15 +53,19 @@ export class CountComponent implements OnInit {
 
 
   count() {
+    console.log(this.counter);
     if (sessionStorage.getItem('user') === this.counter && this.counting === true) {
+      console.log(this.filteredPlayers);
+      console.log(this.id);
       this.db.decrementSeconds(this.id);
-      if (this.filteredPlayers.length > 1) {
+      if (this.filteredPlayers) {
         this.getNextCounter();
       }
     }
   }
 
   getNextCounter() {
+    console.log("wooooooooooooooo");
     const curCountIndex = this.filteredPlayers.map(function(e) { return e.name; }).indexOf(this.counter);
     let newIndex = curCountIndex + 1;
     if (newIndex == this.filteredPlayers.length) {
@@ -68,6 +73,7 @@ export class CountComponent implements OnInit {
     }
     this.counter = this.filteredPlayers[newIndex].name;
     this.db.setCounter(this.id, this.counter);
+    console.log(this.counter);
   }
 
 }

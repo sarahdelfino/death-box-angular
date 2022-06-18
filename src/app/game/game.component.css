@@ -14,7 +14,7 @@ body {
   /* margin-top: 10px; */
   margin-left: auto;
   margin-right: auto;
-  justify-content: space-between;
+  justify-content: space-evenly;
   z-index: 1;
 }
 
@@ -71,13 +71,19 @@ body {
     max-width: 750px;
 } */
 
-.container, .counterContainer {
+.container {
     /* max-width: 1200px; */
     width: 50vw;
     display: flex;
     justify-content: space-between;
     /* padding: 10px; */
     /* margin: auto; */
+}
+
+.counterContainer {
+  width: 100%;
+  position: relative;
+  bottom: 0px;
 }
 
 .inner {
@@ -89,8 +95,8 @@ body {
   width: 700px;
   align-self: baseline;
   justify-content: flex-end;
-  margin-left: auto;
-  margin-right: auto;
+  /* margin-left: auto;
+  margin-right: auto; */
 }
 
 button:hover {

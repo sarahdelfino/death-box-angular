@@ -1,5 +1,5 @@
 import { animate, keyframes, query, sequence, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, OnInit, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Card } from '../card/card';
 import { DatabaseService } from '../database.service';
@@ -28,7 +28,7 @@ export interface CardData {
   ]),
 ]
 })
-export class DeckComponent implements OnInit, OnDestroy {
+export class DeckComponent implements OnInit {
   @Input()
   public card: Card;
 
@@ -66,31 +66,8 @@ export class DeckComponent implements OnInit, OnDestroy {
       this.gameId = this.clickData.gameId;
       this.choice = this.clickData.c;
       this.stackLength = this.clickData.ln;
-      // document.getElementById("scene").addEventListener("transitionend", function (e) {
-      //   e.preventDefault();
-      // });
-      // this.flipEnd();
-      this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
-        this.uiCounter = c.seconds;
-        if (this.uiCounter == 1) {
-          this.text = "second";
-        } else {
-          this.text = "seconds";
-        }
-        // if (this.uiCounter == 0) {
-        //   let timer = setTimeout(() => {
-        //     let outboundData = { crd: this.card, newCrd: this.newCard, ln: this.stackLength };
-        //   }, 1000);
-        // }
-      });
     }
   }
-
-    ngOnDestroy() {
-      // end counting & delete seconds
-      this.db.endCounting(this.gameId);
-      this.subscription.unsubscribe();
-    }
 
   ngOnInit(): void {
     // console.log(this.clickData);
@@ -101,13 +78,14 @@ export class DeckComponent implements OnInit, OnDestroy {
   }
 
   flipEnd() {
+    if (this.clickData) {
     let compare = this.gameService.compare(this.clickData.c, this.clickData.crd[0].value, this.clickData.newCrd.value);
     let data = { stackCard: this.clickData.crd, newCard: this.clickData.newCrd, comp: compare, ln: this.clickData.ln };
     this.endCompareEmitter.emit(data);
     let seconds = 0;
     if (!compare) {
       this.isWrongGuess = true;
-      this.db.updateGameSeconds(this.gameId, this.stackLength);
+      // this.db.updateGameSeconds(this.gameId, this.stackLength);
       // get index of current player
       // let i = this.players.findIndex(i => i.currentPlayer == true);
       // if current player found..
@@ -125,14 +103,17 @@ export class DeckComponent implements OnInit, OnDestroy {
       // if (this.count == 0) {
       //   console.log(data);
       // }
+      let timer = setTimeout(() => {
+        this.title = '';
+        this.clickData = null;
+      }, 1500);
     } else {
-      this.title = '';
-      this.title = "Correct!";
       let timer = setTimeout(() => {
         this.title = '';
         this.clickData = null;
       }, 1500);
     }
   }
+}
 
 }

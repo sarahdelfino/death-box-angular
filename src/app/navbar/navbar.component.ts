@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit {
 
   scoresClick() {
     if (this.playersView) {
-      this.playersView = false;
+      this.playersView = false
     } else {
       this.playersView = true;
     }

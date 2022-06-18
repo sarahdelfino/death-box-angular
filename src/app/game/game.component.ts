@@ -12,6 +12,8 @@ import { InfoComponent } from '../info/info.component';
 import { Game } from '../game';
 import { StackComponent } from '../stack/stack.component';
 import { NONE_TYPE } from '@angular/compiler';
+import { stringify } from 'querystring';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game',
@@ -83,6 +85,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.isHost = false;
     }
+
   }
 
   ngAfterViewInit() {
@@ -215,19 +218,32 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleCompareResults(data: any) {
+    let modalData = {
+      title: '',
+      id: this.id,
+    }
     console.log(data);
     var cardIndex = this.stacks.indexOf(data.stackCard);
-    console.log(cardIndex);
+    // console.log(cardIndex);
         // get index of current card and add to stack
         if (data.newCard) {
           this.addToStack(cardIndex, data.newCard);
         }
-        if (data.comp) {
+        console.log(data);
+        console.log(this.stacks[cardIndex]);
           this.turns += 1;
           if (this.turns == 3) {
             this.turns = 0;
+            modalData.title = 'Next player!';
           }
+          if (data.comp == true) {
+            modalData.title = 'Correct';
+          } else {
+            console.log("hello")
+          modalData.title = 'Nope!'
+          this.db.updateGameSeconds(this.id, this.stacks[cardIndex].length);
         }
+        this.openModal(modalData);
       }
 
   endHighLow(event) {
@@ -236,16 +252,17 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openModal(data: any) {
     const dialogConfig = new MatDialogConfig();
-    const timeout = 1000;
+    // const timeout = 1000;
     dialogConfig.data = data;
+    dialogConfig.disableClose = true;
 
     const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
 
-    dialogRef.afterOpened().subscribe(_ => {
-      setTimeout(() => {
-        dialogRef.close();
-      }, timeout)
-    })
+    // dialogRef.afterOpened().subscribe(_ => {
+    //   setTimeout(() => {
+    //     dialogRef.close();
+    //   }, timeout)
+    // })
   }
 
   removeStacks() {

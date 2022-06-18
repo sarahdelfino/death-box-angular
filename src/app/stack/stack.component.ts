@@ -49,7 +49,6 @@ export class StackComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
     if (changes.cards.currentValue.length > 1) {
       this.added = true;
     }
