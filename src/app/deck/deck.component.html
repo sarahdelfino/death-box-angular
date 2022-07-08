@@ -1,12 +1,22 @@
-<div class="stack">
-    <img class="s" src="../../assets/cards/back.svg" />
-  </div>
-  <div class="card" [@cardFlip]="data.state">
-    <div class="face back">
-      <img class="back" src="../../assets/cards/back.svg" />
+<div class="deck-container">
+  <img id="deck-card-bottom" src="../../assets/cards/back.svg" />
+  <div
+    id="scene"
+    class="scene card"
+    [@cardFlip]="this.clickData ? 'flipped' : null"
+      (@cardFlip.done)="this.flipEnd()"
+  >
+    <div class="card">
+      <img
+        id="deck-card"
+        class="stack card__face card__face--front"
+        src="../../assets/cards/back.svg"
+      />
+      <img
+        id="deck-card"
+        class="stack card__face card__face--back"
+        src="{{ this.clickData.newCrd.cardPath }}"
+      />
     </div>
-    <div class="face front">
-      <img class="fce" [src]="card.cardPath" />
-    </div>
   </div>
-  
+</div>

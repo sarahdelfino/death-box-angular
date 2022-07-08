@@ -1,4 +1,7 @@
-<mat-dialog-content class="mat-typography" style="height: auto;">
+<mat-dialog-content style="height: auto;">
   <h1>{{this.title}}</h1>
-    <h3>{{this.body}}</h3>
+  <div *ngIf="this.wrongGuess == true">
+    <h3>Drink for {{this.uiCounter}} {{this.text}}!</h3>
+    <h3>{{uiCounter}}</h3>
+  </div>
   </mat-dialog-content>

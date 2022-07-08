@@ -1,12 +1,34 @@
 <div class="stack">
 <img
+[ngClass]="this.stackVisibility ? 'img-disabled' : 'img-enabled'"
+[@stackAdd]="this.added ? 'added' : null"
+  class="playing-card"
+  id="playing-card"
   [src]="cards[0].cardPath"
   (click)="onCardClick(cards)"
-  (mouseover)="setStackCount(cards)"
-  (mouseout)="removeStackCount()"
+  (mouseenter)="enableArrowVisibility()"
+  (mouseleave)="disableArrowVisibility($event)"
   [class.selected]="cards === selectedStack"
 />
-<div [ngClass]="this.stackVisibility ? 'enabled' : 'disabled'" class="number">
-  {{this.stackCount}}
+<div
+  class="overlay"
+  >
+  <!-- {{this.stackCount}} -->
+  <div [ngClass]="this.stackVisibility ? 'enabled' : 'disabled'" class="arrows">
+    <img
+      class="arrow"
+      mat-button
+      src="../../assets/up-arrow.png"
+      (click)="arrowClick('higher')"
+      (mouseenter)="enableArrowVisibility()"
+    />
+    <img
+      class="arrow"
+      mat-button
+      src="../../assets/down-arrow.png"
+      (click)="arrowClick('lower')"
+      (mouseenter)="enableArrowVisibility()"
+    />
+  </div>
 </div>
 </div>

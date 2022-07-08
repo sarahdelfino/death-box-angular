@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
@@ -9,28 +10,60 @@ import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../database.service';
 import { InfoComponent } from '../info/info.component';
 import { Game } from '../game';
-
+import { StackComponent } from '../stack/stack.component';
+import { NONE_TYPE } from '@angular/compiler';
+import { stringify } from 'querystring';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css'],
-  providers: [GameService]
+  providers: [GameService],
+  animations: [
+    trigger('openClose', [
+      state('open', style({
+        transform: 'translateY(0px)'
+      })),
+      state('closed', style({
+        transform: 'translateY(200px)'
+      })),
+      state('void', style({
+        transform: 'translateY(200px)'
+      })),
+      transition('open <=> closed', [
+        animate('.25s')
+      ]),
+      transition(':enter', [
+        animate('.25s ease-in')
+      ]),
+      transition(':leave', [
+        animate('.25s .25s ease-out')
+      ]),
+    ]),
+  ],
 })
-export class GameComponent implements OnInit, OnDestroy {
+export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  @ViewChild(StackComponent) stackChild: StackComponent;
 
   public deck: Array<Card>;
+  data = {state: "open"};
   public stacks: any = [];
-  public choice = "";
   public turns = 0;
   public game: Game;
   currentPlayer: string;
+  currentCounter;
   id: string;
   newCard: Card;
   isMobile: boolean;
   isHost: boolean;
   seconds: number;
   players: any = [];
+  openMobile: boolean;
+  clickedData;
+  choice: string;
+  added: boolean;
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
@@ -52,6 +85,11 @@ export class GameComponent implements OnInit, OnDestroy {
     } else {
       this.isHost = false;
     }
+
+  }
+
+  ngAfterViewInit() {
+    // console.log(this.stackChild.addToStack('hi'));
   }
 
   ngOnDestroy() {
@@ -93,16 +131,27 @@ export class GameComponent implements OnInit, OnDestroy {
 
   addToStack(i, card) {
     // add card to the top of the stack
-    this.stacks[i].unshift(card);
+    // this.stacks[i].unshift(card);
+    console.log(this.stacks);
+    this.stacks[i] = [card, ...this.stacks[i]];
+    console.log(this.stacks);
   }
 
   clickedCard(card: Card) {
-    this._gameService.clickedCard(card);
+    // this._gameService.clickedCard(card);
+    this.chooseCard(card);
+  }
+
+  cardChoice(ch: string) {
+    console.log(ch);
+    this.choice = ch;
   }
 
   chooseCard(card: Card) {
     if (this.deck.length > 1) {
       this.openHighLow(card);
+      // this.clickedData = card;
+      // this.openMobile = true;
     } else {
       this.removeStacks();
     }
@@ -123,6 +172,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   openHighLow(card: Card) {
+    // if (!this.isMobile) {
     const dialogConfig = new MatDialogConfig();
     let crd = card;
     let newCrd = this.deck.pop();
@@ -130,18 +180,26 @@ export class GameComponent implements OnInit, OnDestroy {
     let ln = this.stacks[i].length;
     let gameId = this.getId();
     let curP = this.players;
+    let c = this.choice;
+    this.clickedData = { crd, newCrd, ln, gameId, c };
+    // console.log(this.clickedData);
+    if (this.clickedData) {
+      // this.openMobile = true;
+      // console.log(this.openMobile);
+    }
 
-    dialogConfig.data = { crd, newCrd, ln, gameId, curP };
+    dialogConfig.data = { crd, newCrd, ln, gameId, c };
     dialogConfig.disableClose = true;
 
     const dialogRef = this.dialog.open(HighLowComponent, {
-      width: 'auto',
+      width: '90vw',
       height: 'auto',
       data: dialogConfig
     });
 
     dialogRef.afterClosed().subscribe(
       data => {
+        console.log(data);
         var cardIndex = this.stacks.indexOf(card);
         // get index of current card and add to stack
         if (data.newCrd) {
@@ -154,21 +212,57 @@ export class GameComponent implements OnInit, OnDestroy {
           }
         }
       }
-    )
+    );
+  }
+
+  handleCompareResults(data: any) {
+    let modalData = {
+      title: '',
+      id: this.id,
+    }
+    console.log(data);
+    var cardIndex = this.stacks.indexOf(data.stackCard);
+    // console.log(cardIndex);
+        // get index of current card and add to stack
+        if (data.newCard) {
+          this.addToStack(cardIndex, data.newCard);
+        }
+        console.log(data);
+        console.log(this.stacks[cardIndex]);
+          this.turns += 1;
+          if (this.turns == 3) {
+            this.turns = 0;
+            modalData.title = 'Next player!';
+          }
+          if (data.comp == true) {
+            modalData.title = 'Correct';
+          } else {
+            console.log("hello")
+          modalData.title = 'Nope!'
+          this.db.updateGameSeconds(this.id, this.stacks[cardIndex].length);
+        }
+        this.openMobile = true;
+        console.log(this.clickedData);
+        // this.openModal(modalData);
+      }
+
+  endHighLow(event) {
+    this.openMobile = false;
   }
 
   openModal(data: any) {
     const dialogConfig = new MatDialogConfig();
-    const timeout = 1000;
+    // const timeout = 1000;
     dialogConfig.data = data;
+    dialogConfig.disableClose = true;
 
-    const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
+    const dialogRef = this.dialog.open(HighLowComponent, dialogConfig);
 
-    dialogRef.afterOpened().subscribe(_ => {
-      setTimeout(() => {
-        dialogRef.close();
-      }, timeout)
-    })
+    // dialogRef.afterOpened().subscribe(_ => {
+    //   setTimeout(() => {
+    //     dialogRef.close();
+    //   }, timeout)
+    // })
   }
 
   removeStacks() {

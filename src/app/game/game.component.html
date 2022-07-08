@@ -1,17 +1,20 @@
+<app-navbar [gameId]="id"></app-navbar>
 <div class="game">
   <div *ngIf="this.isHost == true" class="container">
     <div class="card-container">
       <ng-container *ngFor="let stack of stacks">
-        <app-stack [cards]="stack" (clickedCardEmitter)="clickedCard($event)"
+        <app-stack [cards]="stack" (clickedCardEmitter)="clickedCard($event)" (cardChoiceEmitter)="cardChoice($event)"
           (click)="chooseCard(stack)"></app-stack>
       </ng-container>
     </div>
   </div>
-  <div *ngIf="this.isHost == false" class="counterContainer">
+  <div class="right">
+  <!-- <app-players [ngClass]="this.isMobile ? 'disabled' : 'enabled'" [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players> -->
+  <!-- <app-high-low [@openClose]="this.openMobile ? 'open' : 'closed'" [data]="clickedData" *ngIf="this.openMobile" class="mobile-hl" (isFinished)="endHighLow($event)"></app-high-low> -->
+  <!-- <app-deck *ngIf="this.isHost == true" class="deckView" (endCompareEmitter)="handleCompareResults($event)" [clickData]="clickedData"></app-deck> -->
+  <div class="counterContainer">
     <app-count [counter]="currentCounter"></app-count>
   </div>
-  <div class="right" *ngIf="!this.isMobile">
-  <app-players [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players>
   </div>
 </div>
 <!-- <img class="info" src="./assets/information.png" (click)="onClick()"/> -->

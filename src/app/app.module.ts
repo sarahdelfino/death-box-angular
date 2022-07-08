@@ -21,6 +21,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ModalComponent } from './modal/modal.component';
@@ -32,6 +34,8 @@ import { PlayersComponent } from './players/players.component';
 import { DeckComponent } from './deck/deck.component';
 import { InfoComponent } from './info/info.component';
 import { CountComponent } from './count/count.component';
+import { MobileHighLowComponent } from './mobile-high-low/mobile-high-low.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +52,8 @@ import { CountComponent } from './count/count.component';
     DeckComponent,
     InfoComponent,
     CountComponent,
+    MobileHighLowComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,6 +64,8 @@ import { CountComponent } from './count/count.component';
     MatDialogModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
+    MatIconModule,
+    MatToolbarModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireDatabaseModule,

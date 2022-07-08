@@ -61,3 +61,16 @@ td {
         margin-bottom: 100px;
     }
 }
+
+@media (max-width: 500px) {
+    .players {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+    .current-player, .players-containers {
+        margin-bottom: 0;
+    }
+}

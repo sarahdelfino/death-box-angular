@@ -81,6 +81,7 @@ export class GameService {
   }
 
   compare(choice, card, newCard) {
+    console.log(choice, card, newCard);
   if ((choice == "higher" && (Number(newCard) > Number(card))) || (choice == "lower" && (Number(newCard) < Number(card)))) {
     return true;
   } else {

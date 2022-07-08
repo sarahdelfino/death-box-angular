@@ -26,6 +26,7 @@
       </div>
     </div>
     <div class="text">
+      <h2>{{ this.title }}</h2>
       <div
         class="counting"
         @fadeViewOut
@@ -35,23 +36,6 @@
         <h2>Wrong! Drink for</h2>
         <h2 class="counter">{{ this.uiCounter }}</h2>
         <h2>{{ this.text }}!</h2>
-      </div>
-      <div @fadeViewIn *ngIf="!this.wrongGuess">
-        <h2 mat-dialog-title>{{ this.title }}</h2>
-        <mat-dialog-actions align="center">
-          <img
-            class="arrow"
-            mat-button
-            src="../../assets/up-arrow.png"
-            (click)="higher()"
-          />
-          <img
-            class="arrow"
-            mat-button
-            src="../../assets/down-arrow.png"
-            (click)="lower()"
-          />
-        </mat-dialog-actions>
       </div>
     </div>
   </div>
