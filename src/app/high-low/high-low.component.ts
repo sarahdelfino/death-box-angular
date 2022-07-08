@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Inject, OnInit, Input, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, Inject, OnInit, AfterViewInit, Input, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { Card } from '../card/card';
@@ -29,13 +29,13 @@ export interface CardData {
           transform: "rotateY(180deg) translate(-150px, 0px)",
         })
       ),
-      transition("default => flipped", [animate('500ms',)]),
+      transition("default => flipped", [animate('500ms .5s',)]),
       transition("flipped => default", [animate("400ms")]),
     ]),
     trigger('fadeViewIn', [
       transition(":enter", [
         style({ opacity: 0 }),
-        animate('4s', style({ opacity: 1 }))]),
+        animate('.5s', style({ opacity: 1 }))]),
     ]),
     trigger('fadeViewOut', [
       transition(":leave", [
@@ -52,7 +52,12 @@ export class HighLowComponent implements OnInit, OnDestroy {
   public card: Card;
   public choice: string;
   newCard: Card;
-  @Input() data: any;
+  // @Input() data: any;
+  data: CardData = {
+    imageId: "",
+    state: "default"
+  };
+
   cardNum: string;
   title: string;
   stackLength: number;
@@ -66,32 +71,19 @@ export class HighLowComponent implements OnInit, OnDestroy {
   arrowClick: boolean;
 
   constructor(
-    // public dialogRef: MatDialogRef<HighLowComponent>,
+    public dialogRef: MatDialogRef<HighLowComponent>,
     private gameService: GameService,
-    private db: DatabaseService,) {
-    //   @Inject(MAT_DIALOG_DATA) data) {
-
-  }
-
-  ngOnInit() {
-    console.log(this.data);
-    this.card = this.data.crd[0];
-    this.newCard = this.data.newCrd;
-    this.stackLength = this.data.ln;
+    private db: DatabaseService,
+      @Inject(MAT_DIALOG_DATA) data) {
+        console.log(data);
+    this.card = data.data.crd[0];
+    this.newCard = data.data.newCrd;
+    this.stackLength = data.data.ln;
     this.count = this.stackLength;
-    this.gameId = this.data.gameId;
-    this.players = this.data.curP;
-    if (parseInt(this.card.value) <= 10 && parseInt(this.card.value) >= 2) {
-      this.title = `Higher or lower than ${this.card.value}?`;
-    } else if (parseInt(this.card.value) == 11) {
-      this.title = "Higher or lower than a jack?"
-    } else if (parseInt(this.card.value) == 12) {
-      this.title = "Higher or lower than a queen?"
-    } else if (parseInt(this.card.value) == 13) {
-      this.title = "Higher or lower than a king?"
-    } else {
-      this.title = "Higher or lower than an ace?"
-    }
+    this.gameId = data.data.gameId;
+    this.players = data.data.curP;
+    this.choice = data.data.c;
+
     this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
       this.uiCounter = c.seconds;
       if (this.uiCounter == 1) {
@@ -101,10 +93,22 @@ export class HighLowComponent implements OnInit, OnDestroy {
       }
       if (this.uiCounter == 0) {
         let timer = setTimeout(() => {
-          let outboundData = { crd: this.card, newCrd: this.newCard, ln: this.stackLength };
-        }, 1000);
+          let data = {crd: this.card, newCrd: this.newCard, ln: this.stackLength};
+          this.dialogRef.close(data);
+        }, 1500);
       }
     })
+
+  }
+
+  ngOnInit() {
+    let timer = setTimeout(() => {
+      this.data.state = 'flipped';
+    }, 500);
+  }
+
+  ngAfterViewInit() {
+    
   }
 
   ngOnDestroy() {
@@ -113,8 +117,11 @@ export class HighLowComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  flipEnd() {
-    let compare = this.gameService.compare(this.choice, this.data.crd[0].value, this.data.newCrd.value);
+  flipEnd($event) {
+    console.log($event);
+    if ($event.fromState != 'void' && $event.toState != 'void') {
+    let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
+    console.log(compare);
     let data = { crd: this.card, newCrd: this.newCard, comp: compare, ln: this.stackLength };
     let seconds = 0;
     if (!compare) {
@@ -142,11 +149,14 @@ export class HighLowComponent implements OnInit, OnDestroy {
       this.title = "Correct!";
       let timer = setTimeout(() => {
         this.isFinished.emit(false);
-      }, 1000);
+        this.dialogRef.close(data);
+      }, 1500);
     }
   }
+}
 
   finishedAnimations($event) {
+    console.log($event);
     if ($event.fromState === 'void' && $event.triggerName === 'fadeViewOut') {
       this.db.updateCounting(this.gameId);
       this.count = this.stackLength;
@@ -156,12 +166,12 @@ export class HighLowComponent implements OnInit, OnDestroy {
   }
 
   arrowChoice(choice: string) {
-    console.log(this.data);
+    // console.log(this.data);
     this.choice = choice;
     document.getElementById("scene").addEventListener("transitionend", function (e) {
       e.preventDefault();
     });
-    this.flipEnd();
+    this.flipEnd(choice);
     this.arrowClick = true;
   }
 }

@@ -23,13 +23,13 @@ import { Subscription } from 'rxjs';
   animations: [
     trigger('openClose', [
       state('open', style({
-        transform: 'translateX(0px)'
+        transform: 'translateY(0px)'
       })),
       state('closed', style({
-        transform: 'translateX(400px)'
+        transform: 'translateY(200px)'
       })),
       state('void', style({
-        transform: 'translateX(400px)'
+        transform: 'translateY(200px)'
       })),
       transition('open <=> closed', [
         animate('.25s')
@@ -173,7 +173,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openHighLow(card: Card) {
     // if (!this.isMobile) {
-    // const dialogConfig = new MatDialogConfig();
+    const dialogConfig = new MatDialogConfig();
     let crd = card;
     let newCrd = this.deck.pop();
     let i = this.stacks.indexOf(card);
@@ -184,37 +184,35 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.clickedData = { crd, newCrd, ln, gameId, c };
     // console.log(this.clickedData);
     if (this.clickedData) {
-      this.openMobile = true;
+      // this.openMobile = true;
       // console.log(this.openMobile);
     }
 
-    // dialogConfig.data = { crd, newCrd, ln, gameId, curP };
-    // dialogConfig.disableClose = true;
+    dialogConfig.data = { crd, newCrd, ln, gameId, c };
+    dialogConfig.disableClose = true;
 
-    // const dialogRef = this.dialog.open(HighLowComponent, {
-    //   width: 'auto',
-    //   height: 'auto',
-    //   data: dialogConfig
-    // });
+    const dialogRef = this.dialog.open(HighLowComponent, {
+      width: '90vw',
+      height: 'auto',
+      data: dialogConfig
+    });
 
-    // dialogRef.afterClosed().subscribe(
-    //   data => {
-    //     var cardIndex = this.stacks.indexOf(card);
-    //     // get index of current card and add to stack
-    //     if (data.newCrd) {
-    //       this.addToStack(cardIndex, data.newCrd);
-    //     }
-    //     if (data.comp) {
-    //       this.turns += 1;
-    //       if (this.turns == 3) {
-    //         this.turns = 0;
-    //       }
-    //     }
-    //   }
-    // )
-    // } else {
-    //   console.log("hello");
-    // }
+    dialogRef.afterClosed().subscribe(
+      data => {
+        console.log(data);
+        var cardIndex = this.stacks.indexOf(card);
+        // get index of current card and add to stack
+        if (data.newCrd) {
+          this.addToStack(cardIndex, data.newCrd);
+        }
+        if (data.comp) {
+          this.turns += 1;
+          if (this.turns == 3) {
+            this.turns = 0;
+          }
+        }
+      }
+    );
   }
 
   handleCompareResults(data: any) {
@@ -243,7 +241,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
           modalData.title = 'Nope!'
           this.db.updateGameSeconds(this.id, this.stacks[cardIndex].length);
         }
-        this.openModal(modalData);
+        this.openMobile = true;
+        console.log(this.clickedData);
+        // this.openModal(modalData);
       }
 
   endHighLow(event) {
@@ -256,7 +256,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     dialogConfig.data = data;
     dialogConfig.disableClose = true;
 
-    const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
+    const dialogRef = this.dialog.open(HighLowComponent, dialogConfig);
 
     // dialogRef.afterOpened().subscribe(_ => {
     //   setTimeout(() => {
