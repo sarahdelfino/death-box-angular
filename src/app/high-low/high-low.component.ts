@@ -75,7 +75,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
     private gameService: GameService,
     private db: DatabaseService,
       @Inject(MAT_DIALOG_DATA) data) {
-        console.log(data);
     this.card = data.data.crd[0];
     this.newCard = data.data.newCrd;
     this.stackLength = data.data.ln;
@@ -118,10 +117,8 @@ export class HighLowComponent implements OnInit, OnDestroy {
   }
 
   flipEnd($event) {
-    console.log($event);
     if ($event.fromState != 'void' && $event.toState != 'void') {
     let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
-    console.log(compare);
     let data = { crd: this.card, newCrd: this.newCard, comp: compare, ln: this.stackLength };
     let seconds = 0;
     if (!compare) {
@@ -137,13 +134,9 @@ export class HighLowComponent implements OnInit, OnDestroy {
         i = 0;
         seconds = this.players[i].secondsDrank;
       }
-      console.log("SECONDS: ", seconds);
-      console.log("new: ", this.count);
       let newSeconds = seconds + this.count;
-      console.log(this.gameId, this.players[i].name, newSeconds);
       this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
       if (this.count == 0) {
-        console.log(data);
       }
     } else {
       this.title = "Correct!";
@@ -156,7 +149,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
 }
 
   finishedAnimations($event) {
-    console.log($event);
     if ($event.fromState === 'void' && $event.triggerName === 'fadeViewOut') {
       this.db.updateCounting(this.gameId);
       this.count = this.stackLength;
@@ -166,7 +158,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
   }
 
   arrowChoice(choice: string) {
-    // console.log(this.data);
     this.choice = choice;
     document.getElementById("scene").addEventListener("transitionend", function (e) {
       e.preventDefault();

@@ -14,6 +14,7 @@ import { StackComponent } from '../stack/stack.component';
 import { NONE_TYPE } from '@angular/compiler';
 import { stringify } from 'querystring';
 import { Subscription } from 'rxjs';
+import { Player } from '../player';
 
 @Component({
   selector: 'app-game',
@@ -64,6 +65,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   clickedData;
   choice: string;
   added: boolean;
+  playersList;
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
@@ -76,7 +78,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.id = this._gameService.getId();
     if (window.innerWidth < 500) {
       this.isMobile = true;
-      console.log(this.isMobile);
     }
     if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
@@ -90,11 +91,12 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     // console.log(this.stackChild.addToStack('hi'));
-    console.log(this.id);
     this.db.getGame(this.id).valueChanges().subscribe(gameData => {
-      console.log(gameData);
       this.currentPlayer = gameData.currentPlayer;
     });
+    this.db.getPlayers(this.id).valueChanges().subscribe(playersData => {
+      this.playersList = playersData;
+    })
   }
 
   ngOnDestroy() {
@@ -214,10 +216,36 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
           this.turns.push('x');
           if (this.turns.length == 3) {
             this.turns = [];
+            this.getNextPlayer();
           }
         }
       }
     );
+  }
+
+  getNextPlayer() {
+    let playerIndex = 0;
+    for (let i in this.playersList) {
+      if (this.playersList[i]['currentPlayer']) {
+        playerIndex = parseInt(i);
+      }
+    }
+    this._gameService.getNextPlayer(playerIndex, this.playersList);
+    // let temp = this.playersList;
+    // console.log(temp.length);
+    // for (let i in temp) {
+    //   console.log(temp[i]);
+    //   if (temp[i]['currentPlayer']) {
+    //     delete temp[i]['currentPlayer'];
+    //     console.log(temp[i]);
+        
+    //     let newIndex = parseInt(i) + 1;
+    //     temp[newIndex].currentPlayer = true;
+    //     console.log(temp[newIndex]);
+    //   }
+    // }
+    // console.log(temp);
+    // this.db.updatePlayers(this.id, temp);
   }
 
   handleCompareResults(data: any) {
@@ -225,15 +253,12 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       title: '',
       id: this.id,
     }
-    console.log(data);
     var cardIndex = this.stacks.indexOf(data.stackCard);
     // console.log(cardIndex);
         // get index of current card and add to stack
         if (data.newCard) {
           this.addToStack(cardIndex, data.newCard);
         }
-        console.log(data);
-        console.log(this.stacks[cardIndex]);
           this.turns.push('x');
           if (this.turns.length == 3) {
             this.turns = [];
@@ -242,12 +267,10 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
           if (data.comp == true) {
             modalData.title = 'Correct';
           } else {
-            console.log("hello")
           modalData.title = 'Nope!'
           this.db.updateGameSeconds(this.id, this.stacks[cardIndex].length);
         }
         this.openMobile = true;
-        console.log(this.clickedData);
         // this.openModal(modalData);
       }
 
@@ -271,7 +294,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   removeStacks() {
-    console.log("BEFORE: " + this.stacks);
     if (this.stacks.length == 9) {
       var removedArray = this.stacks.splice(this.stacks.length - 3, 3);
       console.log("Removing: ", removedArray);

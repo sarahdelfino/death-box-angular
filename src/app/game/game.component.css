@@ -158,6 +158,7 @@ button:hover {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    height: 100%;
   }
   .container {
     width: auto;
@@ -169,11 +170,20 @@ button:hover {
     margin-right: auto;
   }
   .counterContainer {
-    display: block;
+    display: inline-block;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
     text-align: center;
+  }
+  .right {
+    display: flex;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    margin-right: auto;
+    margin-left: auto;
   }
 }
 

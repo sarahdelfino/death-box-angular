@@ -17,6 +17,7 @@ export class DatabaseService {
   gameObj: AngularFireObject<Game> = null;
   playersObj: AngularFireObject<Player> = null;
   deckList: AngularFireList<Card> = null;
+  playersList: AngularFireList<Player> = null;
   playersObject: AngularFireObject<Player> = null;
   host = null;
   database = null;
@@ -66,11 +67,12 @@ export class DatabaseService {
   }
 
   getPlayers(id: string) {
-    this.playersObj = this.db.object('players/' + id);
-    return this.playersObj;
+    this.playersList = this.db.list('players/' + id);
+    return this.playersList;
   }
 
   updatePlayers(id: string, players: any) {
+    console.log(players);
     firebase.database().ref('/players/' + id + '/').set(players);
   }
 
