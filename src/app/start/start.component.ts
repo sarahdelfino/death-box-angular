@@ -8,6 +8,8 @@ import { InfoComponent } from '../info/info.component';
 import { nanoid } from "nanoid";
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { element } from 'protractor';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MobileJoinComponent } from '../mobile-join/mobile-join.component';
 
 @Component({
   selector: 'app-start',
@@ -31,6 +33,7 @@ export class StartComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private dbService: DatabaseService,
+    private bottomSheet: MatBottomSheet,
     private dialog: MatDialog,
     protected $gaService: GoogleAnalyticsService
   ) { 
@@ -71,6 +74,12 @@ export class StartComponent implements OnInit {
     }
   }
 
+  mobileJoin() {
+    if (this.isMobile) {
+      this.bottomSheet.open(MobileJoinComponent);
+    }
+  }
+
   onReset() {
     this.submitted = false;
   }
@@ -80,19 +89,16 @@ export class StartComponent implements OnInit {
     sessionStorage.setItem('host', 'true');
     this.dbService.create(this.game);
     this.dbService.addPlayer(this.game.id, createFormData.name, createFormData.name);
+    this.dbService.setCurrentPlayer(this.game.id, createFormData.name);
     this.router.navigateByUrl(`/lobby/${this.game.id}`);
   }
 
   joinTrigger() {
     if (this.joinClicked) {
       this.joinClicked = false;
-      // let el = document.getElementById('container');
-      // el.scrollIntoView();
     } else {
       this.joinClicked = true;
       this.createClicked = false;
-      // let el = document.getElementById('join');
-      // el.scrollIntoView();
     }
   }
 

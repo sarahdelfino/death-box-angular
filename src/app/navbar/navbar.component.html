@@ -1,11 +1,13 @@
 <div class="nav-container">
     <div class="nav-items">
-    <div class="game">
+    <div class="game nav-item">
         <h2>{{ gameId }}</h2>
     </div>
-    <div class="nav-item">
-        <h3 (click)="scoresClick()">Scores</h3>
+    <div class="player nav-item">
+        <h3>{{ player }}</h3>
+        <div class="checkContainer" *ngFor="let c of correct">
+            <img style="width: 30px;" src="../../assets/check-icon.png">
+        </div>
     </div>
 </div>
 </div>
-<app-players class="playersView" *ngIf="this.playersView"></app-players>

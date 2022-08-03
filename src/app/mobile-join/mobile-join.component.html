@@ -1,0 +1,36 @@
+<div id="join">
+    <form
+      class="form"
+      [formGroup]="joinGameForm"
+      id="join"
+      method="POST"
+    >
+    <div class="inputsGroup">
+      <input
+        id="gameId"
+        formControlName="id"
+        required
+        autocomplete="off"
+        placeholder="Game ID"
+      />
+      <input
+        id="name"
+        formControlName="name"
+        required
+        autocomplete="off"
+        placeholder="Name"
+      />
+    </div>
+    <div class="buttonContainer">
+      <button
+        gaEvent
+        gaAction="mobile_play_game"
+        class="playButton"
+        (click)="joinGame(joinGameForm.value)"
+        type="submit"
+      >
+        Play
+      </button>
+    </div>
+    </form>
+  </div>

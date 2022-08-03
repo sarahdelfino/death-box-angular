@@ -8,11 +8,14 @@ import { Component, Input, OnInit } from '@angular/core';
 export class NavbarComponent implements OnInit {
 
   playersView: boolean;
+  @Input() correct: [];
   @Input() gameId: string;
+  @Input() player: string;
 
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.correct);
   }
 
   scoresClick() {

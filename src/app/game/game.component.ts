@@ -50,7 +50,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   public deck: Array<Card>;
   data = {state: "open"};
   public stacks: any = [];
-  public turns = 0;
+  public turns = [];
   public game: Game;
   currentPlayer: string;
   currentCounter;
@@ -73,13 +73,13 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   ngOnInit() {
+    this.id = this._gameService.getId();
     if (window.innerWidth < 500) {
       this.isMobile = true;
       console.log(this.isMobile);
     }
     if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
-      this.id = this._gameService.getId();
       this.deck = this._gameService.createDeck();
       this.stacks = this._gameService.createStacks(this.deck);
     } else {
@@ -90,6 +90,11 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     // console.log(this.stackChild.addToStack('hi'));
+    console.log(this.id);
+    this.db.getGame(this.id).valueChanges().subscribe(gameData => {
+      console.log(gameData);
+      this.currentPlayer = gameData.currentPlayer;
+    });
   }
 
   ngOnDestroy() {
@@ -206,9 +211,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
           this.addToStack(cardIndex, data.newCrd);
         }
         if (data.comp) {
-          this.turns += 1;
-          if (this.turns == 3) {
-            this.turns = 0;
+          this.turns.push('x');
+          if (this.turns.length == 3) {
+            this.turns = [];
           }
         }
       }
@@ -229,9 +234,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         console.log(data);
         console.log(this.stacks[cardIndex]);
-          this.turns += 1;
-          if (this.turns == 3) {
-            this.turns = 0;
+          this.turns.push('x');
+          if (this.turns.length == 3) {
+            this.turns = [];
             modalData.title = 'Next player!';
           }
           if (data.comp == true) {

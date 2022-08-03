@@ -20,6 +20,7 @@ import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-go
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -36,6 +37,7 @@ import { InfoComponent } from './info/info.component';
 import { CountComponent } from './count/count.component';
 import { MobileHighLowComponent } from './mobile-high-low/mobile-high-low.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { MobileJoinComponent } from './mobile-join/mobile-join.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     CountComponent,
     MobileHighLowComponent,
     NavbarComponent,
+    MobileJoinComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,6 +65,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     ReactiveFormsModule,
     MatButtonModule,
     MatDialogModule,
+    MatBottomSheetModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatIconModule,

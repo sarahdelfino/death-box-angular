@@ -1,6 +1,6 @@
-<app-navbar [gameId]="id"></app-navbar>
+<app-navbar [gameId]="id" [player]="currentPlayer" [correct]="turns"></app-navbar>
 <div class="game">
-  <div *ngIf="this.isHost == true" class="container">
+  <div *ngIf="this.isHost == true && !this.isMobile" class="container">
     <div class="card-container">
       <ng-container *ngFor="let stack of stacks">
         <app-stack [cards]="stack" (clickedCardEmitter)="clickedCard($event)" (cardChoiceEmitter)="cardChoice($event)"

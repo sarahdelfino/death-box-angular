@@ -1,0 +1,29 @@
+#join {
+    /* text-align: left; */
+    /* width: 250px; */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input {
+    margin: 0;
+    margin-right: 10px;
+}
+
+button.playButton {
+    width: 75px;
+    height: 50px;
+}
+
+.inputsGroup {
+    display: flex;
+}
+
+.container {
+    padding: 10px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+}

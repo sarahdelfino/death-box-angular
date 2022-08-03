@@ -58,7 +58,7 @@ button {
 }
 
 button.createGameButton, button.playButton {
-    width: 100px;
+    width: 75px;
     background-color: #6A985C;
 }
 
@@ -72,6 +72,7 @@ button.createGameButton:hover, button.playButton:hover {
     margin-left: auto;
     margin-right: auto;
     display: inline-block;
+    width: 400px;
     /* animation-name: logo;
     animation-duration: 1s; */
 }
@@ -87,7 +88,7 @@ button.createGameButton:hover, button.playButton:hover {
     height: auto;
     margin-left: auto;
     margin-right: auto;
-    text-align: center;
+    text-align: right;
     align-self: flex-end;
 }
 
@@ -110,6 +111,9 @@ mat-label.mat-label {
 
 .enabled {
     display: block;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .disabled {
@@ -127,7 +131,7 @@ mat-label.mat-label {
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
     .container {
         height: 90vh;
     }
@@ -147,16 +151,12 @@ mat-label.mat-label {
         margin: 5px;
     }
     button {
-        width: 170px;
+        width: 150px;
         margin: 5px;
         height: 80px;
     }
-    .logo {
+    img.logo {
         max-width: 380px;
-        margin-top: -30px;
+        margin-top: 0;
     }
-    .form {
-        margin-top: 20px;
-    }
-
 }

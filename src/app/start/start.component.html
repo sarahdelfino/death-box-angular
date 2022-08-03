@@ -7,8 +7,22 @@
     How to play
   </h3>
   <div class="content">
+    <div class="buttonContainer">
+      <button
+      *ngIf="!this.isMobile"
+        gaEvent
+        gaAction="create_game"
+        (click)="createTrigger()"
+        type="submit"
+      >
+        Create game
+      </button>
+      <button (click)="mobileJoin()" gaEvent gaAction="join_trigger" (click)="joinTrigger()">
+        Join game
+      </button>
+    </div>
   <div
-    [ngClass]="this.joinClicked || this.createClicked ? 'enabled' : 'disabled'"
+    [ngClass]="(!this.isMobile) && this.joinClicked || this.createClicked ? 'enabled' : 'disabled'"
   >
     <div id="create">
       <form
@@ -44,6 +58,7 @@
         id="join"
         method="POST"
       >
+      <div class="inputsGroup">
         <input
           id="gameId"
           formControlName="id"
@@ -58,6 +73,7 @@
           autocomplete="off"
           placeholder="Name"
         />
+      </div>
         <button
           gaEvent
           gaAction="play_game"
@@ -69,29 +85,6 @@
         </button>
       </form>
     </div>
-  </div>
-  <div class="buttonContainer">
-    <button
-      gaEvent
-      gaAction="mobile_play_game"
-      *ngIf="this.joinClicked && this.isMobile"
-      class="playButton"
-      (click)="joinGame(joinGameForm.value)"
-      type="submit"
-    >
-      Play
-    </button>
-    <button
-      gaEvent
-      gaAction="create_game"
-      (click)="createTrigger()"
-      type="submit"
-    >
-      Create game
-    </button>
-    <button gaEvent gaAction="join_trigger" (click)="joinTrigger()">
-      Join game
-    </button>
   </div>
 </div>
 </div>
