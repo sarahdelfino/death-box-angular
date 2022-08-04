@@ -69,19 +69,18 @@ export class HighLowComponent implements OnInit, OnDestroy {
   uiCounter: number;
   players: any = [];
   arrowClick: boolean;
+  @Input() cData;
 
   constructor(
-    public dialogRef: MatDialogRef<HighLowComponent>,
     private gameService: GameService,
-    private db: DatabaseService,
-      @Inject(MAT_DIALOG_DATA) data) {
-    this.card = data.data.crd[0];
-    this.newCard = data.data.newCrd;
-    this.stackLength = data.data.ln;
-    this.count = this.stackLength;
-    this.gameId = data.data.gameId;
-    this.players = data.data.curP;
-    this.choice = data.data.c;
+    private db: DatabaseService,) {
+    // this.card = this.cData.data.crd[0];
+    // this.newCard = this.cData.data.newCrd;
+    // this.stackLength = this.cData.data.ln;
+    // this.count = this.stackLength;
+    // this.gameId = this.cData.data.gameId;
+    // this.players = this.cData.data.curP;
+    // this.choice = this.cData.data.c;
 
     this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
       this.uiCounter = c.seconds;
@@ -93,7 +92,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
       if (this.uiCounter == 0) {
         let timer = setTimeout(() => {
           let data = {crd: this.card, newCrd: this.newCard, ln: this.stackLength};
-          this.dialogRef.close(data);
         }, 1500);
       }
     })
@@ -104,6 +102,7 @@ export class HighLowComponent implements OnInit, OnDestroy {
     let timer = setTimeout(() => {
       this.data.state = 'flipped';
     }, 500);
+    console.log(this.cData);
   }
 
   ngAfterViewInit() {
@@ -142,7 +141,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
       this.title = "Correct!";
       let timer = setTimeout(() => {
         this.isFinished.emit(false);
-        this.dialogRef.close(data);
       }, 1500);
     }
   }

@@ -35,13 +35,16 @@ export class DeckComponent implements OnInit {
   @Input()
   public clickData: any;
 
+  @Input()
+  public text: Array<string>;
+
   @Output() endCompareEmitter: EventEmitter<any> = new EventEmitter();
 
   public choice: string;
   title: string;
   isWrongGuess: boolean;
   uiCounter: number;
-  text: string;
+  // text: string;
   subscription: Subscription;
   gameId: string;
   stackLength: number;
@@ -61,6 +64,7 @@ export class DeckComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     // console.log(changes);
+    console.log(this.text);
     if (this.clickData && changes.clickData.currentValue !== undefined) {
       console.log(this.clickData);
       this.gameId = this.clickData.gameId;
@@ -82,36 +86,9 @@ export class DeckComponent implements OnInit {
     let compare = this.gameService.compare(this.clickData.c, this.clickData.crd[0].value, this.clickData.newCrd.value);
     let data = { stackCard: this.clickData.crd, newCard: this.clickData.newCrd, comp: compare, ln: this.clickData.ln };
     this.endCompareEmitter.emit(data);
-    let seconds = 0;
     if (!compare) {
       this.isWrongGuess = true;
-      // this.db.updateGameSeconds(this.gameId, this.stackLength);
-      // get index of current player
-      // let i = this.players.findIndex(i => i.currentPlayer == true);
-      // if current player found..
-      // if (i != -1) {
-      //   seconds = this.players[i].secondsDrank;
-      // } else {
-      //   i = 0;
-      //   seconds = this.players[i].secondsDrank;
-      // }
-      // console.log("SECONDS: ", seconds);
-      // console.log("new: ", this.count);
-      // let newSeconds = seconds + this.count;
-      // console.log(this.gameId, this.players[i].name, newSeconds);
-      // this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
-      // if (this.count == 0) {
-      //   console.log(data);
-      // }
-      let timer = setTimeout(() => {
-        this.title = '';
-        this.clickData = null;
-      }, 1500);
-    } else {
-      let timer = setTimeout(() => {
-        this.title = '';
-        this.clickData = null;
-      }, 1500);
+      this.db.updateGameSeconds(this.gameId, this.stackLength);
     }
   }
 }

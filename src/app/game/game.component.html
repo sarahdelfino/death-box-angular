@@ -9,8 +9,9 @@
     </div>
   </div>
   <div class="right">
-  <div class="counterContainer">
-    <app-count [counter]="currentCounter"></app-count>
+   <app-deck *ngIf="this.isHost == true" class="deckView" [text]="compareText" (endCompareEmitter)="handleCompareResults($event)" [clickData]="cardData"></app-deck>
+   <div class="counterContainer">
+    <app-count [counter]="currentCounter" (clickEmitter)="countClicked()"></app-count>
   </div>
   </div>
 </div>

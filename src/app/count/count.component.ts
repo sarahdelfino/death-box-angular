@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { GameService } from '../game.service';
 
@@ -10,6 +10,7 @@ import { GameService } from '../game.service';
 export class CountComponent implements OnInit {
 
   @Input() counter: string;
+  @Output() clickEmitter: EventEmitter<any> = new EventEmitter();
   public id: string;
   public counting: boolean;
   public currentPlayer = sessionStorage.getItem('user');

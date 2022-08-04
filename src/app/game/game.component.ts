@@ -65,7 +65,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   clickedData;
   choice: string;
   added: boolean;
+  compareText = {};
   playersList;
+  cardData;
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
@@ -90,12 +92,22 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // console.log(this.stackChild.addToStack('hi'));
-    this.db.getGame(this.id).valueChanges().subscribe(gameData => {
-      this.currentPlayer = gameData.currentPlayer;
-    });
     this.db.getPlayers(this.id).valueChanges().subscribe(playersData => {
+      console.log(playersData);
       this.playersList = playersData;
+      for (let p in this.playersList) {
+        if (this.playersList[p]['currentPlayer']) {
+          console.log(this.playersList[p].name);
+          this.currentPlayer = this.playersList[p].name;
+        }
+      }
+    });
+    this.db.getGame(this.id).valueChanges().subscribe(gameData => {
+      if (gameData.seconds) {
+        console.log(gameData.seconds);
+        this.compareText['count'] = gameData.seconds;
+        console.log(this.compareText);
+      }
     })
   }
 
@@ -188,39 +200,37 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     let gameId = this.getId();
     let curP = this.players;
     let c = this.choice;
-    this.clickedData = { crd, newCrd, ln, gameId, c };
+    this.cardData = { crd, newCrd, ln, gameId, c };
+    console.log(this.cardData);
     // console.log(this.clickedData);
     if (this.clickedData) {
       // this.openMobile = true;
       // console.log(this.openMobile);
     }
 
-    dialogConfig.data = { crd, newCrd, ln, gameId, c };
-    dialogConfig.disableClose = true;
+    // const dialogRef = this.dialog.open(HighLowComponent, {
+    //   width: '90vw',
+    //   height: 'auto',
+    //   data: dialogConfig
+    // });
 
-    const dialogRef = this.dialog.open(HighLowComponent, {
-      width: '90vw',
-      height: 'auto',
-      data: dialogConfig
-    });
-
-    dialogRef.afterClosed().subscribe(
-      data => {
-        console.log(data);
-        var cardIndex = this.stacks.indexOf(card);
-        // get index of current card and add to stack
-        if (data.newCrd) {
-          this.addToStack(cardIndex, data.newCrd);
-        }
-        if (data.comp) {
-          this.turns.push('x');
-          if (this.turns.length == 3) {
-            this.turns = [];
-            this.getNextPlayer();
-          }
-        }
-      }
-    );
+    // dialogRef.afterClosed().subscribe(
+    //   data => {
+    //     console.log(data);
+    //     var cardIndex = this.stacks.indexOf(card);
+    //     // get index of current card and add to stack
+    //     if (data.newCrd) {
+    //       this.addToStack(cardIndex, data.newCrd);
+    //     }
+    //     if (data.comp) {
+    //       this.turns.push('x');
+    //       if (this.turns.length == 3) {
+    //         this.turns = [];
+    //         this.getNextPlayer();
+    //       }
+    //     }
+    //   }
+    // );
   }
 
   getNextPlayer() {
@@ -249,29 +259,41 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleCompareResults(data: any) {
-    let modalData = {
-      title: '',
-      id: this.id,
-    }
     var cardIndex = this.stacks.indexOf(data.stackCard);
+    this.compareText = {
+      "text": '',
+      "count": this.stacks[cardIndex].length,
+      "sec": this.stacks[cardIndex].length == '1' ? 'second' : 'seconds',
+    }
     // console.log(cardIndex);
         // get index of current card and add to stack
         if (data.newCard) {
           this.addToStack(cardIndex, data.newCard);
         }
+        if (data.comp) {
           this.turns.push('x');
+          this.compareText['text'] = 'Correct!';
+          this.compareText['count'] = null;
+          this.compareText['sec'] = null;
           if (this.turns.length == 3) {
             this.turns = [];
-            modalData.title = 'Next player!';
+            this.compareText['text'] = '';
+            this.compareText['count'] = null;
+            this.compareText['sec'] = null;
+            this.getNextPlayer();
           }
-          if (data.comp == true) {
-            modalData.title = 'Correct';
-          } else {
-          modalData.title = 'Nope!'
+        } else {
+          this.compareText['text'] = "Nope! Drink for";
           this.db.updateGameSeconds(this.id, this.stacks[cardIndex].length);
-        }
-        this.openMobile = true;
+          }
+        // this.openMobile = true;
         // this.openModal(modalData);
+      }
+
+      countClicked() {
+        console.log(this.compareText);
+        this.compareText['count'] = parseInt(this.compareText['count']) - 1;
+        console.log(this.compareText);
       }
 
   endHighLow(event) {
@@ -284,7 +306,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     dialogConfig.data = data;
     dialogConfig.disableClose = true;
 
-    const dialogRef = this.dialog.open(HighLowComponent, dialogConfig);
+    const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
 
     // dialogRef.afterOpened().subscribe(_ => {
     //   setTimeout(() => {
