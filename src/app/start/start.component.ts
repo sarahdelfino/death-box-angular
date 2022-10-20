@@ -87,6 +87,7 @@ export class StartComponent implements OnInit {
   createGame(createFormData) {
     this.createGameId();
     sessionStorage.setItem('host', 'true');
+    sessionStorage.setItem('user', createFormData.name);
     this.dbService.create(this.game);
     this.dbService.addPlayer(this.game.id, createFormData.name, createFormData.name);
     this.dbService.setCurrentPlayer(this.game.id, createFormData.name);

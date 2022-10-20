@@ -47,7 +47,7 @@ import { Player } from '../player';
 export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild(StackComponent) stackChild: StackComponent;
-
+  
   public deck: Array<Card>;
   data = {state: "open"};
   public stacks: any = [];
@@ -65,7 +65,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   clickedData;
   choice: string;
   added: boolean;
-  compareText = {};
+  counter: number;
+  compareText: string;
   playersList;
   cardData;
 
@@ -105,8 +106,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.db.getGame(this.id).valueChanges().subscribe(gameData => {
       if (gameData.seconds) {
         console.log(gameData.seconds);
-        this.compareText['count'] = gameData.seconds;
-        console.log(this.compareText);
+        let test = [];
+        test.push(gameData.seconds);
+        this.seconds = test[0];
       }
     })
   }
@@ -260,40 +262,38 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleCompareResults(data: any) {
     var cardIndex = this.stacks.indexOf(data.stackCard);
-    this.compareText = {
-      "text": '',
-      "count": this.stacks[cardIndex].length,
-      "sec": this.stacks[cardIndex].length == '1' ? 'second' : 'seconds',
-    }
-    // console.log(cardIndex);
         // get index of current card and add to stack
         if (data.newCard) {
           this.addToStack(cardIndex, data.newCard);
         }
         if (data.comp) {
           this.turns.push('x');
-          this.compareText['text'] = 'Correct!';
-          this.compareText['count'] = null;
-          this.compareText['sec'] = null;
           if (this.turns.length == 3) {
-            this.turns = [];
-            this.compareText['text'] = '';
-            this.compareText['count'] = null;
-            this.compareText['sec'] = null;
+            this.turns = null;
+            this.cardData = null;
             this.getNextPlayer();
           }
-        } else {
-          this.compareText['text'] = "Nope! Drink for";
-          this.db.updateGameSeconds(this.id, this.stacks[cardIndex].length);
-          }
-        // this.openMobile = true;
-        // this.openModal(modalData);
+        }
       }
 
       countClicked() {
-        console.log(this.compareText);
-        this.compareText['count'] = parseInt(this.compareText['count']) - 1;
-        console.log(this.compareText);
+        console.log("SEC: " + this.seconds);
+        // if (this.seconds && this.seconds > 0) {
+        let newSeconds = this.seconds - 1;
+        console.log("NEW SEC: " + newSeconds);
+        this.seconds = newSeconds;
+        console.log("GAME SECONDS: " + this.seconds);
+        this.db.updateGameSeconds(this.id, newSeconds);
+        // console.log(this.seconds);
+        if (newSeconds == 0) {
+          console.log("HEREEEEE");
+          // let timer = setTimeout(() => {
+          //   this.seconds = null;
+          //   this.cardData = null;
+          //   this.db.deleteSeconds(this.id);
+          // }, 6000);
+        // }
+      }
       }
 
   endHighLow(event) {

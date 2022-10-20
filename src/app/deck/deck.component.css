@@ -59,6 +59,11 @@
     /* right: 0px; */
   }
 
+  .text-container {
+    height: 50px;
+    margin-left: -25px;
+  }
+
   .card {
     /* width: 100%;
     height: 100%; */

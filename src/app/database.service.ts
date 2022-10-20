@@ -49,6 +49,12 @@ export class DatabaseService {
     return this.secondsRef;
   }
 
+  setSeconds(id: string, seconds: number) {
+    firebase.database().ref('games/' + id).update({
+      'seconds': seconds
+    });
+  }
+
   decrementSeconds(id: string) {
     firebase.database()
     .ref('games')

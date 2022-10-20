@@ -21,24 +21,30 @@ export class CountComponent implements OnInit {
     }
 
   ngOnInit() {
+    console.log(this.currentPlayer);
     this.id = this.gameService.getId();
     this.db.getPlayers(this.gameService.getId()).valueChanges().subscribe(data => {
       this.filteredPlayers = [];
+      console.log(data);
       for (const d in data) {
         if (!data[d].currentPlayer) {
+          console.log(this.filteredPlayers);
           this.filteredPlayers.push(data[d]);
           this.counter = this.filteredPlayers[0].name;
         }
       }
+      console.log(this.filteredPlayers);
     });
     this.db.getGame(this.id).valueChanges().subscribe(gameData => {
-      if (gameData.counting && gameData.seconds) {
+      console.log(gameData.seconds);
+      if (gameData.seconds && gameData.seconds !== 0) {
         this.counting = true;
         if (gameData.counter) {
           this.counter = gameData.counter;
         }
-      } else if (!gameData.counting) {
-        this.counting = false;
+      } else if (gameData.seconds == 0) {
+        // this.counting = false;
+        console.log("hey");
       }
     });
     console.log(this.counting);
@@ -55,10 +61,10 @@ export class CountComponent implements OnInit {
 
   count() {
     console.log(this.counter);
-    if (sessionStorage.getItem('user') === this.counter && this.counting === true) {
+    if (sessionStorage.getItem('user') === this.counter) {
+      this.clickEmitter.emit();
       console.log(this.filteredPlayers);
       console.log(this.id);
-      this.db.decrementSeconds(this.id);
       if (this.filteredPlayers) {
         this.getNextCounter();
       }

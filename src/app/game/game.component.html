@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="right">
-   <app-deck *ngIf="this.isHost == true" class="deckView" [text]="compareText" (endCompareEmitter)="handleCompareResults($event)" [clickData]="cardData"></app-deck>
+   <app-deck *ngIf="this.isHost == true" class="deckView" [text]="compareText" (endCompareEmitter)="handleCompareResults($event)" [clickData]="cardData" [uiCounter]="seconds"></app-deck>
    <div class="counterContainer">
     <app-count [counter]="currentCounter" (clickEmitter)="countClicked()"></app-count>
   </div>
