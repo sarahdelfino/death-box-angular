@@ -78,6 +78,7 @@ export class PlayersComponent implements OnInit {
       this.players = [];
       for (let x in data) {
         this.players.push(data[x]);
+        console.log(this.players);
         if (data[x].currentPlayer) {
           this.currentPlayer = data[x].name;
           this.curPlayer.emit(this.currentPlayer);

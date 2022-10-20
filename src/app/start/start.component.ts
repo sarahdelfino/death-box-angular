@@ -21,11 +21,13 @@ export class StartComponent implements OnInit {
   createGameForm: FormGroup;
   submitted = false;
   name: string;
+  create = false;
   currentGame: string;
   loggedIn: boolean;
-  joinClicked: boolean;
-  createClicked: boolean;
+  joinClicked = false;
+  createClicked = false;
   isMobile: boolean;
+  start = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -84,20 +86,16 @@ export class StartComponent implements OnInit {
   }
 
   joinTrigger() {
-    if (this.joinClicked) {
+    if (this.joinClicked == true) {
       this.joinClicked = false;
-      // let el = document.getElementById('container');
-      // el.scrollIntoView();
     } else {
       this.joinClicked = true;
       this.createClicked = false;
-      // let el = document.getElementById('join');
-      // el.scrollIntoView();
     }
   }
 
   createTrigger() {
-    if (this.createClicked) {
+    if (this.createClicked == true) {
       this.createClicked = false;
     } else {
       this.createClicked = true;

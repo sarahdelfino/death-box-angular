@@ -1,6 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, Inject, OnInit, AfterViewInit, Input, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { Card } from '../card/card';
 import { DatabaseService } from '../database.service';
@@ -26,7 +25,7 @@ export interface CardData {
       state(
         "flipped",
         style({
-          transform: "rotateY(180deg) translate(-150px, 0px)",
+          transform: "rotateY(180deg) translate(-50px, 0px)",
         })
       ),
       transition("default => flipped", [animate('500ms .5s',)]),
@@ -47,6 +46,7 @@ export interface CardData {
 
 export class HighLowComponent implements OnInit, OnDestroy {
 
+  @Input() public cardsInfo: any = []
   @Output() isFinished = new EventEmitter<boolean>();
 
   public card: Card;
@@ -71,18 +71,45 @@ export class HighLowComponent implements OnInit, OnDestroy {
   arrowClick: boolean;
 
   constructor(
-    public dialogRef: MatDialogRef<HighLowComponent>,
     private gameService: GameService,
-    private db: DatabaseService,
-      @Inject(MAT_DIALOG_DATA) data) {
-        console.log(data);
-    this.card = data.data.crd[0];
-    this.newCard = data.data.newCrd;
-    this.stackLength = data.data.ln;
+    private db: DatabaseService) {
+    //     console.log(data);
+    // this.card = data.data.crd[0];
+    // this.newCard = data.data.newCrd;
+    // this.stackLength = data.data.ln;
+    // this.count = this.stackLength;
+    // this.gameId = data.data.gameId;
+    // this.players = data.data.curP;
+    // this.choice = data.data.c;
+
+    // this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
+    //   this.uiCounter = c.seconds;
+    //   if (this.uiCounter == 1) {
+    //     this.text = "second";
+    //   } else {
+    //     this.text = "seconds";
+    //   }
+    //   if (this.uiCounter == 0) {
+    //     let timer = setTimeout(() => {
+    //       let data = {crd: this.card, newCrd: this.newCard, ln: this.stackLength};
+    //       this.dialogRef.close(data);
+    //     }, 1500);
+    //   }
+    // })
+
+  }
+
+  ngOnInit() {
+    console.log(this.cardsInfo);
+    this.card = this.cardsInfo.clickedCard;
+    this.newCard = this.cardsInfo.newCard;
+    this.stackLength = this.cardsInfo.stackLength;
     this.count = this.stackLength;
-    this.gameId = data.data.gameId;
-    this.players = data.data.curP;
-    this.choice = data.data.c;
+    this.gameId = this.cardsInfo.gameId;
+    // this.players = data.data.curP;
+    this.choice = this.cardsInfo.choice;
+
+    console.log(this.newCard);
 
     this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
       this.uiCounter = c.seconds;
@@ -92,23 +119,19 @@ export class HighLowComponent implements OnInit, OnDestroy {
         this.text = "seconds";
       }
       if (this.uiCounter == 0) {
-        let timer = setTimeout(() => {
-          let data = {crd: this.card, newCrd: this.newCard, ln: this.stackLength};
-          this.dialogRef.close(data);
-        }, 1500);
+        console.log("zero");
+        // let timer = setTimeout(() => {
+        //   let data = { crd: this.card, newCrd: this.newCard, ln: this.stackLength };
+        // }, 1500);
       }
     })
-
-  }
-
-  ngOnInit() {
     let timer = setTimeout(() => {
       this.data.state = 'flipped';
     }, 500);
   }
 
   ngAfterViewInit() {
-    
+
   }
 
   ngOnDestroy() {
@@ -120,40 +143,40 @@ export class HighLowComponent implements OnInit, OnDestroy {
   flipEnd($event) {
     console.log($event);
     if ($event.fromState != 'void' && $event.toState != 'void') {
-    let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
-    console.log(compare);
-    let data = { crd: this.card, newCrd: this.newCard, comp: compare, ln: this.stackLength };
-    let seconds = 0;
-    if (!compare) {
-      this.wrongGuess = true;
-      this.count = this.stackLength;
-      this.db.updateGameSeconds(this.gameId, this.count);
-      // get index of current player
-      let i = this.players.findIndex(i => i.currentPlayer == true);
-      // if current player found..
-      if (i != -1) {
-        seconds = this.players[i].secondsDrank;
+      let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
+      console.log(compare);
+      let data = { crd: this.card, newCrd: this.newCard, comp: compare, ln: this.stackLength };
+      let seconds = 0;
+      if (!compare) {
+        this.wrongGuess = true;
+        this.count = this.stackLength;
+        this.db.updateGameSeconds(this.gameId, this.count);
+        // get index of current player
+        let i = this.players.findIndex(i => i.currentPlayer == true);
+        // if current player found..
+        if (i != -1) {
+          seconds = this.players[i].secondsDrank;
+        } else {
+          i = 0;
+          seconds = this.players[i].secondsDrank;
+        }
+        console.log("SECONDS: ", seconds);
+        console.log("new: ", this.count);
+        let newSeconds = seconds + this.count;
+        console.log(this.gameId, this.players[i].name, newSeconds);
+        this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
+        if (this.count == 0) {
+          console.log(data);
+        }
       } else {
-        i = 0;
-        seconds = this.players[i].secondsDrank;
+        this.title = "Correct!";
+        let timer = setTimeout(() => {
+          this.isFinished.emit(false);
+          // this.dialogRef.close(data);
+        }, 1500);
       }
-      console.log("SECONDS: ", seconds);
-      console.log("new: ", this.count);
-      let newSeconds = seconds + this.count;
-      console.log(this.gameId, this.players[i].name, newSeconds);
-      this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
-      if (this.count == 0) {
-        console.log(data);
-      }
-    } else {
-      this.title = "Correct!";
-      let timer = setTimeout(() => {
-        this.isFinished.emit(false);
-        this.dialogRef.close(data);
-      }, 1500);
     }
   }
-}
 
   finishedAnimations($event) {
     console.log($event);
@@ -161,17 +184,8 @@ export class HighLowComponent implements OnInit, OnDestroy {
       this.db.updateCounting(this.gameId);
       this.count = this.stackLength;
       this.db.updateGameSeconds(this.gameId, this.count);
-      // this.db.updatePlayerSeconds(this.gameId, this.player, this.count);
+      // this.db.updatePlayerSeconds(this.gameId, this.players, this.count);
     }
   }
 
-  arrowChoice(choice: string) {
-    // console.log(this.data);
-    this.choice = choice;
-    document.getElementById("scene").addEventListener("transitionend", function (e) {
-      e.preventDefault();
-    });
-    this.flipEnd(choice);
-    this.arrowClick = true;
-  }
 }

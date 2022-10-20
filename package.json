@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "12": "^1.0.2",
     "@angular/animations": "^10.2.4",
     "@angular/cdk": "^10.2.7",
     "@angular/common": "^10.2.4",
@@ -28,8 +29,10 @@
     "firebaseui": "^6.0.1",
     "nanoid": "^3.3.1",
     "ngx-google-analytics": "^11.2.1",
+    "nvm": "^0.0.4",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
+    "use": "^3.1.1",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

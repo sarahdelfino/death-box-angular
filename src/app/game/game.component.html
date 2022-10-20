@@ -1,20 +1,36 @@
-<app-navbar [gameId]="id"></app-navbar>
+<app-navbar></app-navbar>
 <div class="game">
   <div *ngIf="this.isHost == true" class="container">
-    <div class="card-container">
+    <div *ngIf="!this.cardSelected && !this.arrowClicked" class="card-container">
       <ng-container *ngFor="let stack of stacks">
         <app-stack [cards]="stack" (clickedCardEmitter)="clickedCard($event)" (cardChoiceEmitter)="cardChoice($event)"
           (click)="chooseCard(stack)"></app-stack>
       </ng-container>
     </div>
+    <div *ngIf="this.cardSelected" class="toggle-container">
+      <div class="back-container">
+        <img class="back-button" src="../../assets/back.png" (click)="goBack()">
+        <h3 style="color: gray;">Back to board</h3>
+      </div>
+      <img class="selected-img" [src]="this.clickedData.clickedCard.cardPath" />
+      <p>Will the next card be higher or lower than the one above?</p>
+      <div class="arrow-container">
+        <img id="upArrow" (click)="arrowClick('higher')" class="arrow-img" src="../../assets/up-arrow.png" />
+        <img id="downArrow" (click)="arrowClick('lower')" class="arrow-img" src="../../assets/down-arrow.png" />
+      </div>
+    </div>
+    <div *ngIf="this.arrowClicked && this.clickedData && this.clickedData.choice" class="toggle-container">
+      <app-high-low [cardsInfo]="this.clickedData"></app-high-low>
+    </div>
   </div>
   <div class="right">
+    <!-- <app-players *ngIf="this.playersView" [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players> -->
   <!-- <app-players [ngClass]="this.isMobile ? 'disabled' : 'enabled'" [turn]="turns" [seconds]="seconds" (curPlayer)="getCurPlayer($event)" (playerList)="getPlayerList($event)"></app-players> -->
   <!-- <app-high-low [@openClose]="this.openMobile ? 'open' : 'closed'" [data]="clickedData" *ngIf="this.openMobile" class="mobile-hl" (isFinished)="endHighLow($event)"></app-high-low> -->
   <!-- <app-deck *ngIf="this.isHost == true" class="deckView" (endCompareEmitter)="handleCompareResults($event)" [clickData]="clickedData"></app-deck> -->
-  <div class="counterContainer">
+  <!-- <div *ngIf="!this.cardSelected" class="counterContainer">
     <app-count [counter]="currentCounter"></app-count>
-  </div>
+  </div> -->
   </div>
 </div>
 <!-- <img class="info" src="./assets/information.png" (click)="onClick()"/> -->

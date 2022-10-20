@@ -52,6 +52,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   public stacks: any = [];
   public turns = 0;
   public game: Game;
+  public cardSelected = false;
+  public arrowClicked = false;
   currentPlayer: string;
   currentCounter;
   id: string;
@@ -64,6 +66,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   clickedData;
   choice: string;
   added: boolean;
+  playersView: boolean;
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
@@ -112,6 +115,14 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     return id;
   }
 
+  scoresClick() {
+    if (this.playersView) {
+      this.playersView = false
+    } else {
+      this.playersView = true;
+    }
+  }
+
   getCurPlayer(event: any) {
     this.currentPlayer = event;
   }
@@ -149,12 +160,30 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   chooseCard(card: Card) {
     if (this.deck.length > 1) {
-      this.openHighLow(card);
+      // this.openHighLow(card);
+      let clickedCard = card[0];
+      let newCard = this.deck.pop();
+      let i = this.stacks.indexOf(card);
+      let stackLength = this.stacks[i].length;
+      let gameId = this.getId();
+      this.clickedData = { clickedCard, newCard, stackLength, gameId };
+      console.log(this.clickedData);
+      this.cardSelected = true;
       // this.clickedData = card;
       // this.openMobile = true;
     } else {
       this.removeStacks();
     }
+  }
+
+  goBack() {
+    this.cardSelected = false;
+  }
+
+  arrowClick(choice: string) {
+    this.arrowClicked = true;
+    this.cardSelected = false;
+    this.clickedData['choice'] = choice;
   }
 
   openRemoveStacks() {
@@ -171,49 +200,45 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
-  openHighLow(card: Card) {
-    // if (!this.isMobile) {
-    const dialogConfig = new MatDialogConfig();
-    let crd = card;
-    let newCrd = this.deck.pop();
-    let i = this.stacks.indexOf(card);
-    let ln = this.stacks[i].length;
-    let gameId = this.getId();
-    let curP = this.players;
-    let c = this.choice;
-    this.clickedData = { crd, newCrd, ln, gameId, c };
-    // console.log(this.clickedData);
-    if (this.clickedData) {
-      // this.openMobile = true;
-      // console.log(this.openMobile);
-    }
+  // openHighLow(card: Card) {
+  //   // if (!this.isMobile) {
+  //   const dialogConfig = new MatDialogConfig();
+  //   let crd = card;
+  //   let newCrd = this.deck.pop();
+  //   let i = this.stacks.indexOf(card);
+  //   let ln = this.stacks[i].length;
+  //   let gameId = this.getId();
+  //   let curP = this.players;
+  //   let c = this.choice;
+  //   this.clickedData = { crd, newCrd, ln, gameId, c, curP };
+  //   console.log(this.clickedData);
 
-    dialogConfig.data = { crd, newCrd, ln, gameId, c };
-    dialogConfig.disableClose = true;
+  //   dialogConfig.data = this.clickedData;
+  //   dialogConfig.disableClose = true;
 
-    const dialogRef = this.dialog.open(HighLowComponent, {
-      width: '90vw',
-      height: 'auto',
-      data: dialogConfig
-    });
+  //   const dialogRef = this.dialog.open(HighLowComponent, {
+  //     width: '70vw',
+  //     height: 'auto',
+  //     data: dialogConfig
+  //   });
 
-    dialogRef.afterClosed().subscribe(
-      data => {
-        console.log(data);
-        var cardIndex = this.stacks.indexOf(card);
-        // get index of current card and add to stack
-        if (data.newCrd) {
-          this.addToStack(cardIndex, data.newCrd);
-        }
-        if (data.comp) {
-          this.turns += 1;
-          if (this.turns == 3) {
-            this.turns = 0;
-          }
-        }
-      }
-    );
-  }
+  //   dialogRef.afterClosed().subscribe(
+  //     data => {
+  //       console.log(data);
+  //       var cardIndex = this.stacks.indexOf(card);
+  //       // get index of current card and add to stack
+  //       if (data.newCrd) {
+  //         this.addToStack(cardIndex, data.newCrd);
+  //       }
+  //       if (data.comp) {
+  //         this.turns += 1;
+  //         if (this.turns == 3) {
+  //           this.turns = 0;
+  //         }
+  //       }
+  //     }
+  //   );
+  // }
 
   handleCompareResults(data: any) {
     let modalData = {

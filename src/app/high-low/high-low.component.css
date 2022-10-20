@@ -169,3 +169,22 @@
     max-height: 180px;
     transform: rotateY(180deg);
   }
+
+  @media (max-width: 400px) {
+    .container {
+      width: 95vw;
+      height: 80vh;
+    }
+    .flip-card .stack {
+      width: 150px;
+    }
+    .card {
+      padding-left: 0;
+    }
+    .stack {
+      width: 200px;
+    }
+    img.card-face {
+      width: 150px;
+    }
+  }

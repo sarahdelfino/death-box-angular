@@ -34,71 +34,8 @@ h2 {
   position: relative;
 }
 
-.stack:hover {
-  cursor: pointer;
-}
-
-.overlay {
-  width: 50px;
-  /* font-size: 4rem; */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 4;
-  text-align: center;
-}
-
-@keyframes view {
-  from {opacity: 0;}
-    to {opacity: 1;}
-}
-
-.img-disabled {
-  opacity: 0.3;
-}
-
-.img-enabled {
-  opacity: 1;
-}
-
-@keyframes imgView {
-  from {opacity: 1;}
-    to {opacity: .3;}
-}
-
-.enabled {
-  opacity: 1;
-}
-
-.opaque {
-  opacity: .2;
-}
-
 img.playing-card:hover {
   cursor: pointer;
-  opacity: .3;
-}
-
-.disabled {
-  opacity: 0;
-  /* z-index: -1; */
-}
-
-.high-low {
-  /* position: absolute; */
-  /* top: 50%; */
-  top: 0;
-  left: 0;
-  border: 1px solid red;
-  width: 100px;
-  height: 100px;
-}
-
-@media (max-width: 1200px) {
-  img {
-    /* max-width: 130px; */
-  }
 }
 
 @media (max-width: 400px) {
