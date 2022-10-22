@@ -14,34 +14,6 @@ export interface CardData {
   selector: 'app-high-low',
   templateUrl: './high-low.component.html',
   styleUrls: ['./high-low.component.css'],
-  animations: [
-    trigger("cardFlip", [
-      state(
-        "default",
-        style({
-          transform: "none"
-        })
-      ),
-      state(
-        "flipped",
-        style({
-          transform: "rotateY(180deg) translate(-50px, 0px)",
-        })
-      ),
-      transition("default => flipped", [animate('500ms .5s',)]),
-      transition("flipped => default", [animate("400ms")]),
-    ]),
-    trigger('fadeViewIn', [
-      transition(":enter", [
-        style({ opacity: 0 }),
-        animate('.5s', style({ opacity: 1 }))]),
-    ]),
-    trigger('fadeViewOut', [
-      transition(":leave", [
-        style({ opacity: 1 }),
-        animate('2s 3s', style({ opacity: 0 }))]),
-    ]),
-  ]
 })
 
 export class HighLowComponent implements OnInit, OnDestroy {
@@ -68,7 +40,9 @@ export class HighLowComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   uiCounter: number;
   players: any = [];
-  arrowClick: boolean;
+  arrowClicked: boolean;
+  cardSelected: boolean;
+  // arrowClick: boolean;
 
   constructor(
     private gameService: GameService,
@@ -107,7 +81,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
     this.count = this.stackLength;
     this.gameId = this.cardsInfo.gameId;
     // this.players = data.data.curP;
-    this.choice = this.cardsInfo.choice;
 
     console.log(this.newCard);
 
@@ -140,41 +113,40 @@ export class HighLowComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  flipEnd($event) {
-    console.log($event);
-    if ($event.fromState != 'void' && $event.toState != 'void') {
-      let compare = this.gameService.compare(this.choice, this.card.value, this.newCard.value);
-      console.log(compare);
-      let data = { crd: this.card, newCrd: this.newCard, comp: compare, ln: this.stackLength };
-      let seconds = 0;
-      if (!compare) {
-        this.wrongGuess = true;
-        this.count = this.stackLength;
-        this.db.updateGameSeconds(this.gameId, this.count);
-        // get index of current player
-        let i = this.players.findIndex(i => i.currentPlayer == true);
-        // if current player found..
-        if (i != -1) {
-          seconds = this.players[i].secondsDrank;
-        } else {
-          i = 0;
-          seconds = this.players[i].secondsDrank;
-        }
-        console.log("SECONDS: ", seconds);
-        console.log("new: ", this.count);
-        let newSeconds = seconds + this.count;
-        console.log(this.gameId, this.players[i].name, newSeconds);
-        this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
-        if (this.count == 0) {
-          console.log(data);
-        }
-      } else {
-        this.title = "Correct!";
-        let timer = setTimeout(() => {
-          this.isFinished.emit(false);
-          // this.dialogRef.close(data);
-        }, 1500);
-      }
+  arrowClick(choice: string) {
+    this.arrowClicked = true;
+    this.cardSelected = false;
+    this.cardsInfo['choice'] = choice;
+    console.log(this.cardsInfo);
+    let compare = this.gameService.compare(choice, this.card.value, this.newCard.value);
+    console.log(compare);
+    let seconds = 0;
+    if (!compare) {
+      this.wrongGuess = true;
+      this.db.updateCounting(this.gameId);
+      this.count = this.stackLength;
+      this.db.updateGameSeconds(this.gameId, this.count);
+      this.title = 'Nope!';
+
+      // get index of current player
+      // let i = this.players.findIndex(i => i.currentPlayer == true);
+      // // if current player found..
+      // if (i != -1) {
+      //   seconds = this.players[i].secondsDrank;
+      // } else {
+      //   i = 0;
+      //   seconds = this.players[i].secondsDrank;
+      // }
+      // console.log("SECONDS: ", seconds);
+      // console.log("new: ", this.count);
+      // let newSeconds = seconds + this.count;
+      // console.log(this.gameId, this.players[i].name, newSeconds);
+      // this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
+    } else {
+      this.title = "Correct!";
+      let timer = setTimeout(() => {
+        this.isFinished.emit();
+      }, 1500);
     }
   }
 

@@ -46,7 +46,7 @@ body {
 
  .card-container {
   position: relative;
-  top: 150px;
+  top: 50px;
   height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 33%);
@@ -94,37 +94,11 @@ body {
   cursor: pointer;
 }
 
-.back-container {
-  display: flex;
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
-
-.back-button {
-  width: 50px;
-  margin: 5px;
-}
-
 .toggle-container {
   max-width: 80vw;
   height: 70vh;
   margin-left: auto;
   margin-right: auto;
-}
-
-.selected-img {
-  height: 50vh;
-}
-
-.arrow-container {
-  display: flex;
-  max-width: 90vw;
-  justify-content: space-around;
-  margin-top: 50px;
-}
-
-.arrow-img {
-  width: 100px;
 }
 
 /*

@@ -1,5 +1,8 @@
 <div class="nav-container">
     <div class="nav-items">
+        <div class="back-container">
+        <img *ngIf="this.renderBack" class="back-button" src="../../assets/back.png" (click)="goBack()" />
+    </div>
         <div class="logo">
             <img src="../../assets/logo.png" />
         </div>

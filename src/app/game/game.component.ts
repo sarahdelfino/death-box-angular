@@ -180,10 +180,14 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cardSelected = false;
   }
 
-  arrowClick(choice: string) {
-    this.arrowClicked = true;
+  // arrowClick(choice: string) {
+  //   this.arrowClicked = true;
+  //   this.cardSelected = false;
+  //   this.clickedData['choice'] = choice;
+  // }
+
+  endCounting() {
     this.cardSelected = false;
-    this.clickedData['choice'] = choice;
   }
 
   openRemoveStacks() {
