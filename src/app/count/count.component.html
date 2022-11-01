@@ -1,4 +1,1 @@
-<button [ngClass]="this.counting && this.currentPlayer === this.counter
-? 'enabled'
-: 'disabled'
-" (click)="count()">Count</button>
+<button *ngIf="this.currentPlayer === this.currentCounter" class="enabled" (click)="count()">Count</button>

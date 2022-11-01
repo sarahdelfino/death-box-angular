@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
-html, body { height: 100%; }
+/* html, body { height: 100%; } */
 /* body { margin: 0; font-family: 'Inconsolata', monospace; background-color: #ffcdb2; color: #e5989b;} */
 body { margin: 0; font-family: 'Inconsolata', monospace; color: #FF6666;}
 
@@ -25,16 +25,12 @@ input {
 }
 
 button, .button {
-  width: 200px;
-  height: 50px;
-  margin: 10px;
   background-color: #FF6666;
   border: none;
   border-radius: 5px;
   color: #fff;
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 500;
-  text-transform: uppercase;
 
 }
 
@@ -59,6 +55,6 @@ button:hover, .button:hover {
       width: 170px;
       margin: 5px;
       height: 120px;
-      margin-bottom: 40px;
+      /* margin-bottom: 40px; */
   }
 }

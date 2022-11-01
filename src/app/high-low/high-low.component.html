@@ -1,42 +1,24 @@
-<div class="container">
-  <div mat-dialog-content>
-    <div class="card">
-      <img class="stack" src="../../assets/cards/back.svg">
-      <div class="flip-card">
-        <div
-          class="flip-card-inner"
-          [@cardFlip]="data.state"
-          (@cardFlip.done)="flipEnd($event)"
-        >
-          <div class="flip-card-front">
-            <img
-              src="../../assets/cards/back.svg"
-              alt="deck"
-              style="width: 300px; height: 300px"
-            />
-          </div>
-          <div class="flip-card-back">
-            <img
-              class="card-face"
-              [src]="newCard.cardPath"
-              style="width: 300px; height: 300px"
-            />
-          </div>
-        </div>
-      </div>
+<!-- <div class="high-low-container"> -->
+  <div *ngIf="!revealCount">
+    <div *ngIf="this.arrowClicked">
+      <img [ngClass]="this.cardsInfo['choice'] ? 'card-enter' : ''" class="new-img"
+        [src]="cardsInfo.newCard.cardPath" />
     </div>
-    <div class="text">
-      <h2>{{ this.title }}</h2>
-      <div
-        class="counting"
-        @fadeViewOut
-        *ngIf="this.wrongGuess == true"
-        (@fadeViewOut.done)="finishedAnimations($event)"
-      >
-        <h2>Wrong! Drink for</h2>
-        <h2 class="counter">{{ this.uiCounter }}</h2>
-        <h2>{{ this.text }}!</h2>
+    <img id="selectedImg" [ngClass]="this.cardsInfo['choice'] ? 'move-card' : ''" class="selected-img"
+      [src]="cardsInfo.clickedCard.cardPath" />
+    <div *ngIf="!this.arrowClicked">
+      <p>Will the next card be higher or lower than the one above?</p>
+      <div class="arrow-container">
+        <img id="upArrow" (click)="arrowClick('higher')" class="arrow-img" src="../../assets/up-arrow.png" />
+        <img id="downArrow" (click)="arrowClick('lower')" class="arrow-img" src="../../assets/down-arrow.png" />
       </div>
     </div>
   </div>
-</div>
+  <div *ngIf="revealCount">
+    <h1>hello</h1>
+    <h2>{{this.title}}</h2>
+    <h3 *ngIf="this.wrongGuess">
+      Just for {{ this.stackLength }} {{ this.text }}
+    </h3>
+  </div>
+<!-- </div> -->

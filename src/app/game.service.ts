@@ -80,7 +80,7 @@ export class GameService {
     // console.log("User clicked: " + card);
   }
 
-  compare(choice, card, newCard) {
+  compare(choice: string, card, newCard) {
     console.log(choice, card, newCard);
   if ((choice == "higher" && (Number(newCard) > Number(card))) || (choice == "lower" && (Number(newCard) < Number(card)))) {
     return true;

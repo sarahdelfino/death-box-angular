@@ -68,6 +68,79 @@
   .card.is-flipped {
     transform: rotateY(180deg);
   } */
+  /* .high-low-container {
+    width: 100vw;
+    height: 100%;
+  } */
+
+  .back-container {
+    height: 60px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .back-button {
+    width: 50px;
+    margin: 5px;
+  }
+
+  .selected-img {
+    height: 50vh;
+    z-index: -1;
+  }
+
+  .new-img {
+    height: 50vh;
+    position: absolute;
+    z-index: 9999;
+    /* bottom: 200px;
+    right: 50px; */
+  }
+
+  .move-card {
+    animation: moveCard .8s forwards;
+  }
+
+  @keyframes moveCard {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(0.6) translate(-60%, -20%);
+    }
+  }
+
+  .card-enter {
+    opacity: 0;
+    animation: cardEnter .5s forwards;
+  }
+
+  @keyframes cardEnter {
+    0% {
+      opacity: 0;
+      transform: translate(500px, 200px);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(30px, 200px)
+    }
+  }
+
+  .result-text {
+    position: relative;
+    top: 500px;
+  }
+
+  .arrow-container {
+    display: flex;
+    max-width: 90vw;
+    justify-content: space-around;
+    margin-top: 50px;
+  }
+  
+  .arrow-img {
+    width: 100px;
+  }
 
   .container {
     width: 700px;
@@ -168,4 +241,23 @@
     max-width: 180px;
     max-height: 180px;
     transform: rotateY(180deg);
+  }
+
+  @media (max-width: 400px) {
+    .container {
+      width: 95vw;
+      height: 80vh;
+    }
+    .flip-card .stack {
+      width: 150px;
+    }
+    .card {
+      padding-left: 0;
+    }
+    .stack {
+      width: 200px;
+    }
+    img.card-face {
+      width: 150px;
+    }
   }

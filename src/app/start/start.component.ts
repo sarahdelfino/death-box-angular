@@ -21,11 +21,13 @@ export class StartComponent implements OnInit {
   createGameForm: FormGroup;
   submitted = false;
   name: string;
+  create = false;
   currentGame: string;
   loggedIn: boolean;
-  joinClicked: boolean;
-  createClicked: boolean;
+  joinClicked = false;
+  createClicked = false;
   isMobile: boolean;
+  start = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -65,7 +67,7 @@ export class StartComponent implements OnInit {
       return;
     } else {
       this.dbService.addPlayer(joinFormData.id, joinFormData.name);
-      sessionStorage.setItem('user', joinFormData.name);
+      sessionStorage.setItem('player', joinFormData.name);
       sessionStorage.setItem('host', 'false');
       this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
     }
@@ -78,26 +80,23 @@ export class StartComponent implements OnInit {
   createGame(createFormData) {
     this.createGameId();
     sessionStorage.setItem('host', 'true');
+    sessionStorage.setItem('player', createFormData.name);
     this.dbService.create(this.game);
     this.dbService.addPlayer(this.game.id, createFormData.name, createFormData.name);
     this.router.navigateByUrl(`/lobby/${this.game.id}`);
   }
 
   joinTrigger() {
-    if (this.joinClicked) {
+    if (this.joinClicked == true) {
       this.joinClicked = false;
-      // let el = document.getElementById('container');
-      // el.scrollIntoView();
     } else {
       this.joinClicked = true;
       this.createClicked = false;
-      // let el = document.getElementById('join');
-      // el.scrollIntoView();
     }
   }
 
   createTrigger() {
-    if (this.createClicked) {
+    if (this.createClicked == true) {
       this.createClicked = false;
     } else {
       this.createClicked = true;
