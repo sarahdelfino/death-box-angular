@@ -67,7 +67,7 @@ export class StartComponent implements OnInit {
       return;
     } else {
       this.dbService.addPlayer(joinFormData.id, joinFormData.name);
-      sessionStorage.setItem('user', joinFormData.name);
+      sessionStorage.setItem('player', joinFormData.name);
       sessionStorage.setItem('host', 'false');
       this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
     }
@@ -80,6 +80,7 @@ export class StartComponent implements OnInit {
   createGame(createFormData) {
     this.createGameId();
     sessionStorage.setItem('host', 'true');
+    sessionStorage.setItem('player', createFormData.name);
     this.dbService.create(this.game);
     this.dbService.addPlayer(this.game.id, createFormData.name, createFormData.name);
     this.router.navigateByUrl(`/lobby/${this.game.id}`);

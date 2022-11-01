@@ -1,37 +1,24 @@
-<div class="high-low-container">
-  <div *ngIf="this.cardsInfo['choice']">
-    <img
-      [ngClass]="this.cardsInfo['choice'] ? 'card-enter' : ''"
-      class="new-img"
-      [src]="cardsInfo.newCard.cardPath"
-    />
-    <div *ngIf="this.cardsInfo['choice'] && this.title" class="result-text">
-      <h2>{{this.title}}</h2>
-      <h3 *ngIf="this.wrongGuess">
-        Drink for {{ this.count }} {{ this.text }}
-      </h3>
+<!-- <div class="high-low-container"> -->
+  <div *ngIf="!revealCount">
+    <div *ngIf="this.arrowClicked">
+      <img [ngClass]="this.cardsInfo['choice'] ? 'card-enter' : ''" class="new-img"
+        [src]="cardsInfo.newCard.cardPath" />
+    </div>
+    <img id="selectedImg" [ngClass]="this.cardsInfo['choice'] ? 'move-card' : ''" class="selected-img"
+      [src]="cardsInfo.clickedCard.cardPath" />
+    <div *ngIf="!this.arrowClicked">
+      <p>Will the next card be higher or lower than the one above?</p>
+      <div class="arrow-container">
+        <img id="upArrow" (click)="arrowClick('higher')" class="arrow-img" src="../../assets/up-arrow.png" />
+        <img id="downArrow" (click)="arrowClick('lower')" class="arrow-img" src="../../assets/down-arrow.png" />
+      </div>
     </div>
   </div>
-  <img
-    [ngClass]="this.cardsInfo['choice'] ? 'move-card' : ''"
-    class="selected-img"
-    [src]="cardsInfo.clickedCard.cardPath"
-  />
-  <div *ngIf="!this.cardsInfo['choice']">
-    <p>Will the next card be higher or lower than the one above?</p>
-    <div class="arrow-container">
-      <img
-        id="upArrow"
-        (click)="arrowClick('higher')"
-        class="arrow-img"
-        src="../../assets/up-arrow.png"
-      />
-      <img
-        id="downArrow"
-        (click)="arrowClick('lower')"
-        class="arrow-img"
-        src="../../assets/down-arrow.png"
-      />
-    </div>
+  <div *ngIf="revealCount">
+    <h1>hello</h1>
+    <h2>{{this.title}}</h2>
+    <h3 *ngIf="this.wrongGuess">
+      Just for {{ this.stackLength }} {{ this.text }}
+    </h3>
   </div>
-</div>
+<!-- </div> -->

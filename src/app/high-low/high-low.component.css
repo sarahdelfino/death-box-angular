@@ -68,6 +68,10 @@
   .card.is-flipped {
     transform: rotateY(180deg);
   } */
+  /* .high-low-container {
+    width: 100vw;
+    height: 100%;
+  } */
 
   .back-container {
     height: 60px;
@@ -94,41 +98,31 @@
   }
 
   .move-card {
-    animation: moveCard .6s forwards;
+    animation: moveCard .8s forwards;
   }
 
   @keyframes moveCard {
-    0% {
-      transform: translate(0px, -50px);
+    from {
+      transform: scale(1);
     }
-    80% {
-      transform: translate(0px, -100px);
-    }
-    100% {
-      /* height: 40vh; */
-      transform: translate(-50px, -100px);
+    to {
+      transform: scale(0.6) translate(-60%, -20%);
     }
   }
 
   .card-enter {
     opacity: 0;
-    animation: cardEnter .7s forwards;
+    animation: cardEnter .5s forwards;
   }
 
   @keyframes cardEnter {
     0% {
       opacity: 0;
-      /* filter: brightness(3) saturate(3);
-      transform: scale(0.8, 0.8); */
-      transform: scale(0.8, 0.8); 
-      transform: translate(500px, 0px);
+      transform: translate(500px, 200px);
     }
     100% {
       opacity: 1;
-      transform: scale(1); 
-      /* filter: brightness(1) saturate(1);
-      transform: scale(1, 1); */
-      transform: translate(30px, 0px)
+      transform: translate(30px, 200px)
     }
   }
 

@@ -48,14 +48,15 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(StackComponent) stackChild: StackComponent;
 
   public deck: Array<Card>;
-  data = {state: "open"};
+  data = { state: "open" };
   public stacks: any = [];
   public turns = 0;
   public game: Game;
   public cardSelected = false;
   public arrowClicked = false;
-  currentPlayer: string;
-  currentCounter;
+  currentTurn: string;
+  currentCounter: string;
+  filteredPlayers: any = [];
   id: string;
   newCard: Card;
   isMobile: boolean;
@@ -67,6 +68,8 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   choice: string;
   added: boolean;
   playersView: boolean;
+  player: string;
+  counting: boolean;
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
@@ -76,19 +79,41 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   ngOnInit() {
+    this.id = this._gameService.getId();
+    this.player = sessionStorage.getItem('player');
+    console.log("player: ", this.player);
     if (window.innerWidth < 500) {
       this.isMobile = true;
-      console.log(this.isMobile);
     }
     if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
-      this.id = this._gameService.getId();
       this.deck = this._gameService.createDeck();
       this.stacks = this._gameService.createStacks(this.deck);
     } else {
       this.isHost = false;
     }
-
+    this.db.getPlayers(this.id).valueChanges().subscribe(playersData => {
+      console.log("players data: ", playersData);
+      this.players = playersData;
+      console.log(this.currentCounter);
+      for (let p in this.players) {
+        if (this.players[p].currentPlayer) {
+          this.currentTurn = this.players[p].name;
+          console.log("current turn: ", this.currentTurn);
+        }
+        if (this.players[p].name !== this.currentTurn) {
+          this.filteredPlayers.push(this.players[p].name);
+          console.log("filtered players: ", this.filteredPlayers);
+        }
+      }
+    });
+    this.db.getGame(this.id).valueChanges().subscribe(gameData => {
+      console.log("game data: ", gameData);
+      this.game = gameData;
+      if (this.game.counting && this.game.seconds) {
+        this.counting = true;
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -124,7 +149,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getCurPlayer(event: any) {
-    this.currentPlayer = event;
+    this.currentTurn = event;
   }
 
   getPlayerList(event: any) {
@@ -140,12 +165,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.stacks[i].length;
   }
 
-  addToStack(i, card) {
+  addToStack(i: number, card: Card) {
     // add card to the top of the stack
-    // this.stacks[i].unshift(card);
-    console.log(this.stacks);
-    this.stacks[i] = [card, ...this.stacks[i]];
-    console.log(this.stacks);
+    this.stacks[i].unshift(card);
   }
 
   clickedCard(card: Card) {
@@ -180,12 +202,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cardSelected = false;
   }
 
-  // arrowClick(choice: string) {
-  //   this.arrowClicked = true;
-  //   this.cardSelected = false;
-  //   this.clickedData['choice'] = choice;
-  // }
-
   endCounting() {
     this.cardSelected = false;
   }
@@ -204,94 +220,25 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
-  // openHighLow(card: Card) {
-  //   // if (!this.isMobile) {
-  //   const dialogConfig = new MatDialogConfig();
-  //   let crd = card;
-  //   let newCrd = this.deck.pop();
-  //   let i = this.stacks.indexOf(card);
-  //   let ln = this.stacks[i].length;
-  //   let gameId = this.getId();
-  //   let curP = this.players;
-  //   let c = this.choice;
-  //   this.clickedData = { crd, newCrd, ln, gameId, c, curP };
-  //   console.log(this.clickedData);
-
-  //   dialogConfig.data = this.clickedData;
-  //   dialogConfig.disableClose = true;
-
-  //   const dialogRef = this.dialog.open(HighLowComponent, {
-  //     width: '70vw',
-  //     height: 'auto',
-  //     data: dialogConfig
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(
-  //     data => {
-  //       console.log(data);
-  //       var cardIndex = this.stacks.indexOf(card);
-  //       // get index of current card and add to stack
-  //       if (data.newCrd) {
-  //         this.addToStack(cardIndex, data.newCrd);
-  //       }
-  //       if (data.comp) {
-  //         this.turns += 1;
-  //         if (this.turns == 3) {
-  //           this.turns = 0;
-  //         }
-  //       }
-  //     }
-  //   );
-  // }
-
-  handleCompareResults(data: any) {
-    let modalData = {
-      title: '',
-      id: this.id,
-    }
-    console.log(data);
-    var cardIndex = this.stacks.indexOf(data.stackCard);
-    // console.log(cardIndex);
-        // get index of current card and add to stack
-        if (data.newCard) {
-          this.addToStack(cardIndex, data.newCard);
-        }
-        console.log(data);
-        console.log(this.stacks[cardIndex]);
+  endHighLow(event: boolean) {
+    console.log(event);
+    if (event) {
+      for (let stack in this.stacks) {
+        if (this.stacks[stack][0].cardName === this.clickedData.clickedCard.cardName) {
+          this.addToStack(parseInt(stack), this.clickedData.newCard);
           this.turns += 1;
           if (this.turns == 3) {
             this.turns = 0;
-            modalData.title = 'Next player!';
           }
-          if (data.comp == true) {
-            modalData.title = 'Correct';
-          } else {
-            console.log("hello")
-          modalData.title = 'Nope!'
-          this.db.updateGameSeconds(this.id, this.stacks[cardIndex].length);
+          console.log(this.turns);
+          this.cardSelected = false;
         }
-        this.openMobile = true;
-        console.log(this.clickedData);
-        // this.openModal(modalData);
       }
-
-  endHighLow(event) {
-    this.openMobile = false;
-  }
-
-  openModal(data: any) {
-    const dialogConfig = new MatDialogConfig();
-    // const timeout = 1000;
-    dialogConfig.data = data;
-    dialogConfig.disableClose = true;
-
-    const dialogRef = this.dialog.open(HighLowComponent, dialogConfig);
-
-    // dialogRef.afterOpened().subscribe(_ => {
-    //   setTimeout(() => {
-    //     dialogRef.close();
-    //   }, timeout)
-    // })
+    } else {
+      this.currentCounter = this.filteredPlayers[0];
+      console.log(this.currentCounter);
+      console.log(this.counting, this.player, this.currentCounter);
+    }
   }
 
   removeStacks() {

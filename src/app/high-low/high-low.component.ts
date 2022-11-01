@@ -23,6 +23,7 @@ export class HighLowComponent implements OnInit, OnDestroy {
 
   public card: Card;
   public choice: string;
+  public revealCount = false;
   newCard: Card;
   // @Input() data: any;
   data: CardData = {
@@ -40,8 +41,9 @@ export class HighLowComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   uiCounter: number;
   players: any = [];
-  arrowClicked: boolean;
+  arrowClicked = false;
   cardSelected: boolean;
+  hideImages = false;
   // arrowClick: boolean;
 
   constructor(
@@ -93,6 +95,7 @@ export class HighLowComponent implements OnInit, OnDestroy {
       }
       if (this.uiCounter == 0) {
         console.log("zero");
+        // this.isFinished.emit(true);
         // let timer = setTimeout(() => {
         //   let data = { crd: this.card, newCrd: this.newCard, ln: this.stackLength };
         // }, 1500);
@@ -104,7 +107,9 @@ export class HighLowComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-
+    let selected = document.getElementById("selectedImg");
+    selected.addEventListener("webkitanimationend", this.endCardMoveAnimation);
+    selected.addEventListener("animationend", this.endCardMoveAnimation);
   }
 
   ngOnDestroy() {
@@ -115,7 +120,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
 
   arrowClick(choice: string) {
     this.arrowClicked = true;
-    this.cardSelected = false;
     this.cardsInfo['choice'] = choice;
     console.log(this.cardsInfo);
     let compare = this.gameService.compare(choice, this.card.value, this.newCard.value);
@@ -126,7 +130,10 @@ export class HighLowComponent implements OnInit, OnDestroy {
       this.db.updateCounting(this.gameId);
       this.count = this.stackLength;
       this.db.updateGameSeconds(this.gameId, this.count);
-      this.title = 'Nope!';
+      this.title = 'Drink up!';
+      let newSeconds = seconds + this.count;
+      console.log(newSeconds);
+      // this.isFinished.emit(false);
 
       // get index of current player
       // let i = this.players.findIndex(i => i.currentPlayer == true);
@@ -139,15 +146,23 @@ export class HighLowComponent implements OnInit, OnDestroy {
       // }
       // console.log("SECONDS: ", seconds);
       // console.log("new: ", this.count);
-      // let newSeconds = seconds + this.count;
+       
       // console.log(this.gameId, this.players[i].name, newSeconds);
       // this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
     } else {
       this.title = "Correct!";
-      let timer = setTimeout(() => {
-        this.isFinished.emit();
-      }, 1500);
+      // let timer = setTimeout(() => {
+        // this.isFinished.emit(true);
+      // }, 1500);
     }
+  }
+
+  endCardMoveAnimation() {
+    console.log("before: ", this.revealCount);
+    console.log("animation ended!");
+    this.revealCount = true;
+    this.hideImages = true;
+    console.log("after: ", this.revealCount);
   }
 
   finishedAnimations($event) {
