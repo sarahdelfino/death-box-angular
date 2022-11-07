@@ -10,10 +10,9 @@ import { GameComponent } from './game/game.component';
 import { CardComponent } from './card/card.component';
 import { StackComponent } from './stack/stack.component';
 import { HighLowComponent } from './high-low/high-low.component';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -49,7 +48,6 @@ import { NavbarComponent } from './navbar/navbar.component';
     FormsModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule,
     AngularFireDatabaseModule,
     NgxGoogleAnalyticsModule.forRoot(environment.firebase.measurementId),
     NgxGoogleAnalyticsRouterModule,

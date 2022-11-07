@@ -5,7 +5,6 @@ import { Player } from './player';
 import { Stack } from './stack';
 import { Table } from './table';
 import { GameComponent } from './game/game.component';
-import { ModalComponent } from './modal/modal.component';
 import { DatabaseService } from './database.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -27,8 +26,7 @@ export class GameService {
 
   constructor(private http: HttpClient,
     private route: ActivatedRoute,
-    private db: DatabaseService,
-    private dialog: MatDialog,) { }
+    private db: DatabaseService) { }
 
   public createDeck(): Array<Card> {
     this.suits.forEach((s) => {
@@ -89,17 +87,17 @@ export class GameService {
 }
 
 openModal(data: any) {
-  const dialogConfig = new MatDialogConfig();
-  const timeout = 1000;
-  dialogConfig.data = data;
+  // const dialogConfig = new MatDialogConfig();
+  // const timeout = 1000;
+  // dialogConfig.data = data;
 
-  const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
+  // const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
 
-  dialogRef.afterOpened().subscribe(_ => {
-    setTimeout(() => {
-      dialogRef.close();
-    }, timeout)
-  })
+  // dialogRef.afterOpened().subscribe(_ => {
+  //   setTimeout(() => {
+  //     dialogRef.close();
+  //   }, timeout)
+  // })
 }
 
 getNextPlayer(playerIndex: number, playerList: any) {

@@ -88,6 +88,7 @@ export class HighLowComponent implements OnInit, OnDestroy {
     console.log(this.newCard);
 
     this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
+      console.log("%%%%%%%%%%%%%%%%%%", c);
       this.uiCounter = c.seconds;
       if (this.uiCounter == 1) {
         this.text = "second";

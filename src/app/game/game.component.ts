@@ -3,8 +3,6 @@ import { animate, keyframes, state, style, transition, trigger } from '@angular/
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
 import { HighLowComponent } from '../high-low/high-low.component';
-import { ModalComponent } from '../modal/modal.component';
-import { RemoveStacksComponent } from '../remove-stacks/remove-stacks.component';
 import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../database.service';
 import { InfoComponent } from '../info/info.component';

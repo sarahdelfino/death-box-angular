@@ -58,7 +58,7 @@ export class StartComponent implements OnInit {
   // infoClick() {
   //   const dialogConfig = new MatDialogConfig();
   //   const dialogRef = this.dialog.open(InfoComponent);
-  }
+  // }
 
   joinGame(joinFormData) {
     if (this.joinGameForm.invalid) {

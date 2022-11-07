@@ -1,6 +1,8 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
+import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
 
 export const environment = {
   production: false,
@@ -14,6 +16,14 @@ export const environment = {
     measurementId: "G-RMWB0565QP"
   }
 };
+
+
+// Initialize Firebase
+const app = initializeApp(environment.firebase);
+
+
+// Initialize Realtime Database and get a reference to the service
+export const database = getDatabase(app);
 
 /*
  * For easier debugging in development mode, you can import the following file
