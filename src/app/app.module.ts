@@ -75,11 +75,11 @@ import { NavbarComponent } from './navbar/navbar.component';
     MatRippleModule,
     HttpClientModule,
     RouterModule.forRoot([
-      {
+    {
         path: '',
         component: GameComponent
-      }
-    ]),
+    }
+], { relativeLinkResolution: 'legacy' }),
     BrowserAnimationsModule
   ],
   providers: [

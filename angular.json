@@ -25,7 +25,8 @@
             ],
             "styles": [
               {
-                "input": "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css"
+                "input": "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+                "inject": true
               },
               "src/styles.css"
             ],
@@ -42,7 +43,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
