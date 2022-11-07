@@ -1,11 +1,8 @@
 import { Component, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
 import { HighLowComponent } from '../high-low/high-low.component';
-import { ModalComponent } from '../modal/modal.component';
-import { RemoveStacksComponent } from '../remove-stacks/remove-stacks.component';
 import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../database.service';
 import { InfoComponent } from '../info/info.component';
@@ -57,6 +54,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   currentTurn: string;
   currentCounter: string;
   filteredPlayers: any = [];
+  playerObj = {};
   id: string;
   newCard: Card;
   isMobile: boolean;
@@ -73,7 +71,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
-    private dialog: MatDialog,
     private route: ActivatedRoute,
   ) { }
 
@@ -106,6 +103,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log("filtered players: ", this.filteredPlayers);
         }
       }
+      this.playerObj['filtered'] = this.filteredPlayers;
+      this.playerObj['currentTurn'] = this.currentTurn;
+      console.log(this.playerObj);
     });
     this.db.getGame(this.id).valueChanges().subscribe(gameData => {
       console.log("game data: ", gameData);
@@ -156,11 +156,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.players = event;
   }
 
-  onClick() {
-    const dialogConfig = new MatDialogConfig();
-    const dialogRef = this.dialog.open(InfoComponent);
-  }
-
   getLength(i) {
     return this.stacks[i].length;
   }
@@ -207,17 +202,17 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openRemoveStacks() {
-    const dialogConfig = new MatDialogConfig();
-    const timeout = 2000;
+    // const dialogConfig = new MatDialogConfig();
+    // const timeout = 2000;
 
-    const dialogRef = this.dialog.open(RemoveStacksComponent);
+    // const dialogRef = this.dialog.open(RemoveStacksComponent);
 
-    dialogRef.afterOpened().subscribe(_ => {
-      setTimeout(() => {
-        this.removeStacks();
-        dialogRef.close();
-      }, timeout)
-    })
+    // dialogRef.afterOpened().subscribe(_ => {
+    //   setTimeout(() => {
+    //     this.removeStacks();
+    //     dialogRef.close();
+    //   }, timeout)
+    // })
   }
 
   endHighLow(event: boolean) {

@@ -45,8 +45,6 @@ body {
 }
 
  .card-container {
-  position: relative;
-  top: 50px;
   height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 33%);
@@ -108,18 +106,18 @@ body {
 
 .container {
     /* max-width: 1200px; */
-    width: 50vw;
+    /* width: 50vw;
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    justify-content: space-between; */
+    /* margin-top: 20px; */
     /* padding: 10px; */
     /* margin: auto; */
 }
-
+/* 
 .counterContainer {
   position: absolute;
   bottom: 20px;
-}
+} */
 
 .inner {
   width: 100%;
@@ -159,10 +157,10 @@ button:hover {
     width: 200px;
     height: 500px;
   }
-  .counterContainer {
+  /* .counterContainer {
     width: auto;
     
-  }
+  } */
   .game {
     max-width: 500px;
     min-width: 200px;
@@ -199,12 +197,9 @@ button:hover {
     margin-left: auto;
     margin-right: auto;
   }
-  .counterContainer {
+  /* .counterContainer {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
     margin-top: 20px;
-    text-align: center;
-  }
+  } */
 }
 

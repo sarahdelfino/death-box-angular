@@ -23,7 +23,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
 
   public card: Card;
   public choice: string;
-  public revealCount = false;
   newCard: Card;
   // @Input() data: any;
   data: CardData = {
@@ -44,6 +43,8 @@ export class HighLowComponent implements OnInit, OnDestroy {
   arrowClicked = false;
   cardSelected: boolean;
   hideImages = false;
+  revealCount = false;
+  imgPath: string;
   // arrowClick: boolean;
 
   constructor(
@@ -87,23 +88,28 @@ export class HighLowComponent implements OnInit, OnDestroy {
     console.log(this.newCard);
 
     this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
+      console.log("%%%%%%%%%%%%%%%%%%", c);
       this.uiCounter = c.seconds;
       if (this.uiCounter == 1) {
         this.text = "second";
       } else {
         this.text = "seconds";
       }
-      if (this.uiCounter == 0) {
+      if (this.uiCounter == 0 && this.wrongGuess) {
         console.log("zero");
         // this.isFinished.emit(true);
         // let timer = setTimeout(() => {
         //   let data = { crd: this.card, newCrd: this.newCard, ln: this.stackLength };
         // }, 1500);
+        let timer = setTimeout(() => {
+          this.isFinished.emit(true);
+        }, 1500);
       }
     })
-    let timer = setTimeout(() => {
-      this.data.state = 'flipped';
-    }, 500);
+    // let timer = setTimeout(() => {
+    //   this.data.state = 'flipped';
+    // }, 500);\
+
   }
 
   ngAfterViewInit() {
@@ -127,12 +133,17 @@ export class HighLowComponent implements OnInit, OnDestroy {
     let seconds = 0;
     if (!compare) {
       this.wrongGuess = true;
+      this.imgPath = '../../assets/drink.png';
       this.db.updateCounting(this.gameId);
       this.count = this.stackLength;
       this.db.updateGameSeconds(this.gameId, this.count);
       this.title = 'Drink up!';
       let newSeconds = seconds + this.count;
       console.log(newSeconds);
+      let timer = setTimeout(() => {
+        this.revealCount = true;
+      }, 1000);
+
       // this.isFinished.emit(false);
 
       // get index of current player
@@ -146,23 +157,25 @@ export class HighLowComponent implements OnInit, OnDestroy {
       // }
       // console.log("SECONDS: ", seconds);
       // console.log("new: ", this.count);
-       
+
       // console.log(this.gameId, this.players[i].name, newSeconds);
       // this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
     } else {
+      this.wrongGuess = false;
+      this.imgPath = '../../assets/sober.png';
+      console.log("HEEEEERE", this.imgPath);
       this.title = "Correct!";
-      // let timer = setTimeout(() => {
-        // this.isFinished.emit(true);
-      // }, 1500);
+      let countTimer = setTimeout(() => {
+        this.revealCount = true;
+      }, 1000);
+      let timer = setTimeout(() => {
+        this.isFinished.emit(true);
+      }, 2500);
     }
   }
 
   endCardMoveAnimation() {
-    console.log("before: ", this.revealCount);
-    console.log("animation ended!");
     this.revealCount = true;
-    this.hideImages = true;
-    console.log("after: ", this.revealCount);
   }
 
   finishedAnimations($event) {

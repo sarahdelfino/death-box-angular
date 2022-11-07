@@ -1,6 +1,13 @@
-button {
-    width: 100vw;
-    height: 90vh;
+.count-container {
+  width: 365px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.button {
+    width: 365px;
+    height: 500px;
     /* margin-left: 300px; */
     background-color: #4E4E4E;
     border: 1px solid #fff;
@@ -10,12 +17,31 @@ button {
     font-size: 16px;
   }
 
+  h1 {
+    margin: 5px;
+    font-size: 3rem;
+  }
+
+  h3 {
+    margin: 0px;
+    font-size: 1rem;
+  }
+
+  .button-img {
+    width: 365px;
+    margin-top: 20px;
+  }
+
   .enabled {
     background-color: #FE6765ff;
   }
 
   .disabled {
     background-color: #4E4E4E;
+  }
+
+  .countdown {
+    margin-top: 50px;
   }
 
 @media (min-width: 900px) {

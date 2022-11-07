@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { FirebaseApp } from '@angular/fire';
-import { AngularFireDatabase, AngularFireDatabaseModule, AngularFireList, AngularFireObject } from '@angular/fire/database';
-import firebase from "firebase/app";
+// import { AngularFireDatabase, AngularFireDatabaseModule, AngularFireList, AngularFireObject } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireList, AngularFireObject} from '@angular/fire/compat/database';
 import "firebase/database";
 import { Observable } from 'rxjs';
 import { Card } from './card/card';
@@ -26,9 +25,8 @@ export class DatabaseService {
 
 
   constructor(private db: AngularFireDatabase) {
-    this.database = firebase.database();
-    this.gamesRef = firebase.database().ref('games');
-    this.playersRef = firebase.database().ref('players');
+    // this.gamesRef = firebase.database().ref('games');
+    // this.playersRef = firebase.database().ref('players');
    }
 
   // Fetch Single Game Object
@@ -38,7 +36,10 @@ export class DatabaseService {
   }
 
   setStart(id: string) {
-    firebase.database().ref('games/' + id).update({
+    // firebase.database().ref('games/' + id).update({
+    //   started: true
+    // });
+    this.db.database.ref('games/' + id).set({
       started: true
     });
   }
@@ -49,15 +50,15 @@ export class DatabaseService {
   }
 
   decrementSeconds(id: string) {
-    firebase.database()
-    .ref('games')
-    .child(id)
-    .child('seconds')
-    .set(firebase.database.ServerValue.increment(-1));
+    // this.db.database
+    // .ref('games')
+    // .child(id)
+    // .child('seconds')
+    // .set(this.db.ServerValue.increment(-1));
   }
 
   incrementSeconds(id: string, player: any, seconds: number) {
-    firebase.database()
+    this.db.database
     .ref('players')
     .child(id)
     .child(player)
@@ -71,35 +72,36 @@ export class DatabaseService {
   }
 
   updatePlayers(id: string, players: any) {
-    firebase.database().ref('/players/' + id + '/').set(players);
+    // firebase.database().ref('/players/' + id + '/').set(players);
+    this.db.database.ref('/players/' + id + '/').set(players);
   }
 
   updatePlayerSeconds(id: string, player: string, seconds: number) {
-    firebase.database().ref('/players/' + id + '/' + player + '/secondsDrank/').set(seconds);
+    this.db.database.ref('/players/' + id + '/' + player + '/secondsDrank/').set(seconds);
   }
 
   updateGameSeconds(id: string, seconds: number) {
-    firebase.database().ref('/games/' + id + '/seconds/').set(seconds);
+    this.db.database.ref('/games/' + id + '/seconds/').set(seconds);
   }
 
   updateCounting(id: string) {
-    firebase.database().ref('/games/' + id + '/counting/').set(true);
+    this.db.database.ref('/games/' + id + '/counting/').set(true);
   }
 
   endCounting(id: string) {
-    firebase.database().ref('/games/' + id + '/'). update({
-      "/counting/": null,
-      "/seconds/": null,
-      "/counter/": null,
+    this.db.database.ref('/games/' + id + '/').set({
+      "counting": null,
+      "seconds": null,
+      "counter": null,
     });
   }
 
   deleteCounting(id: string) {
-    firebase.database().ref('/games/' + id + '/counting/').remove();
+    this.db.database.ref('/games/' + id + '/counting/').remove();
   }
 
   deleteSeconds(id: string) {
-    firebase.database().ref('/games/' + id + '/seconds/').remove();
+    this.db.database.ref('/games/' + id + '/seconds/').remove();
   }
 
   getCurrentPlayer(id: string) {
@@ -108,31 +110,45 @@ export class DatabaseService {
   }
 
   setCurrentPlayer(id: string, name: string) {
-    firebase.database().ref('/games/' + id + '/currentPlayer/').set(name);
+    // firebase.database().ref('/games/' + id + '/currentPlayer/').set(name);
+    this.db.database.ref('/games/' + id + '/currentPlayer/').set(name);
   }
 
   setCounter(id: string, name: string) {
-    firebase.database().ref('/games/' + id + '/counter').set(name);
+    // firebase.database().ref('/games/' + id + '/counter').set(name);
+    this.db.database.ref('/games/' + id + '/counter').set(name);
   }
 
    create(game: Game): any {
-    firebase.database().ref('/games/' + game.id).set({
-      started: false
-    });
-   }
+    // firebase.database().ref('/games/' + game.id).set({
+    //   started: false
+    // });
+    this.db.database.ref('/games/' + game.id).set({
+      //   started: false
+      // });
+   })
+  }
 
    addPlayer(id: string, name: string, currentPlayer?: boolean) {
     if (typeof currentPlayer !== 'undefined') {
-      firebase.database().ref('/players/' + id + '/' + name + '/').set({
-        "name": name,
-        "secondsDrank": 0,
-        "currentPlayer": true});
-    } else {
-      firebase.database().ref('/players/' + id + '/' + name + '/').set({
-        "name": name,
-        "secondsDrank": 0});
+      // firebase.database().ref('/players/' + id + '/' + name + '/').set({
+      //   "name": name,
+      //   "secondsDrank": 0,
+      //   "currentPlayer": true});
+      this.db.database.ref('/players/' + id + '/' + name + '/').set({
+          "name": name,
+          "secondsDrank": 0,
+          "currentPlayer": true});
+      } else {
+        this.db.database.ref('/players/' + id + '/' + name + '/').set({
+              "name": name,
+              "secondsDrank": 0});
+      }
+    // } else {
+    //   firebase.database().ref('/players/' + id + '/' + name + '/').set({
+    //     "name": name,
+    //     "secondsDrank": 0});
     }
-   }
 
    deleteGame(id: string): Promise<void> {
      this.deletePlayers(id);

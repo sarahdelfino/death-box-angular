@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Game } from '../game';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DatabaseService } from '../database.service';
 import { InfoComponent } from '../info/info.component';
 import { nanoid } from "nanoid";
@@ -17,8 +16,8 @@ import { element } from 'protractor';
 export class StartComponent implements OnInit {
 
   game: Game;
-  joinGameForm: FormGroup;
-  createGameForm: FormGroup;
+  joinGameForm: UntypedFormGroup;
+  createGameForm: UntypedFormGroup;
   submitted = false;
   name: string;
   create = false;
@@ -30,10 +29,9 @@ export class StartComponent implements OnInit {
   start = false;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     private dbService: DatabaseService,
-    private dialog: MatDialog,
     protected $gaService: GoogleAnalyticsService
   ) { 
     this.createForm();
@@ -57,10 +55,10 @@ export class StartComponent implements OnInit {
     });
   }
 
-  infoClick() {
-    const dialogConfig = new MatDialogConfig();
-    const dialogRef = this.dialog.open(InfoComponent);
-  }
+  // infoClick() {
+  //   const dialogConfig = new MatDialogConfig();
+  //   const dialogRef = this.dialog.open(InfoComponent);
+  // }
 
   joinGame(joinFormData) {
     if (this.joinGameForm.invalid) {

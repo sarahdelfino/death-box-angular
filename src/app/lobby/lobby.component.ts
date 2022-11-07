@@ -35,11 +35,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
     this.getId();
     this.subscription = this.db.getGame(this.id).valueChanges().subscribe(data => {
-        this.started = data.started
-      if (this.started == true) {
-        this.router.navigateByUrl(`/play/${this.id}`);
-      }
-    })
+      this.started = data.started
+    if (this.started == true) {
+      this.router.navigateByUrl(`/play/${this.id}`);
+    }
+  });
   }
 
   ngOnInit() {

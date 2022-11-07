@@ -9,24 +9,13 @@ import { AppComponent } from './app.component';
 import { GameComponent } from './game/game.component';
 import { CardComponent } from './card/card.component';
 import { StackComponent } from './stack/stack.component';
-import { RemoveStacksComponent } from './remove-stacks/remove-stacks.component';
 import { HighLowComponent } from './high-low/high-low.component';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { ModalComponent } from './modal/modal.component';
-import { MatRippleModule } from '@angular/material/core';
 import { GameService } from './game.service';
 import { StartComponent } from './start/start.component';
 import { LobbyComponent } from './lobby/lobby.component';
@@ -44,8 +33,6 @@ import { NavbarComponent } from './navbar/navbar.component';
     CardComponent,
     HighLowComponent,
     StackComponent,
-    RemoveStacksComponent,
-    ModalComponent,
     StartComponent,
     LobbyComponent,
     PlayersComponent,
@@ -60,26 +47,17 @@ import { NavbarComponent } from './navbar/navbar.component';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatProgressSpinnerModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatToolbarModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule,
     AngularFireDatabaseModule,
     NgxGoogleAnalyticsModule.forRoot(environment.firebase.measurementId),
     NgxGoogleAnalyticsRouterModule,
-    MatInputModule,
-    MatRippleModule,
     HttpClientModule,
     RouterModule.forRoot([
-      {
+    {
         path: '',
         component: GameComponent
-      }
-    ]),
+    }
+], { relativeLinkResolution: 'legacy' }),
     BrowserAnimationsModule
   ],
   providers: [
