@@ -32,7 +32,6 @@ export class StartComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private dbService: DatabaseService,
-    private dialog: MatDialog,
     protected $gaService: GoogleAnalyticsService
   ) { 
     this.createForm();
@@ -56,9 +55,9 @@ export class StartComponent implements OnInit {
     });
   }
 
-  infoClick() {
-    const dialogConfig = new MatDialogConfig();
-    const dialogRef = this.dialog.open(InfoComponent);
+  // infoClick() {
+  //   const dialogConfig = new MatDialogConfig();
+  //   const dialogRef = this.dialog.open(InfoComponent);
   }
 
   joinGame(joinFormData) {

@@ -73,7 +73,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private _gameService: GameService,
     private db: DatabaseService,
-    private dialog: MatDialog,
     private route: ActivatedRoute,
   ) { }
 
@@ -159,11 +158,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.players = event;
   }
 
-  onClick() {
-    const dialogConfig = new MatDialogConfig();
-    const dialogRef = this.dialog.open(InfoComponent);
-  }
-
   getLength(i) {
     return this.stacks[i].length;
   }
@@ -210,17 +204,17 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openRemoveStacks() {
-    const dialogConfig = new MatDialogConfig();
-    const timeout = 2000;
+    // const dialogConfig = new MatDialogConfig();
+    // const timeout = 2000;
 
-    const dialogRef = this.dialog.open(RemoveStacksComponent);
+    // const dialogRef = this.dialog.open(RemoveStacksComponent);
 
-    dialogRef.afterOpened().subscribe(_ => {
-      setTimeout(() => {
-        this.removeStacks();
-        dialogRef.close();
-      }, timeout)
-    })
+    // dialogRef.afterOpened().subscribe(_ => {
+    //   setTimeout(() => {
+    //     this.removeStacks();
+    //     dialogRef.close();
+    //   }, timeout)
+    // })
   }
 
   endHighLow(event: boolean) {

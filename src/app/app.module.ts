@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { GameComponent } from './game/game.component';
 import { CardComponent } from './card/card.component';
 import { StackComponent } from './stack/stack.component';
-import { RemoveStacksComponent } from './remove-stacks/remove-stacks.component';
 import { HighLowComponent } from './high-low/high-low.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -35,7 +34,6 @@ import { NavbarComponent } from './navbar/navbar.component';
     CardComponent,
     HighLowComponent,
     StackComponent,
-    RemoveStacksComponent,
     StartComponent,
     LobbyComponent,
     PlayersComponent,
