@@ -5,7 +5,6 @@ import { Player } from './player';
 import { Stack } from './stack';
 import { Table } from './table';
 import { GameComponent } from './game/game.component';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ModalComponent } from './modal/modal.component';
 import { DatabaseService } from './database.service';
 import { ActivatedRoute } from '@angular/router';

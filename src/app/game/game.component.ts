@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
 import { HighLowComponent } from '../high-low/high-low.component';

@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit, OnDestroy, SimpleChanges, Input } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { DatabaseService } from '../database.service';
 import { Game } from '../game';

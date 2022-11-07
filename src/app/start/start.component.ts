@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Game } from '../game';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DatabaseService } from '../database.service';
 import { InfoComponent } from '../info/info.component';
 import { nanoid } from "nanoid";
