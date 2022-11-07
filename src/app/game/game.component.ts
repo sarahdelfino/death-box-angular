@@ -57,6 +57,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   currentTurn: string;
   currentCounter: string;
   filteredPlayers: any = [];
+  playerObj = {};
   id: string;
   newCard: Card;
   isMobile: boolean;
@@ -106,6 +107,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log("filtered players: ", this.filteredPlayers);
         }
       }
+      this.playerObj['filtered'] = this.filteredPlayers;
+      this.playerObj['currentTurn'] = this.currentTurn;
+      console.log(this.playerObj);
     });
     this.db.getGame(this.id).valueChanges().subscribe(gameData => {
       console.log("game data: ", gameData);

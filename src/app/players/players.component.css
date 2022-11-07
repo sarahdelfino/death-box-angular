@@ -1,76 +1,15 @@
-.players {
-    margin: 20px;
-    width: 600px;
-    height: auto;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 1.5rem;
+h4, h3 {
+    margin: 0px;
 }
 
-table {
-    width: 100%;
-    margin-top: 28px;
-}
-
-.current-player, .players-containers {
+.player-container {
     display: flex;
-    /* max-width: 180px; */
-    justify-content: space-around;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 5px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    border: 1px solid #fff;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 25px;
+    padding-left: 20px;
 }
 
-.current-player {
-    background-color: #FF6666;
-    color: #fff;
-    animation-name: add-highlight;
-    animation-duration: .5s;
-}
-
-@keyframes add-highlight {
-    from {background-color: #fff; color: #FF6666;}
-    to {background-color: #FF6666; color: #fff;}
-}
-
-.flex-item {
-    margin-left: 20px;
-}
-
-th {
-    width: 100%;
-}
-
-td {
-    text-align: center;
-    font-size: 18px;
-}
-
-@media (max-width: 1500px) {
-    .players {
-        width: 400px;
-    }
-}
-
-@media (max-width: 860px) {
-    .players {
-        width: 200px;
-        margin-bottom: 100px;
-    }
-}
-
-@media (max-width: 500px) {
-    .players {
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        font-size: 1rem;
-        margin-bottom: 10px;
-    }
-    .current-player, .players-containers {
-        margin-bottom: 0;
-    }
+.player-img {
+    margin-right: 10px;
 }

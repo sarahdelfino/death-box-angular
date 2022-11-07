@@ -1,4 +1,4 @@
-<div class="players">
+<!-- <div class="players">
   <div
     *ngFor="let player of players"
     [ngClass]="currentPlayer === player.name
@@ -8,5 +8,14 @@
   >
     <p>{{ player.name }}</p>
     <p class="flex-item">{{ player.secondsDrank }}</p>
+  </div>
+</div> -->
+<div class="player-container">
+  <div class="player-img">
+    <img style="width: 30px;" src="../../assets/drink.png">
+  </div>
+  <div class="player-text">
+    <h4 style="color: darkgray;">Whose turn is it?</h4>
+    <h3>{{ this.currentPlayer }}</h3>
   </div>
 </div>

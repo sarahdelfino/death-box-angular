@@ -27,7 +27,8 @@ export class CountComponent implements OnInit {
     this.id = this.gameService.getId();
     console.log(this.game);
     console.log(this.players);
-    this.filteredPlayers = this.players;
+    this.filteredPlayers = this.players.filtered;
+    console.log(this.filteredPlayers);
     console.log(this.currentPlayer);
     this.currentCounter = this.filteredPlayers[0];
     console.log(this.currentCounter);
