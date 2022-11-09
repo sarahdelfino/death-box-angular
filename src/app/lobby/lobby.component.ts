@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Location } from '@angular/common';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Game } from '../game';
 import { DatabaseService } from '../database.service';
-import { GameService } from '../game.service';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 
 @Component({
@@ -57,12 +55,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
-      for (let p in data) {
-          this.playerList.push(data[p].name);
-      }
-      this.playerList = this.playerList.filter(function(elem, index, self) {
-        return index === self.indexOf(elem);
-      });
+      this.playerList = Object.keys(data);
     });
   }
 

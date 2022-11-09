@@ -77,7 +77,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(this.cardsInfo);
     this.card = this.cardsInfo.clickedCard;
     this.newCard = this.cardsInfo.newCard;
     this.stackLength = this.cardsInfo.stackLength;
@@ -85,10 +84,7 @@ export class HighLowComponent implements OnInit, OnDestroy {
     this.gameId = this.cardsInfo.gameId;
     // this.players = data.data.curP;
 
-    console.log(this.newCard);
-
     this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
-      console.log("%%%%%%%%%%%%%%%%%%", c);
       this.uiCounter = c.seconds;
       if (this.uiCounter == 1) {
         this.text = "second";
@@ -96,7 +92,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
         this.text = "seconds";
       }
       if (this.uiCounter == 0 && this.wrongGuess) {
-        console.log("zero");
         // this.isFinished.emit(true);
         // let timer = setTimeout(() => {
         //   let data = { crd: this.card, newCrd: this.newCard, ln: this.stackLength };
@@ -127,9 +122,7 @@ export class HighLowComponent implements OnInit, OnDestroy {
   arrowClick(choice: string) {
     this.arrowClicked = true;
     this.cardsInfo['choice'] = choice;
-    console.log(this.cardsInfo);
     let compare = this.gameService.compare(choice, this.card.value, this.newCard.value);
-    console.log(compare);
     let seconds = 0;
     if (!compare) {
       this.wrongGuess = true;
@@ -139,7 +132,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
       this.db.updateGameSeconds(this.gameId, this.count);
       this.title = 'Drink up!';
       let newSeconds = seconds + this.count;
-      console.log(newSeconds);
       let timer = setTimeout(() => {
         this.revealCount = true;
       }, 1000);
@@ -163,7 +155,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
     } else {
       this.wrongGuess = false;
       this.imgPath = '../../assets/sober.png';
-      console.log("HEEEEERE", this.imgPath);
       this.title = "Correct!";
       let countTimer = setTimeout(() => {
         this.revealCount = true;
@@ -179,7 +170,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
   }
 
   finishedAnimations($event) {
-    console.log($event);
     if ($event.fromState === 'void' && $event.triggerName === 'fadeViewOut') {
       this.db.updateCounting(this.gameId);
       this.count = this.stackLength;

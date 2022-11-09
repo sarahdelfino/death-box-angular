@@ -79,8 +79,7 @@ export class StartComponent implements OnInit {
     this.createGameId();
     sessionStorage.setItem('host', 'true');
     sessionStorage.setItem('player', createFormData.name);
-    this.dbService.create(this.game);
-    this.dbService.addPlayer(this.game.id, createFormData.name, createFormData.name);
+    this.dbService.createGame(this.game.id, createFormData.name);
     this.router.navigateByUrl(`/lobby/${this.game.id}`);
   }
 

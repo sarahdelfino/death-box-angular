@@ -89,30 +89,41 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.isHost = false;
     }
-    this.db.getPlayers(this.id).valueChanges().subscribe(playersData => {
-      console.log("players data: ", playersData);
-      this.players = playersData;
-      console.log(this.currentCounter);
+    // this.db.getPlayers(this.id).valueChanges().subscribe(playersData => {
+    //   console.log("players data: ", playersData);
+    //   this.players = playersData;
+    //   console.log(this.currentCounter);
+    //   for (let p in this.players) {
+    //     if (this.players[p].currentPlayer) {
+    //       this.currentTurn = p;
+    //       console.log("current turn: ", this.currentTurn);
+    //     } else {
+    //       this.filteredPlayers.push(p);
+    //     }
+    //   }
+    //   this.playerObj['filtered'] = this.filteredPlayers;
+    //   this.playerObj['currentTurn'] = this.currentTurn;
+    //   console.log(this.playerObj);
+    // });
+    this.db.getGame(this.id).valueChanges().subscribe(gameData => {
+      console.log("game data: ", gameData);
+      this.game = gameData;
+      if (gameData.counting && gameData.seconds) {
+        this.counting = true;
+      }
+      this.players = gameData.players;
       for (let p in this.players) {
         if (this.players[p].currentPlayer) {
-          this.currentTurn = this.players[p].name;
+          this.currentTurn = p;
           console.log("current turn: ", this.currentTurn);
-        }
-        if (this.players[p].name !== this.currentTurn) {
-          this.filteredPlayers.push(this.players[p].name);
-          console.log("filtered players: ", this.filteredPlayers);
+        } else {
+          this.filteredPlayers.push(p);
         }
       }
       this.playerObj['filtered'] = this.filteredPlayers;
       this.playerObj['currentTurn'] = this.currentTurn;
       console.log(this.playerObj);
-    });
-    this.db.getGame(this.id).valueChanges().subscribe(gameData => {
-      console.log("game data: ", gameData);
-      this.game = gameData;
-      if (this.game.counting && this.game.seconds) {
-        this.counting = true;
-      }
+
     });
   }
 
@@ -121,11 +132,11 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    sessionStorage.clear();
-    if (sessionStorage.getItem('host') == 'true') {
-      this.db.deleteGame(this.id);
-      //  TODO: delete player from game
-    }
+    // sessionStorage.clear();
+    // if (sessionStorage.getItem('host') == 'true') {
+    //   this.db.deleteGame(this.id);
+    //   //  TODO: delete player from game
+    // }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -220,10 +231,12 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     if (event) {
       for (let stack in this.stacks) {
         if (this.stacks[stack][0].cardName === this.clickedData.clickedCard.cardName) {
+          console.log("*****************", this.clickedData);
           this.addToStack(parseInt(stack), this.clickedData.newCard);
           this.turns += 1;
           if (this.turns == 3) {
             this.turns = 0;
+            this.getNextPlayer();
           }
           console.log(this.turns);
           this.cardSelected = false;
@@ -234,6 +247,28 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log(this.currentCounter);
       console.log(this.counting, this.player, this.currentCounter);
     }
+  }
+
+  getNextPlayer() {
+    let list = Object.keys(this.players);
+    let nextIndex = list.indexOf(this.currentTurn) + 1;
+    let nextPlayer = '';
+    if (list[nextIndex]) {
+      nextPlayer = list[nextIndex];
+    } else {
+      nextPlayer = list[0];
+    }
+
+    let tempPlayers = this.players;
+
+    // delete currentPlayer from old
+    delete tempPlayers[this.currentTurn].currentPlayer;
+    // add currentPlayer to next
+    tempPlayers[nextPlayer].currentPlayer = true;
+
+    this.currentTurn = nextPlayer;
+    this.players = tempPlayers;
+    this.db.updatePlayers(this.id, this.players);
   }
 
   removeStacks() {
