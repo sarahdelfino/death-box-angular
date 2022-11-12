@@ -61,13 +61,9 @@ export class CountComponent implements OnInit {
     if (changes && changes.players && changes.players.firstChange) {
       this.currentCounter = changes.players.currentValue.filtered[0];
       this.filteredPlayers = changes.players.currentValue.filtered;
-    } else {
-      this.currentCounter = changes.game.currentValue.counter;
-      console.log("current counter: ", this.currentCounter);
+    } else if (this.game.counter) {
+      this.currentCounter = this.game.counter;
     }
-    // if (changes.game.firstChange) {
-    //   this.id = changes.game.currentValue.id;
-    // }
     console.log(this.game);
     this.id = this.game.id;
   }
@@ -85,6 +81,7 @@ export class CountComponent implements OnInit {
     if (this.filteredPlayers.length > 1 && this.game.seconds > 1) {
       this.getNextCounter();
     } else {
+      this.counting = false;
       this.db.endCounting(this.game.id);
     }
   }
