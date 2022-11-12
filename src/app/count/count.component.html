@@ -4,7 +4,7 @@
         Tap anywhere on the card
     </span>
 </button> -->
-<div *ngIf="this.sessionPlayer === this.currentCounter && game.counting" class="count-container">
+<div *ngIf="this.sessionPlayer === this.currentCounter && this.game.counting" class="count-container">
 <div class="button enabled" (click)="count()">
     <img class="button-img" src="../../assets/count.png">
     <div class="button-text">

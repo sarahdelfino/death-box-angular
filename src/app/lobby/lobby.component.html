@@ -1,6 +1,6 @@
 <div class="container">
   <div class="logo-container">
-    <img class="logo" src="../../assets/logo-text.png" />
+    <img class="logo" src="../../assets/logo-text.png" alt="deathbox-logo" />
   </div>
   <div class="gameId">
     <h1 style="margin-top: -40px; margin-bottom: 0px;" class="gameId">{{ this.id }}</h1>
@@ -9,10 +9,9 @@
     <div *ngIf="!this.isHost">
       <h3>Waiting on host to start the game...</h3>
     </div>
-    <div class="players">
-      <h2>Participants</h2>
+    <div class="players" [ngClass]="this.isHost ? 'scroll' : ''">
       <div class="list-flex" *ngFor="let player of playerList">
-        <img class="bullet" src="../../assets/drink.png" />
+        <img class="bullet" src="../../assets/drink.png" alt="player-icon"/>
         <p>{{ player }}</p>
       </div>
     </div>

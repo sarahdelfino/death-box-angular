@@ -91,12 +91,14 @@
   .selected-img {
     height: 50vh;
     z-index: -1;
+    border-radius: 10px;
   }
 
   .new-img {
     height: 50vh;
     position: absolute;
     z-index: 9999;
+    border-radius: 10px;
     /* bottom: 200px;
     right: 50px; */
   }
