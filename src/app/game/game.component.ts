@@ -113,17 +113,18 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
         this.counting = true;
       }
       let tmpPlayers = [];
-      tmpPlayers = gameData.players;
-      console.log("data from fb", tmpPlayers);
-      for (let p in tmpPlayers) {
-        if (tmpPlayers[p].currentPlayer) {
+      console.log("data from fb", gameData.players);
+      for (let p in gameData.players) {
+        if (gameData.players[p].currentPlayer) {
           this.currentTurn = p;
           console.log("current turn: ", this.currentTurn);
         } else {
-          this.filteredPlayers.push(p);
+          tmpPlayers.push(p);
         }
       }
-      console.log(this.filteredPlayers);
+      console.log(tmpPlayers);
+      this.players = gameData.players;
+      this.filteredPlayers = tmpPlayers;
       this.playerObj['filtered'] = this.filteredPlayers;
       this.playerObj['currentTurn'] = this.currentTurn;
       console.log(this.playerObj);
@@ -254,13 +255,18 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getNextPlayer() {
+    console.log("in get next player");
     let list = Object.keys(this.players);
+    console.log(list);
     let nextIndex = list.indexOf(this.currentTurn) + 1;
+    console.log(nextIndex);
     let nextPlayer = '';
     if (list[nextIndex]) {
+      console.log(list[nextIndex]);
       nextPlayer = list[nextIndex];
     } else {
       nextPlayer = list[0];
+      console.log(nextPlayer);
     }
 
     let tempPlayers = this.players;
@@ -272,6 +278,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.currentTurn = nextPlayer;
     this.players = tempPlayers;
+    console.log(this.currentTurn, this.players);
     this.db.updatePlayers(this.id, this.players);
   }
 
