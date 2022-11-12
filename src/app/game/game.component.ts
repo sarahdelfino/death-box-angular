@@ -106,20 +106,24 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     //   console.log(this.playerObj);
     // });
     this.db.getGame(this.id).valueChanges().subscribe(gameData => {
-      console.log("game data: ", gameData);
       this.game = gameData;
+      this.game.id = this.id;
+      console.log("game data: ", gameData);
       if (gameData.counting && gameData.seconds) {
         this.counting = true;
       }
-      this.players = gameData.players;
-      for (let p in this.players) {
-        if (this.players[p].currentPlayer) {
+      let tmpPlayers = [];
+      tmpPlayers = gameData.players;
+      console.log("data from fb", tmpPlayers);
+      for (let p in tmpPlayers) {
+        if (tmpPlayers[p].currentPlayer) {
           this.currentTurn = p;
           console.log("current turn: ", this.currentTurn);
         } else {
           this.filteredPlayers.push(p);
         }
       }
+      console.log(this.filteredPlayers);
       this.playerObj['filtered'] = this.filteredPlayers;
       this.playerObj['currentTurn'] = this.currentTurn;
       console.log(this.playerObj);

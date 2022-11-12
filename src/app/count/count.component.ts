@@ -10,7 +10,7 @@ import { GameService } from '../game.service';
 })
 export class CountComponent implements OnInit {
 
-  @Input() game: any;
+  @Input() game: Game;
   @Input() players: any;
   // @Output() currentCounter: string;
   public id: string;
@@ -57,16 +57,19 @@ export class CountComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     console.log(changes);
-    console.log(changes.players.currentValue.filtered);
 
-    let counters = changes.players.currentValue.filtered;
-
-    if (changes.players.firstChange) {
-      this.currentCounter = counters[0];
+    if (changes && changes.players && changes.players.firstChange) {
+      this.currentCounter = changes.players.currentValue.filtered[0];
+      this.filteredPlayers = changes.players.currentValue.filtered;
     } else {
-      let i = 0;
-      
+      this.currentCounter = changes.game.currentValue.counter;
+      console.log("current counter: ", this.currentCounter);
     }
+    // if (changes.game.firstChange) {
+    //   this.id = changes.game.currentValue.id;
+    // }
+    console.log(this.game);
+    this.id = this.game.id;
   }
 
   ngOnDestroy() {
@@ -76,25 +79,26 @@ export class CountComponent implements OnInit {
 
 
   count() {
-    console.log(this.currentCounter);
+    console.log("current counter: ", this.currentCounter);
     console.log(this.filteredPlayers);
-    console.log(this.id);
-    this.db.decrementSeconds(this.id);
-    if (this.filteredPlayers) {
+    this.db.decrementSeconds(this.game.id);
+    if (this.filteredPlayers.length > 1 && this.game.seconds > 1) {
       this.getNextCounter();
+    } else {
+      this.db.endCounting(this.game.id);
     }
   }
 
   getNextCounter() {
-    console.log("wooooooooooooooo");
-    const curCountIndex = this.filteredPlayers.map(function (e) { return e.name; }).indexOf(this.currentCounter);
+    const curCountIndex = this.filteredPlayers.indexOf(this.currentCounter);
+    console.log(curCountIndex);
     let newIndex = curCountIndex + 1;
     if (newIndex == this.filteredPlayers.length) {
       newIndex = 0;
     }
-    this.currentCounter = this.filteredPlayers[newIndex].name;
-    this.db.setCounter(this.id, this.currentCounter);
-    console.log(this.currentCounter);
+    this.currentCounter = this.filteredPlayers[newIndex];
+    console.log("next counter: ", this.currentCounter);
+    this.db.setCounter(this.game.id, this.currentCounter);
   }
 
 }

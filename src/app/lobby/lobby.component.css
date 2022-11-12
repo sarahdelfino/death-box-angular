@@ -12,7 +12,12 @@ button {
 
 .logo-container {
   text-align: center;
-  margin-top: 100px;
+  margin-top: 50px;
+}
+
+div.players.scroll {
+  height: 250px;
+  overflow: scroll;
 }
 
 .logo {
@@ -25,11 +30,6 @@ button {
   width: 80vw;
   margin-left: auto;
   margin-right: auto;
-}
-
-.players {
-  height: 250px;
-  overflow: scroll;
 }
 
 @keyframes wiggle {
@@ -60,14 +60,18 @@ button {
     font-size: 1.75rem;
   }
 
+  .players {
+    margin: 10px;
+  }
+
   .list-flex {
     display: flex;
     align-items: center;
+    height: 60px;
   }
 
   img.bullet {
     width: 40px;
-    height: 50px;
     margin-right: 10px;
   }
 

@@ -85,7 +85,7 @@ export class DatabaseService {
 
   decrementSeconds(id: string) {
     this.db.database
-    .ref('games' + id)
+    .ref('/games/' + id)
     .update({
       seconds: increment(-1)});
   }
@@ -150,7 +150,8 @@ export class DatabaseService {
 
   setCounter(id: string, name: string) {
     // firebase.database().ref('/games/' + id + '/counter').set(name);
-    this.db.database.ref('/games/' + id + '/counter').update(name);
+    this.db.database.ref('/games/' + id + '/').update({
+      counter: name});
   }
 
   //  create(game: Game): any {
