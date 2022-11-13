@@ -15,6 +15,7 @@ export class CountComponent {
   public id: string;
   public currentCounter: string;
   public counting: boolean;
+  public currentPlayer: string;
   public sessionPlayer = sessionStorage.getItem('player');
   public filteredPlayers = [];
 
@@ -26,6 +27,7 @@ export class CountComponent {
     console.log(changes);
 
     if (changes && changes.players && changes.players.firstChange) {
+      console.log("PLAYERRRSSRSERSE: ", changes.players);
       this.currentCounter = changes.players.currentValue.filtered[0];
       this.filteredPlayers = changes.players.currentValue.filtered;
     } else if (this.game.counter) {
@@ -33,17 +35,21 @@ export class CountComponent {
     }
     console.log(this.game);
     this.id = this.game.id;
+    // this.currentPlayer = this.players.currentValue.currentTurn;
+    console.log(this.players.currentTurn);
   }
 
   count() {
     console.log("current counter: ", this.currentCounter);
     console.log(this.filteredPlayers);
     this.db.decrementSeconds(this.game.id);
-    if (this.filteredPlayers.length > 1 && this.game.seconds > 1) {
+    if (this.game.seconds > 1) {
       this.getNextCounter();
     } else {
-      this.counting = false;
-      this.db.endCounting(this.game.id);
+      let timer = setTimeout(() => {
+        this.db.endCounting(this.game.id);
+        this.counting = false;
+      }, 1000);
     }
   }
 
