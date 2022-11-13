@@ -8,7 +8,7 @@ export class Deck {
 
     build() {
         this.suits.forEach((s) => {
-            for (let v of this.values) {
+            for (const v of this.values) {
                 this.deck.push(new Card(v.toString(), s))
             }
         })

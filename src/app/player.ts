@@ -12,7 +12,4 @@ export class Player {
         this.currentPlayer = currentPlayer;
     }
 
-    // public getPlayer() {
-    //     return new Array(this.name, this.secondsDrank);
-    // }
 }

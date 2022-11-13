@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, NgForm, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Game } from '../game';
 import { DatabaseService } from '../database.service';
-import { InfoComponent } from '../info/info.component';
 import { nanoid } from "nanoid";
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
-import { element } from 'protractor';
 
 @Component({
   selector: 'app-start',
@@ -54,11 +52,6 @@ export class StartComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(2)]]
     });
   }
-
-  // infoClick() {
-  //   const dialogConfig = new MatDialogConfig();
-  //   const dialogRef = this.dialog.open(InfoComponent);
-  // }
 
   joinGame(joinFormData) {
     if (this.joinGameForm.invalid) {

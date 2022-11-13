@@ -1,88 +1,13 @@
+h4, h3 {
+  margin: 0px;
+}
+
 .deck-container {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    /* border: 2px solid green; */
-    justify-content: center;
-  }
+  display: flex;
+  align-items: center;
+}
 
-  h2 {
-    font-size: 1.25rem;
-    margin: 0px;
-  }
-
-  .text {
-    height: 100px;
-  }
-
-  .counting {
-    display: flex;
-  }
-
-  .deckView {
-    align-self: center;
-  }
-
-  .content {
-    /* width: 100%; */
-    height: auto;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: right;
-  }
-
-  img#deck-card {
-      width: 180px;
-      position: absolute;
-      right: 0px;
-  }
-
-  .scene {
-    width: 180px;
-    height: 180px;
-    perspective: 600px;
-    margin-top: -180px;
-  }
-
-  img#deck-card-bottom {
-    z-index: -1;
-    /* position: absolute; */
-    width: 180px;
-    /* right: 0px; */
-  }
-
-  .card {
-    /* width: 100%;
-    height: 100%; */
-    position: relative;
-    /* transition: transform .75s; */
-    transform-style: preserve-3d;
-  }
-
-  .card__face {
-    position: absolute;
-    /* width: 100%;
-    height: 100%; */
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-  }
-
-  .card__face--front {
-
-  }
-  
-  .card__face--back {
-    transform: rotateY( 180deg );
-    /* transform: translateY(150px, 0); */
-    max-width: 100px;
-    margin-top: 12px;
-  }
-
-  .card.is-flipped {
-    /* transform: rotateY(180deg); */
-  }
-  
+.deck-image {
+  width: 100px;
+  padding-left: 10px;
+}
