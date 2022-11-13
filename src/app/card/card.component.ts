@@ -1,6 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-// import { DECK } from '../deck';
-// import { Deck } from '../deck';
 import { Card } from './card';
 
 @Component({
@@ -9,8 +7,6 @@ import { Card } from './card';
   styleUrls: ['./card.component.css']
 })
 export class CardComponent implements OnInit {
-  // deck = DECK;
-  // public deck = Deck;
   public selectedIndex = false;
 
   @Input()

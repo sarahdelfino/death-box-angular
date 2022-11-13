@@ -1,22 +1,9 @@
 <div class="deck-container">
-  <img id="deck-card-bottom" src="../../assets/cards/back.svg" />
-  <div
-    id="scene"
-    class="scene card"
-    [@cardFlip]="this.clickData ? 'flipped' : null"
-      (@cardFlip.done)="this.flipEnd()"
-  >
-    <div class="card">
-      <img
-        id="deck-card"
-        class="stack card__face card__face--front"
-        src="../../assets/cards/back.svg"
-      />
-      <img
-        id="deck-card"
-        class="stack card__face card__face--back"
-        src="{{ this.clickData.newCrd.cardPath }}"
-      />
-    </div>
+  <div class="deck-image">
+    <img style="width: 100px;" src="../../assets/back.svg">
+  </div>
+  <div class="deck-text">
+    <h4 style="color: darkgray;">How many cards are left?</h4>
+    <h3>{{ this.deckCount }} cards remain</h3>
   </div>
 </div>

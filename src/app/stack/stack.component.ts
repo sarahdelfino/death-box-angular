@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
-import { stringify } from 'querystring';
 import { AppComponent } from '../app.component';
 import { Card } from '../card/card';
 import { GameService } from '../game.service';
@@ -25,9 +24,6 @@ import { GameService } from '../game.service';
   ]
 })
 export class StackComponent implements OnInit {
-
-  // private deck: Array<Card>;
-  // public cards: any = [];
   selectedStack: Card;
   wasClicked = false;
   stackVisibility = false;
@@ -52,11 +48,6 @@ export class StackComponent implements OnInit {
     if (changes.cards.currentValue.length > 1) {
       this.added = true;
     }
-    // for (const propName in changes) {
-    //   const chng = changes[propName];
-    //   const cur = JSON.stringify(chng.currentValue);
-    //   console.log(cur);
-    // }
   }
 
   public add(card: Card) {
@@ -79,7 +70,6 @@ export class StackComponent implements OnInit {
   }
 
   arrowClick(choice: string) {
-    // console.log(choice);
     this.choice = choice;
     this.cardChoiceEmitter.emit(this.choice);
   }

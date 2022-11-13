@@ -1,16 +1,11 @@
 import { Component, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
-import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
-import { HighLowComponent } from '../high-low/high-low.component';
 import { ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../database.service';
-import { InfoComponent } from '../info/info.component';
 import { Game } from '../game';
 import { StackComponent } from '../stack/stack.component';
-import { NONE_TYPE } from '@angular/compiler';
-import { stringify } from 'querystring';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game',
@@ -40,7 +35,7 @@ import { Subscription } from 'rxjs';
     ]),
   ],
 })
-export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GameComponent implements OnInit {
 
   @ViewChild(StackComponent) stackChild: StackComponent;
 
@@ -78,7 +73,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.id = this._gameService.getId();
     this.player = sessionStorage.getItem('player');
-    console.log("player: ", this.player);
     if (window.innerWidth < 500) {
       this.isMobile = true;
     }
@@ -89,22 +83,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.isHost = false;
     }
-    // this.db.getPlayers(this.id).valueChanges().subscribe(playersData => {
-    //   console.log("players data: ", playersData);
-    //   this.players = playersData;
-    //   console.log(this.currentCounter);
-    //   for (let p in this.players) {
-    //     if (this.players[p].currentPlayer) {
-    //       this.currentTurn = p;
-    //       console.log("current turn: ", this.currentTurn);
-    //     } else {
-    //       this.filteredPlayers.push(p);
-    //     }
-    //   }
-    //   this.playerObj['filtered'] = this.filteredPlayers;
-    //   this.playerObj['currentTurn'] = this.currentTurn;
-    //   console.log(this.playerObj);
-    // });
     this.db.getGame(this.id).valueChanges().subscribe(gameData => {
       this.game = gameData;
       this.game.id = this.id;
@@ -122,26 +100,12 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
           tmpPlayers.push(p);
         }
       }
-      console.log(tmpPlayers);
       this.players = gameData.players;
       this.filteredPlayers = tmpPlayers;
       this.playerObj['filtered'] = this.filteredPlayers;
       this.playerObj['currentTurn'] = this.currentTurn;
-      console.log(this.playerObj);
 
     });
-  }
-
-  ngAfterViewInit() {
-    // console.log(this.stackChild.addToStack('hi'));
-  }
-
-  ngOnDestroy() {
-    // sessionStorage.clear();
-    // if (sessionStorage.getItem('host') == 'true') {
-    //   this.db.deleteGame(this.id);
-    //   //  TODO: delete player from game
-    // }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -181,19 +145,12 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.stacks[i].unshift(card);
   }
 
-  clickedCard(card: Card) {
-    // this._gameService.clickedCard(card);
-    this.chooseCard(card);
-  }
-
   cardChoice(ch: string) {
-    console.log(ch);
     this.choice = ch;
   }
 
   chooseCard(card: Card) {
     if (this.deck.length > 1) {
-      // this.openHighLow(card);
       let clickedCard = card[0];
       let newCard = this.deck.pop();
       let i = this.stacks.indexOf(card);
@@ -202,8 +159,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       this.clickedData = { clickedCard, newCard, stackLength, gameId };
       console.log(this.clickedData);
       this.cardSelected = true;
-      // this.clickedData = card;
-      // this.openMobile = true;
     } else {
       this.removeStacks();
     }
@@ -213,60 +168,39 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cardSelected = false;
   }
 
-  endCounting() {
+  endCounting(card: any) {
+    this.deck.push(card);
+    this._gameService.shuffle(this.deck);
+    console.log(this.deck);
     this.cardSelected = false;
   }
 
-  openRemoveStacks() {
-    // const dialogConfig = new MatDialogConfig();
-    // const timeout = 2000;
-
-    // const dialogRef = this.dialog.open(RemoveStacksComponent);
-
-    // dialogRef.afterOpened().subscribe(_ => {
-    //   setTimeout(() => {
-    //     this.removeStacks();
-    //     dialogRef.close();
-    //   }, timeout)
-    // })
-  }
-
-  endHighLow(event: boolean) {
-    console.log(event);
-    if (event) {
-      for (let stack in this.stacks) {
-        if (this.stacks[stack][0].cardName === this.clickedData.clickedCard.cardName) {
-          console.log("*****************", this.clickedData);
-          this.addToStack(parseInt(stack), this.clickedData.newCard);
+  endHighLow(wrongGuess: boolean) {
+    for (let stack in this.stacks) {
+      if (this.stacks[stack][0].cardName === this.clickedData.clickedCard.cardName) {
+        this.addToStack(parseInt(stack), this.clickedData.newCard);
+        if (!wrongGuess) {
           this.turns += 1;
           if (this.turns == 3) {
             this.turns = 0;
             this.getNextPlayer();
           }
-          console.log(this.turns);
-          this.cardSelected = false;
         }
+        console.log(this.turns);
+        this.cardSelected = false;
       }
-    } else {
-      this.currentCounter = this.filteredPlayers[0];
-      console.log(this.currentCounter);
-      console.log(this.counting, this.player, this.currentCounter);
     }
   }
 
   getNextPlayer() {
     console.log("in get next player");
     let list = Object.keys(this.players);
-    console.log(list);
     let nextIndex = list.indexOf(this.currentTurn) + 1;
-    console.log(nextIndex);
     let nextPlayer = '';
     if (list[nextIndex]) {
-      console.log(list[nextIndex]);
       nextPlayer = list[nextIndex];
     } else {
       nextPlayer = list[0];
-      console.log(nextPlayer);
     }
 
     let tempPlayers = this.players;
@@ -278,7 +212,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.currentTurn = nextPlayer;
     this.players = tempPlayers;
-    console.log(this.currentTurn, this.players);
     this.db.updatePlayers(this.id, this.players);
   }
 
@@ -300,6 +233,5 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
     this._gameService.shuffle(this.deck);
-    console.log(this.stacks);
   }
 }

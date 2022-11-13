@@ -1,5 +1,4 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Inject, OnInit, AfterViewInit, Input, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Card } from '../card/card';
 import { DatabaseService } from '../database.service';
@@ -24,7 +23,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
   public card: Card;
   public choice: string;
   newCard: Card;
-  // @Input() data: any;
   data: CardData = {
     imageId: "",
     state: "default"
@@ -45,35 +43,10 @@ export class HighLowComponent implements OnInit, OnDestroy {
   hideImages = false;
   revealCount = false;
   imgPath: string;
-  // arrowClick: boolean;
 
   constructor(
     private gameService: GameService,
     private db: DatabaseService) {
-    //     console.log(data);
-    // this.card = data.data.crd[0];
-    // this.newCard = data.data.newCrd;
-    // this.stackLength = data.data.ln;
-    // this.count = this.stackLength;
-    // this.gameId = data.data.gameId;
-    // this.players = data.data.curP;
-    // this.choice = data.data.c;
-
-    // this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
-    //   this.uiCounter = c.seconds;
-    //   if (this.uiCounter == 1) {
-    //     this.text = "second";
-    //   } else {
-    //     this.text = "seconds";
-    //   }
-    //   if (this.uiCounter == 0) {
-    //     let timer = setTimeout(() => {
-    //       let data = {crd: this.card, newCrd: this.newCard, ln: this.stackLength};
-    //       this.dialogRef.close(data);
-    //     }, 1500);
-    //   }
-    // })
-
   }
 
   ngOnInit() {
@@ -82,7 +55,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
     this.stackLength = this.cardsInfo.stackLength;
     this.count = this.stackLength;
     this.gameId = this.cardsInfo.gameId;
-    // this.players = data.data.curP;
 
     this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
       this.uiCounter = c.seconds;
@@ -92,19 +64,11 @@ export class HighLowComponent implements OnInit, OnDestroy {
         this.text = "seconds";
       }
       if (this.uiCounter == 0 && this.wrongGuess) {
-        // this.isFinished.emit(true);
-        // let timer = setTimeout(() => {
-        //   let data = { crd: this.card, newCrd: this.newCard, ln: this.stackLength };
-        // }, 1500);
         let timer = setTimeout(() => {
-          this.isFinished.emit(true);
+          this.isFinished.emit(this.wrongGuess);
         }, 1500);
       }
-    })
-    // let timer = setTimeout(() => {
-    //   this.data.state = 'flipped';
-    // }, 500);\
-
+    });
   }
 
   ngAfterViewInit() {
@@ -135,23 +99,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
       let timer = setTimeout(() => {
         this.revealCount = true;
       }, 1000);
-
-      // this.isFinished.emit(false);
-
-      // get index of current player
-      // let i = this.players.findIndex(i => i.currentPlayer == true);
-      // // if current player found..
-      // if (i != -1) {
-      //   seconds = this.players[i].secondsDrank;
-      // } else {
-      //   i = 0;
-      //   seconds = this.players[i].secondsDrank;
-      // }
-      // console.log("SECONDS: ", seconds);
-      // console.log("new: ", this.count);
-
-      // console.log(this.gameId, this.players[i].name, newSeconds);
-      // this.db.updatePlayerSeconds(this.gameId, this.players[i].name, newSeconds);
     } else {
       this.wrongGuess = false;
       this.imgPath = '../../assets/sober.png';
@@ -160,7 +107,7 @@ export class HighLowComponent implements OnInit, OnDestroy {
         this.revealCount = true;
       }, 1000);
       let timer = setTimeout(() => {
-        this.isFinished.emit(true);
+        this.isFinished.emit(this.wrongGuess);
       }, 2500);
     }
   }
@@ -174,7 +121,6 @@ export class HighLowComponent implements OnInit, OnDestroy {
       this.db.updateCounting(this.gameId);
       this.count = this.stackLength;
       this.db.updateGameSeconds(this.gameId, this.count);
-      // this.db.updatePlayerSeconds(this.gameId, this.players, this.count);
     }
   }
 

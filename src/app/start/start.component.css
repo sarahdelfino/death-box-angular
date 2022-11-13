@@ -12,10 +12,6 @@ a {
     color: #e5989b;
 }
 
-.content {
-    margin-top: -75px;
-}
-
 .input-container {
     max-width: 75vw;
     display: flex;
@@ -71,6 +67,7 @@ button.createGameButton:hover, button.playButton:hover {
 
 .logo-container {
     margin-top: 50px;
+    height: 400px;
 }
 
 .logo {

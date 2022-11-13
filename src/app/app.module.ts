@@ -23,7 +23,6 @@ import { PlayersComponent } from './players/players.component';
 import { DeckComponent } from './deck/deck.component';
 import { InfoComponent } from './info/info.component';
 import { CountComponent } from './count/count.component';
-import { MobileHighLowComponent } from './mobile-high-low/mobile-high-low.component';
 import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
@@ -39,7 +38,6 @@ import { NavbarComponent } from './navbar/navbar.component';
     DeckComponent,
     InfoComponent,
     CountComponent,
-    MobileHighLowComponent,
     NavbarComponent,
   ],
   imports: [

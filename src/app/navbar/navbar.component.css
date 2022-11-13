@@ -5,19 +5,19 @@ h3 {
 .nav-container {
     height: 75px;
     z-index: 999999;
-    padding-left: 10px;
+    padding-left: 5px;
 }
 
 img {
-    width: 75px;
-    margin-top: 20px;
+    width: 50px;
+    margin-top: 5px;
 }
 
 .nav-items {
     display: flex;
     height: 100%;
-    align-items: center;
     color: white;
+    justify-content: space-between;
 }
 
 .nav-item {
@@ -30,6 +30,11 @@ img {
 .nav-item:hover {
     cursor: pointer;
     color: #4d4d4d;
+}
+
+.back-container {
+    width: 50px;
+    /* border: 1px solid red; */
 }
 
 .playersView {
