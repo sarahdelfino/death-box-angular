@@ -1,11 +1,10 @@
 .container {
-    /* max-width: 850px; */
+    max-width: 850px;
     margin-left: auto;
     margin-right: auto;
-    margin: auto;
     text-align: center;
     animation-name: logo;
-    animation-duration: 1s;
+    animation-duration: .5s;
 }
 
 a {
@@ -13,14 +12,14 @@ a {
 }
 
 .input-container {
-    max-width: 75vw;
+    max-width: 250px;
     display: flex;
     flex-direction: column;
-    margin: 30px auto;
+    margin: auto;
 }
 
 label {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     text-align: left;
 }
 
@@ -42,10 +41,11 @@ h3:hover {
 }
 
 button {
-    width: 80vw;
+    width: 200px;
     height: 50px;
     font-weight: 600;
     letter-spacing: 2px;
+    margin: 5px;
 }
 
 .placeholder {
@@ -66,7 +66,7 @@ button.createGameButton:hover, button.playButton:hover {
 }
 
 .logo-container {
-    margin-top: 50px;
+    margin-top: 20px;
     height: 400px;
 }
 
@@ -76,6 +76,7 @@ button.createGameButton:hover, button.playButton:hover {
     display: inline-block;
     /* animation-name: logo;
     animation-duration: 1s; */
+    max-width: 300px;
 }
 
 @keyframes logo {
@@ -83,20 +84,8 @@ button.createGameButton:hover, button.playButton:hover {
     to {opacity: 1;}
 }
 
-.button-container {
-    margin-top: 100px;
-}
-
 .info:hover {
     cursor: pointer;
-}
-
-mat-form-field.mat-form-field {
-    margin-right: 10px;
-}
-
-mat-label.mat-label {
-    border: 1px solid red;
 }
 
 .form {
