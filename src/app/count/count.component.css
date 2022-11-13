@@ -3,6 +3,17 @@
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+  opacity: 0;
+  animation: buttonEnter 1s 2s forwards;
+}
+
+@keyframes buttonEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .button {

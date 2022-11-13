@@ -121,6 +121,10 @@
     animation: revealEnter .5s forwards;
   }
 
+  .reveal-leave {
+    animation: revealEnter .5s reverse;
+  }
+
   @keyframes revealEnter {
     from {
       opacity: 0;
