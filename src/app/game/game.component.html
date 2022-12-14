@@ -13,7 +13,7 @@
     </div>
   <!-- <app-deck *ngIf="this.isHost == true" class="deckView" (endCompareEmitter)="handleCompareResults($event)" [clickData]="clickedData"></app-deck> -->
   </div>
-  <app-count *ngIf="this.counting == true" class="counterContainer" [game]="this.game" [players]="this.playerObj"></app-count>
+  <app-count *ngIf="this.counting == true" class="counterContainer" [currentPlayer]="this.currentTurn" [game]="this.game" [players]="this.playerObj"></app-count>
 </div>
 <app-deck *ngIf="!this.cardSelected && !this.arrowClicked && this.isHost" [deckCount]="this.deck.length"></app-deck>
 <!-- <img class="info" src="./assets/information.png" (click)="onClick()"/> -->

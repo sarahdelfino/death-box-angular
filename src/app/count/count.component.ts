@@ -12,10 +12,11 @@ export class CountComponent {
 
   @Input() game: Game;
   @Input() players: any;
+  @Input() currentPlayer: any;
   public id: string;
   public currentCounter: string;
   public counting: boolean;
-  public currentPlayer: string;
+  // public currentPlayer: string;
   public sessionPlayer = sessionStorage.getItem('player');
   public filteredPlayers = [];
 
@@ -24,26 +25,31 @@ export class CountComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    // take in player obj
+    // on changes filter and map
     console.log(changes);
 
     if (changes && changes.players && changes.players.firstChange) {
       console.log("PLAYERRRSSRSERSE: ", changes.players);
-      this.currentCounter = changes.players.currentValue.filtered[0];
+      console.log("^^^^^^^^^^^^", changes.players.currentValue.filtered);
       this.filteredPlayers = changes.players.currentValue.filtered;
-    } else if (this.game.counter) {
-      this.currentCounter = this.game.counter;
+      this.currentCounter = this.filteredPlayers[0];  
     }
     console.log(this.game);
     this.id = this.game.id;
+    console.log(this.players);
+    
     // this.currentPlayer = this.players.currentValue.currentTurn;
-    console.log(this.players.currentTurn);
+    console.log("current turn: ", this.players.currentTurn, this.currentPlayer);
+    console.log("session: ", this.sessionPlayer);
+    console.log("counter: ", this.currentCounter);
   }
 
   count() {
     console.log("current counter: ", this.currentCounter);
-    console.log(this.filteredPlayers);
+    console.log("filtered: ", this.filteredPlayers);
     this.db.decrementSeconds(this.game.id);
-    if (this.game.seconds > 1) {
+    if (this.game.seconds > 0) {
       this.getNextCounter();
     } else {
       let timer = setTimeout(() => {
