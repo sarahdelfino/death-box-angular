@@ -60,6 +60,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   getPlayers() {
     this.db.getPlayers(this.id).valueChanges().subscribe(data => {
+      console.log(data);
       this.playerList = Object.keys(data);
     });
   }

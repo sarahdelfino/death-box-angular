@@ -52,8 +52,8 @@ export class DatabaseService {
   }
 
   getPlayers(id: string) {
-    this.playersRef = this.db.list('games/' + id + '/players/');
-    return this.playersRef;
+    this.playersObj = this.db.object('games/' + id + '/players/');
+    return this.playersObj;
   }
 
   // Fetch Single Game Object
