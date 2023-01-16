@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
 import { ActivatedRoute } from '@angular/router';
@@ -43,11 +44,13 @@ export class GameComponent implements OnInit {
   data = { state: "open" };
   public stacks: any = [];
   public turns = 0;
-  public game: Game;
+  public game = new Game();
   public cardSelected = false;
   public arrowClicked = false;
+  public sessionPlayer = sessionStorage.getItem('player');
+  public currentCounter;
   currentTurn: string;
-  currentCounter: string;
+  // currentCounter: string;
   filteredPlayers: any = [];
   playerObj = {};
   id: string;
@@ -86,13 +89,16 @@ export class GameComponent implements OnInit {
     this.db.getGame(this.id).valueChanges().subscribe(gameData => {
       this.game = gameData;
       this.game.id = this.id;
-      console.log("game data: ", gameData);
-      if (gameData.counting && gameData.seconds) {
-        this.counting = true;
-      }
-      let tmpPlayers = [];
-      console.log("data from fb", gameData.players);
-      for (let p in gameData.players) {
+      this.game.counting = gameData.counting;
+      this.game.counter = gameData.counter;
+      this.game.players = gameData.players;
+      this.game.seconds = gameData.seconds;
+      this.game.started = gameData.started;
+      console.log("game data: ", this.game);
+      const tmpPlayers = [];
+      console.log("player data from fb", this.game.players);
+      // this._gameService.setPlayers(this.game.players);
+      for (const p in gameData.players) {
         if (gameData.players[p].currentPlayer) {
           this.currentTurn = p;
           console.log("current turn: ", this.currentTurn);
@@ -102,10 +108,17 @@ export class GameComponent implements OnInit {
       }
       this.players = gameData.players;
       this.filteredPlayers = tmpPlayers;
+      // const playersSubject = new BehaviorSubject(this.filteredPlayers[0]);
       this.playerObj['filtered'] = this.filteredPlayers;
       this.playerObj['currentTurn'] = this.currentTurn;
-
+      if (!gameData.counter) {
+        this.db.setCounter(this.id, this.filteredPlayers[0]).then(() => {
+          console.log("successfully updated counter to: ", this.filteredPlayers[0]);
+          this.currentCounter = this.filteredPlayers[0];
+        });
+      }
     });
+    console.log(this.game);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -151,11 +164,13 @@ export class GameComponent implements OnInit {
 
   chooseCard(card: Card) {
     if (this.deck.length > 1) {
-      let clickedCard = card[0];
-      let newCard = this.deck.pop();
-      let i = this.stacks.indexOf(card);
-      let stackLength = this.stacks[i].length;
-      let gameId = this.getId();
+      const clickedCard = card[0];
+      console.log("BEFORE CARD PULLED: ", this.deck);
+      const newCard = this.deck.pop();
+      console.log("AFTER CARD PULLED: ", this.deck);
+      const i = this.stacks.indexOf(card);
+      const stackLength = this.stacks[i].length;
+      const gameId = this.getId();
       this.clickedData = { clickedCard, newCard, stackLength, gameId };
       console.log(this.clickedData);
       this.cardSelected = true;
@@ -168,15 +183,51 @@ export class GameComponent implements OnInit {
     this.cardSelected = false;
   }
 
+  count() {
+    console.log("current counter: ", this.currentCounter);
+    console.log("filtered: ", this.filteredPlayers);
+    this.db.decrementSeconds(this.game.id);
+    if (this.game.seconds > 0) {
+      this.getNextCounter(this.currentCounter);
+    } else {
+      let timer = setTimeout(() => {
+        this.db.endCounting(this.game.id).then(() => {
+          console.log("ended counting successfully!");
+          this.counting = false;
+        });
+      }, 1000);
+    }
+  }
+
+  getNextCounter(currentCounter: string) {
+    console.log(this.filteredPlayers);
+    const curCountIndex = this.filteredPlayers.indexOf(currentCounter);
+    console.log(curCountIndex);
+    let newIndex = curCountIndex + 1;
+    console.log("bef: ", newIndex);
+    console.log(this.filteredPlayers.length);
+    if (newIndex == this.filteredPlayers.length) {
+      newIndex = 0;
+    }
+    console.log(newIndex);
+    this.currentCounter = this.filteredPlayers[newIndex];
+    console.log("next counter: ", this.currentCounter);
+    this.db.setCounter(this.game.id, this.currentCounter).then(() => {
+      console.log("set counter successfully: ", this.currentCounter);
+    });
+  }
+
   endCounting(card: any) {
+    console.log("BEFORE PUTTING BACK: ", this.deck);
     this.deck.push(card);
+    console.log("AFTER PUTTING BACK: ", this.deck);
     this._gameService.shuffle(this.deck);
-    console.log(this.deck);
+    console.log("AFTER SHUFFLE: ", this.deck);
     this.cardSelected = false;
   }
 
   endHighLow(wrongGuess: boolean) {
-    for (let stack in this.stacks) {
+    for (const stack in this.stacks) {
       if (this.stacks[stack][0].cardName === this.clickedData.clickedCard.cardName) {
         this.addToStack(parseInt(stack), this.clickedData.newCard);
         if (!wrongGuess) {
@@ -194,14 +245,16 @@ export class GameComponent implements OnInit {
 
   getNextPlayer() {
     console.log("in get next player");
-    let list = Object.keys(this.players);
-    let nextIndex = list.indexOf(this.currentTurn) + 1;
+    const list = Object.keys(this.players);
+    const nextIndex = list.indexOf(this.currentTurn) + 1;
     let nextPlayer = '';
     if (list[nextIndex]) {
       nextPlayer = list[nextIndex];
     } else {
       nextPlayer = list[0];
     }
+
+    this._gameService.setPlayers(this.players);
 
     let tempPlayers = this.players;
 
@@ -212,7 +265,10 @@ export class GameComponent implements OnInit {
 
     this.currentTurn = nextPlayer;
     this.players = tempPlayers;
-    this.db.updatePlayers(this.id, this.players);
+    this.db.updatePlayers(this.id, this.players).then(() => {
+      console.log("getNextPlayer -- updated players successfully: ", this.players);
+    });
+    // console.log("in get next player -- new players obj: " + this.players);
   }
 
   removeStacks() {
@@ -228,7 +284,7 @@ export class GameComponent implements OnInit {
       var removedArray = this.stacks.splice(this.stacks.length - 3, 1);
     }
     removedArray.forEach(card => {
-      for (var c in card) {
+      for (const c in card) {
         this.deck.push(card[c]);
       }
     });

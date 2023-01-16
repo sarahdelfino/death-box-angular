@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { Game } from '../game';
 import { DatabaseService } from '../database.service';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
+import { GameService } from '../game.service';
 
 @Component({
   selector: 'app-lobby',
@@ -24,6 +25,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private db: DatabaseService,
+    private _gameService: GameService,
     protected $gaService: GoogleAnalyticsService
   ) {
     if (sessionStorage.getItem('host') == 'true') {
@@ -43,6 +45,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.$gaService.pageView('/lobby', 'lobby');
     this.getPlayers();
+    // this._gameService.getPlayers().subscribe((players) => {
+    //   console.log(players);
+    // })
   }
 
   ngOnDestroy() {
@@ -60,7 +65,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   startGame() {
-    this.db.setStart(this.id);
+    this.db.setStart(this.id).then(() => {
+      console.log("successfully started game in db!");
+    });
   }
 
 }

@@ -13,4 +13,9 @@ describe('GameService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should create the deck', () => {
+    let deck = service.createDeck();
+    console.log(deck);
+  });
 });

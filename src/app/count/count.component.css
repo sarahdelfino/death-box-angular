@@ -4,7 +4,7 @@
   margin-left: auto;
   margin-right: auto;
   opacity: 0;
-  animation: buttonEnter 1s 2s forwards;
+  animation: buttonEnter 500ms 1s forwards;
 }
 
 @keyframes buttonEnter {

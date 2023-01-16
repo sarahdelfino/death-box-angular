@@ -1,9 +1,3 @@
-<!-- <button *ngIf="this.currentPlayer === this.currentCounter" class="enabled" (click)="count()">
-    Count down
-    <span class="button-subtext">
-        Tap anywhere on the card
-    </span>
-</button> -->
 <div *ngIf="this.sessionPlayer === this.currentCounter && this.game.counting" class="count-container">
 <div class="button enabled" (click)="count()">
     <img class="button-img" src="../../assets/count.png">
@@ -13,7 +7,6 @@
     </div>
 </div>
 <div class="countdown">
-    <h2>Seconds remaining</h2>
-    <h2>{{ game.seconds }} - poor {{ this.players.currentTurn }}</h2>
+    <h2>{{ this.game.seconds }} {{ this.text }} left</h2>
 </div>
 </div>

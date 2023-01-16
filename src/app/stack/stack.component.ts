@@ -56,7 +56,7 @@ export class StackComponent implements OnInit {
 
   onCardClick(stack: Card) {
     this.selectedStack = stack;
-    this.clickedCardEmitter.emit(this.cards[0].cardName);
+    // this.clickedCardEmitter.emit(this.cards[0].cardName);
   }
 
   enableArrowVisibility() {

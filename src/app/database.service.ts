@@ -13,19 +13,22 @@ import { Player } from './player';
 export class DatabaseService {
 
   private dbPath = '/games';
-  gameObj: AngularFireObject<any> = null;
+  gameObj: AngularFireObject<Game>;
+  // gameRef: AngularFireList<Game>;
   playersObj: AngularFireObject<Player> = null;
+  playersRef: AngularFireList<Player>;
   deckList: AngularFireList<Card> = null;
   playersObject: AngularFireObject<Player> = null;
   playersList: AngularFireList<Player> = null;
   host = null;
   database = null;
   gamesRef = null;
-  playersRef = null;
+  // playersRef = null;
   secondsRef = null;
 
 
   constructor(private db: AngularFireDatabase) {
+    // this.gameRef = db.list(this.dbPath);
   }
 
   createGame(id: string, name: string) {
@@ -49,8 +52,8 @@ export class DatabaseService {
   }
 
   getPlayers(id: string) {
-    this.playersObj = this.db.object('games/' + id + '/players/');
-    return this.playersObj;
+    this.playersRef = this.db.list('games/' + id + '/players/');
+    return this.playersRef;
   }
 
   // Fetch Single Game Object
@@ -60,7 +63,7 @@ export class DatabaseService {
   }
 
   setStart(id: string) {
-    this.db.database.ref('games/' + id).update({
+    return this.db.database.ref('games/' + id).update({
       started: true
     });
   }
@@ -70,7 +73,7 @@ export class DatabaseService {
   }
 
   updatePlayers(id: string, players: any) {
-    this.db.database.ref('/games/' + id + '/players/').update(players);
+    return this.db.database.ref('/games/' + id + '/players/').update(players);
   }
 
   getSeconds(id: string) {
@@ -79,7 +82,7 @@ export class DatabaseService {
   }
 
   decrementSeconds(id: string) {
-    this.db.database
+    return this.db.database
     .ref('/games/' + id)
     .update({
       seconds: increment(-1)});
@@ -96,8 +99,9 @@ export class DatabaseService {
     this.db.database.ref('/players/' + id + '/' + player + '/secondsDrank/').update(seconds);
   }
 
-  updateGameSeconds(id: string, seconds: number) {
-    this.db.database.ref('/games/' + id).update({
+  updateGameSecondsAndCounting(id: string, seconds?: number) {
+    return this.db.database.ref('/games/' + id).update({
+      counting: true,
       seconds: seconds});
   }
 
@@ -108,19 +112,11 @@ export class DatabaseService {
   }
 
   endCounting(id: string) {
-    this.db.database.ref('/games/' + id + '/').update({
+    return this.db.database.ref('/games/' + id + '/').update({
       "counting": null,
       "seconds": null,
       "counter": null,
     });
-  }
-
-  deleteCounting(id: string) {
-    this.db.database.ref('/games/' + id + '/counting/').remove();
-  }
-
-  deleteSeconds(id: string) {
-    this.db.database.ref('/games/' + id + '/seconds/').remove();
   }
 
   getCurrentPlayer(id: string) {
@@ -129,7 +125,7 @@ export class DatabaseService {
   }
 
   setCounter(id: string, name: string) {
-    this.db.database.ref('/games/' + id + '/').update({
+    return this.db.database.ref('/games/' + id + '/').update({
       counter: name});
   }
 

@@ -19,10 +19,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GameService } from './game.service';
 import { StartComponent } from './start/start.component';
 import { LobbyComponent } from './lobby/lobby.component';
-import { PlayersComponent } from './players/players.component';
 import { DeckComponent } from './deck/deck.component';
-import { InfoComponent } from './info/info.component';
 import { CountComponent } from './count/count.component';
+import { InfoComponent } from './info/info.component';
 import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
@@ -34,10 +33,9 @@ import { NavbarComponent } from './navbar/navbar.component';
     StackComponent,
     StartComponent,
     LobbyComponent,
-    PlayersComponent,
     DeckComponent,
-    InfoComponent,
     CountComponent,
+    InfoComponent,
     NavbarComponent,
   ],
   imports: [

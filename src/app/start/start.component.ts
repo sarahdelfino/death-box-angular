@@ -5,6 +5,7 @@ import { Game } from '../game';
 import { DatabaseService } from '../database.service';
 import { nanoid } from "nanoid";
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
+import { GameService } from '../game.service';
 
 @Component({
   selector: 'app-start',
@@ -30,6 +31,7 @@ export class StartComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private router: Router,
     private dbService: DatabaseService,
+    private _gameService: GameService,
     protected $gaService: GoogleAnalyticsService
   ) { 
     this.createForm();
@@ -95,7 +97,7 @@ export class StartComponent implements OnInit {
   }
 
   createGameId() {
-    var id = nanoid(5);
+    const id = nanoid(5);
     this.game = new Game(id, false,);
   }
 }

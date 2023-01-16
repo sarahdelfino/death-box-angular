@@ -56,15 +56,15 @@ export class HighLowComponent implements OnInit, OnDestroy {
     this.count = this.stackLength;
     this.gameId = this.cardsInfo.gameId;
 
-    this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(c => {
-      this.uiCounter = c.seconds;
+    this.subscription = this.db.getGame(this.gameId).valueChanges().subscribe(g => {
+      this.uiCounter = g.seconds;
       if (this.uiCounter == 1) {
         this.text = "second";
       } else {
         this.text = "seconds";
       }
       if (this.uiCounter == 0 && this.wrongGuess) {
-        let timer = setTimeout(() => {
+        const timer = setTimeout(() => {
           this.isFinished.emit(this.wrongGuess);
         }, 1500);
       }
@@ -72,41 +72,46 @@ export class HighLowComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    let selected = document.getElementById("selectedImg");
+    const selected = document.getElementById("selectedImg");
     selected.addEventListener("webkitanimationend", this.endCardMoveAnimation);
     selected.addEventListener("animationend", this.endCardMoveAnimation);
   }
 
   ngOnDestroy() {
     // end counting & delete seconds
-    this.db.endCounting(this.gameId);
-    this.subscription.unsubscribe();
+    this.db.endCounting(this.gameId).then(() => {
+      console.log("successfully ended counting!");
+      this.subscription.unsubscribe();
+    });
   }
 
   arrowClick(choice: string) {
     this.arrowClicked = true;
     this.cardsInfo['choice'] = choice;
-    let compare = this.gameService.compare(choice, this.card.value, this.newCard.value);
-    let seconds = 0;
+    const compare = this.gameService.compare(choice, this.card.value, this.newCard.value);
+    const seconds = 0;
     if (!compare) {
       this.wrongGuess = true;
       this.imgPath = '../../assets/drink.png';
-      this.db.updateCounting(this.gameId);
+      // this.db.updateCounting(this.gameId);
       this.count = this.stackLength;
-      this.db.updateGameSeconds(this.gameId, this.count);
-      this.title = 'Drink up!';
-      let newSeconds = seconds + this.count;
-      let timer = setTimeout(() => {
-        this.revealCount = true;
-      }, 1000);
+      this.db.updateGameSecondsAndCounting(this.gameId, this.count).then(() => {
+        console.log("successfully updated game seconds");
+        this.title = 'Drink up!';
+        const newSeconds = seconds + this.count;
+        const timer = setTimeout(() => {
+          this.revealCount = true;
+          // this.db.setCounter(this.gameId, this.currentCounter);
+        }, 1000);
+      });
     } else {
       this.wrongGuess = false;
       this.imgPath = '../../assets/sober.png';
       this.title = "Correct!";
-      let countTimer = setTimeout(() => {
+      const countTimer = setTimeout(() => {
         this.revealCount = true;
       }, 1000);
-      let timer = setTimeout(() => {
+      const timer = setTimeout(() => {
         this.isFinished.emit(this.wrongGuess);
       }, 2500);
     }
@@ -118,9 +123,9 @@ export class HighLowComponent implements OnInit, OnDestroy {
 
   finishedAnimations($event) {
     if ($event.fromState === 'void' && $event.triggerName === 'fadeViewOut') {
-      this.db.updateCounting(this.gameId);
+      // this.db.updateCounting(this.gameId);
       this.count = this.stackLength;
-      this.db.updateGameSeconds(this.gameId, this.count);
+      this.db.updateGameSecondsAndCounting(this.gameId, this.count);
     }
   }
 

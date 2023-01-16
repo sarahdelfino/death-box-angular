@@ -1,19 +1,18 @@
-<app-navbar [renderBack]="this.cardSelected && (this.counting == false || !this.counting)" (backToBoard)="endCounting(this.clickedData.newCard)"></app-navbar>
-<app-players [player]="this.currentTurn"></app-players>
+<app-navbar [renderBack]="this.cardSelected && (this.counting == false || !this.counting)" [player]="this.currentTurn"
+  (backToBoard)="endCounting(this.clickedData.newCard)"></app-navbar>
 <div class="game">
   <div *ngIf="this.isHost == true" class="container">
     <div *ngIf="!this.cardSelected && !this.arrowClicked" class="card-container">
       <ng-container *ngFor="let stack of stacks">
-        <app-stack [cards]="stack" (clickedCardEmitter)="clickedCard($event)" (cardChoiceEmitter)="cardChoice($event)"
-          (click)="chooseCard(stack)"></app-stack>
+        <app-stack [cards]="stack" (cardChoiceEmitter)="cardChoice($event)"
+          (click)="chooseCard(stack)"
+          ></app-stack>
       </ng-container>
     </div>
     <div *ngIf="this.cardSelected">
       <app-high-low [cardsInfo]="this.clickedData" (isFinished)="endHighLow($event)"></app-high-low>
     </div>
-  <!-- <app-deck *ngIf="this.isHost == true" class="deckView" (endCompareEmitter)="handleCompareResults($event)" [clickData]="clickedData"></app-deck> -->
   </div>
-  <app-count *ngIf="this.counting == true" class="counterContainer" [currentPlayer]="this.currentTurn" [game]="this.game" [players]="this.playerObj"></app-count>
+  <app-count [game]="this.game" (nextCounter)="getNextCounter($event)"></app-count>
 </div>
 <app-deck *ngIf="!this.cardSelected && !this.arrowClicked && this.isHost" [deckCount]="this.deck.length"></app-deck>
-<!-- <img class="info" src="./assets/information.png" (click)="onClick()"/> -->

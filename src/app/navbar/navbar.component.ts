@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -7,26 +7,33 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  playersView: boolean;
+  isHost: boolean;
+  currentPlayer: string;
   @Input() gameId: string;
   @Input() renderBack: boolean;
+  @Input() player: string;
   @Output() backToBoard = new EventEmitter<boolean>();
 
   constructor() { }
 
   ngOnInit(): void {
+    if (sessionStorage.getItem('host') == 'true') {
+      this.isHost = true;
+      this.currentPlayer = this.player;
+    } else {
+      this.isHost = false;
+      this.currentPlayer = sessionStorage.getItem('player');
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.isHost == true && changes.player && changes?.player?.currentValue !== this.currentPlayer) {
+      this.currentPlayer = changes.player.currentValue
+    }
   }
 
   goBack() {
     this.backToBoard.emit(true);
-  }
-
-  scoresClick() {
-    if (this.playersView) {
-      this.playersView = false
-    } else {
-      this.playersView = true;
-    }
   }
 
 }

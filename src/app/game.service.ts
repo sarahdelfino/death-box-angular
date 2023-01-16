@@ -4,14 +4,13 @@ import { Card } from './card/card';
 import { Player } from './player';
 import { DatabaseService } from './database.service';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
 
-  values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-  suits = ['D', 'C', 'H', 'S']
   deck = new Array<Card>();
   players = new Array<Player>();
   currentPlayer = 1;
@@ -19,14 +18,18 @@ export class GameService {
   public stacks: any = [];
   newCard: Card;
   public turns = 0;
+  private _players = new ReplaySubject()
+  private _players$ = this._players.asObservable();
 
   constructor(private http: HttpClient,
     private route: ActivatedRoute,
     private db: DatabaseService) { }
 
   public createDeck(): Array<Card> {
-    this.suits.forEach((s) => {
-      for (const v of this.values) {
+    const values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    const suits = ['D', 'C', 'H', 'S']
+    suits.forEach((s) => {
+      for (const v of values) {
         this.deck.push(new Card(v.toString(), s));
       }
     });
@@ -38,13 +41,14 @@ export class GameService {
     return this.deck.length;
   }
 
-  public shuffle(deck) {
+  public shuffle(deck: Array<Card>) {
     for (let i = deck.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      let temp = deck[i];
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = deck[i];
       deck[i] = deck[j];
       deck[j] = temp;
     }
+    return deck;
   }
 
   public getId() {
@@ -52,9 +56,9 @@ export class GameService {
     return id;
   }
 
-  createStacks(deck) {
+  createStacks(deck: Array<Card>) {
     for (let i = 0; i < 9; i++) {
-      let stack = new Array();
+      const stack = [];
       stack.push(deck.pop());
       this.stacks.push(stack);
     }
@@ -74,6 +78,25 @@ export class GameService {
   }
 }
 
+// createPlayers(name: string) {
+//   const players = new BehaviorSubject({
+//       [name]: {
+//         secondsDrank: 0
+//       }
+//       });
+//   console.log(players);
+// }
+
+getPlayers(): Observable<any> {
+  return this._players$;
+  }
+
+setPlayers(players: any) {
+  this._players.next(players);
+}
+
+
+
 getNextPlayer(playerIndex: number, playerList: any) {
   let newIndex = 0;
 
@@ -85,7 +108,9 @@ getNextPlayer(playerIndex: number, playerList: any) {
     newIndex = playerIndex + 1;
     playerList[newIndex].currentPlayer = true;
   }
-  this.db.updatePlayers(this.getId(), playerList);
+  this.db.updatePlayers(this.getId(), playerList).then(() => {
+    console.log("Updated players successfully!");
+  });
 }
 
 }
