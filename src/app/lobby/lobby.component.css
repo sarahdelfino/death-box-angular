@@ -7,7 +7,16 @@
 button {
     width: 300px;
     height: 50px;
-    animation: wiggle 3s linear 5s infinite;
+    /* animation: wiggle 3s linear 5s infinite; */
+}
+
+form#join {
+  padding: 20px;
+}
+
+label {
+  display: flex;
+  padding-left: 10px;
 }
 
 .logo-container {
@@ -79,6 +88,8 @@ div.players.scroll {
 .gameId {
     text-align: center;
     font-size: 5rem;
+    font-family: 'Roboto Slab', serif;
+
 }
 
 @media (max-width: 400px) {
