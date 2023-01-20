@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Subscription } from 'rxjs';
 import { Game } from '../game';
 import { DatabaseService } from '../database.service';
@@ -10,7 +11,24 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
-  styleUrls: ['./lobby.component.css']
+  styleUrls: ['./lobby.component.css'],
+  animations: [
+    trigger('copyPopup', [
+      // state('visible', style({
+      //   transform: 'translateY(20px)'
+      // })),
+      // state('void', style({
+      //   transform: 'translateY(-20px)'
+      // })),
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('1s ease', style({ opacity: 1, bottom: '.5rem' }))
+      ]),
+      transition(':leave', [
+        animate('1s ease', style({ opacity: 0, bottom: '0rem' }))
+      ]),
+    ]),
+  ],
 })
 export class LobbyComponent implements OnInit, OnDestroy {
   id: string;
@@ -23,6 +41,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   joinGameForm: UntypedFormGroup;
   test: any;
   subscription: Subscription;
+  showPopup = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -99,9 +118,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   inviteClicked() {
-    console.log("invite clicked!");
-    let url = `play deathbox with me! \ndeathbox.app/lobby/${this.id}`;
-    navigator.clipboard.writeText(url);
+    let url = window.location.href;
+    navigator.clipboard.writeText(`Play deathbox with me! ${url}`);
+    this.showPopup = true;
+    let timer = setTimeout(() => {
+      this.showPopup = false;
+    }, 1000);
   }
 
   startGame() {

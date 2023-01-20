@@ -14,6 +14,27 @@ form#join {
   padding: 20px;
 }
 
+.popup {
+  position: relative;
+}
+
+.popup-text {
+  position: absolute;
+  width: 150px;
+  font-size: .5rem;
+  margin: 0px;
+}
+
+.invite:hover {
+  cursor: pointer;
+}
+
+.invite-container {
+  width: 150px;
+  height: 50px;
+  text-align: center;
+}
+
 label {
   display: flex;
   padding-left: 10px;
