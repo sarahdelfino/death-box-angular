@@ -10,21 +10,18 @@ import { Game } from '../game';
 export class CountComponent {
 
   @Input() game: Game;
-  @Input() players: any;
-  @Input() currentPlayer: any;
   @Output() nextCounter = new EventEmitter<string>();
   public id: string;
   public currentCounter: string;
   public counting: boolean;
   public text = '';
   public sessionPlayer = sessionStorage.getItem('player');
-  public filteredPlayers = [];
 
   constructor(private db: DatabaseService) {
       
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges() {
     this.currentCounter = this.game.counter;
     if (this.game.seconds == 1) {
       this.text = "second";

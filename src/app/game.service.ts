@@ -4,7 +4,7 @@ import { Card } from './card/card';
 import { Player } from './player';
 import { DatabaseService } from './database.service';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class GameService {
   players = new Array<Player>();
   currentPlayer = 1;
   rootURL = '/api';
-  public stacks: any = [];
+  public stacks = [];
   newCard: Card;
   public turns = 0;
   private _players = new ReplaySubject()
@@ -77,15 +77,6 @@ export class GameService {
     return false;
   }
 }
-
-// createPlayers(name: string) {
-//   const players = new BehaviorSubject({
-//       [name]: {
-//         secondsDrank: 0
-//       }
-//       });
-//   console.log(players);
-// }
 
 getPlayers(): Observable<any> {
   return this._players$;

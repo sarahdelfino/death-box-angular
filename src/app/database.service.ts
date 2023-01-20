@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
 import "firebase/database";
 import { increment } from 'firebase/database';
-import { Observable } from 'rxjs';
 import { Card } from './card/card';
 import { Game } from './game';
 import { Player } from './player';
@@ -92,7 +91,7 @@ export class DatabaseService {
     this.db.database
     .ref('/games/' + id + '/' + player + '/')
     .update({
-      secondsDrank: increment(1)});
+      secondsDrank: increment(seconds)});
   }
 
   updatePlayerSeconds(id: string, player: string, seconds: number) {

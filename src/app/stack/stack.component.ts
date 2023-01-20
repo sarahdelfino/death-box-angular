@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
-import { AppComponent } from '../app.component';
 import { Card } from '../card/card';
 import { GameService } from '../game.service';
 
@@ -23,7 +22,7 @@ import { GameService } from '../game.service';
     ]),
   ]
 })
-export class StackComponent implements OnInit {
+export class StackComponent {
   selectedStack: Card;
   wasClicked = false;
   stackVisibility = false;
@@ -39,10 +38,6 @@ export class StackComponent implements OnInit {
   @Output() public cardChoiceEmitter: EventEmitter<string> = new EventEmitter();
 
   constructor(private _gameService: GameService) { }
-
-  ngOnInit() {
-
-  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.cards.currentValue.length > 1) {

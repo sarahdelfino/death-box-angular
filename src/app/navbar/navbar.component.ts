@@ -14,8 +14,6 @@ export class NavbarComponent implements OnInit {
   @Input() player: string;
   @Output() backToBoard = new EventEmitter<boolean>();
 
-  constructor() { }
-
   ngOnInit(): void {
     if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;

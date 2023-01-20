@@ -14,7 +14,6 @@ export class CardComponent implements OnInit {
 
   @Output()
   private clickedCardEmitter: EventEmitter<Card> = new EventEmitter();
-  constructor() { }
   ngOnInit() {
     if(this.card == null) { 
       this.card = new Card('undefined', 'undefined');

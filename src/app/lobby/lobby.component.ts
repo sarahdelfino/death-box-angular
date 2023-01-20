@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Router, ActivatedRoute } from '@angular/router';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Subscription } from 'rxjs';
 import { Game } from '../game';
 import { DatabaseService } from '../database.service';
@@ -14,12 +14,6 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
   styleUrls: ['./lobby.component.css'],
   animations: [
     trigger('copyPopup', [
-      // state('visible', style({
-      //   transform: 'translateY(20px)'
-      // })),
-      // state('void', style({
-      //   transform: 'translateY(-20px)'
-      // })),
       transition(':enter', [
         style({ opacity: 0 }),
         animate('1s ease', style({ opacity: 1, bottom: '.5rem' }))
@@ -39,9 +33,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
   showJoinForm = false;
   isHost: boolean;
   joinGameForm: UntypedFormGroup;
-  test: any;
   subscription: Subscription;
   showPopup = false;
+  invalidGame = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -65,13 +59,14 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
   } else {
     console.log("invalid game! reroute to homepage");
-
+    this.invalidGame = true;
+    this.router.navigateByUrl('/');
   }
   });
   }
 
   ngOnInit() {
-    if (!sessionStorage.getItem('player')) {
+    if (!sessionStorage.getItem('player') && !this.invalidGame) {
       this.showJoinForm = true;
       this.createForm();
       const dialog: HTMLDialogElement = document.getElementById("dialog") as HTMLDialogElement;
@@ -118,10 +113,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   inviteClicked() {
-    let url = window.location.href;
+    const url = window.location.href;
     navigator.clipboard.writeText(`Play deathbox with me! ${url}`);
     this.showPopup = true;
-    let timer = setTimeout(() => {
+    const timer = setTimeout(() => {
       this.showPopup = false;
     }, 1000);
   }

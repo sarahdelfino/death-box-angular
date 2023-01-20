@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { BehaviorSubject } from 'rxjs';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
 import { ActivatedRoute } from '@angular/router';
@@ -42,7 +41,7 @@ export class GameComponent implements OnInit {
 
   public deck: Array<Card>;
   data = { state: "open" };
-  public stacks: any = [];
+  public stacks = [];
   public turns = 0;
   public game = new Game();
   public cardSelected = false;
@@ -50,7 +49,6 @@ export class GameComponent implements OnInit {
   public sessionPlayer = sessionStorage.getItem('player');
   public currentCounter;
   currentTurn: string;
-  // currentCounter: string;
   filteredPlayers: any = [];
   playerObj = {};
   id: string;
@@ -97,7 +95,6 @@ export class GameComponent implements OnInit {
       console.log("game data: ", this.game);
       const tmpPlayers = [];
       console.log("player data from fb", this.game.players);
-      // this._gameService.setPlayers(this.game.players);
       for (const p in gameData.players) {
         if (gameData.players[p].currentPlayer) {
           this.currentTurn = p;
@@ -119,13 +116,6 @@ export class GameComponent implements OnInit {
       }
     });
     console.log(this.game);
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    for (const propName in changes) {
-      const chng = changes[propName];
-      const cur = JSON.stringify(chng.currentValue);
-    }
   }
 
   getId(): string {
@@ -190,7 +180,7 @@ export class GameComponent implements OnInit {
     if (this.game.seconds > 0) {
       this.getNextCounter(this.currentCounter);
     } else {
-      let timer = setTimeout(() => {
+      const timer = setTimeout(() => {
         this.db.endCounting(this.game.id).then(() => {
           console.log("ended counting successfully!");
           this.counting = false;
@@ -256,7 +246,7 @@ export class GameComponent implements OnInit {
 
     this._gameService.setPlayers(this.players);
 
-    let tempPlayers = this.players;
+    const tempPlayers = this.players;
 
     // delete currentPlayer from old
     delete tempPlayers[this.currentTurn].currentPlayer;
@@ -268,20 +258,20 @@ export class GameComponent implements OnInit {
     this.db.updatePlayers(this.id, this.players).then(() => {
       console.log("getNextPlayer -- updated players successfully: ", this.players);
     });
-    // console.log("in get next player -- new players obj: " + this.players);
   }
 
   removeStacks() {
+    let removedArray;
     console.log("BEFORE: " + this.stacks);
     if (this.stacks.length == 9) {
-      var removedArray = this.stacks.splice(this.stacks.length - 3, 3);
+      const removedArray = this.stacks.splice(this.stacks.length - 3, 3);
       console.log("Removing: ", removedArray);
     } else if (this.stacks.length == 6) {
-      var removedArray = this.stacks.splice(this.stacks.length - 3, 2);
+      const removedArray = this.stacks.splice(this.stacks.length - 3, 2);
       console.log("Removing: ", removedArray);
     } else {
+      const removedArray = this.stacks.splice(this.stacks.length - 3, 1);
       console.log("Removing: ", removedArray);
-      var removedArray = this.stacks.splice(this.stacks.length - 3, 1);
     }
     removedArray.forEach(card => {
       for (const c in card) {

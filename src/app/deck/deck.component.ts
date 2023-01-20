@@ -1,6 +1,4 @@
-import { Component, Input, SimpleChanges, } from '@angular/core';
-import { DatabaseService } from '../database.service';
-import { GameService } from '../game.service';
+import { Component, Input } from '@angular/core';
 
 export interface CardData {
   imageId: string;
@@ -16,11 +14,5 @@ export interface CardData {
 export class DeckComponent {
 
   @Input() deckCount: number;
-
-  constructor() { }
-
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-  }
 
 }

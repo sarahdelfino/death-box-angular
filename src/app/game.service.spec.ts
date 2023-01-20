@@ -15,7 +15,7 @@ describe('GameService', () => {
   });
 
   it('should create the deck', () => {
-    let deck = service.createDeck();
+    const deck = service.createDeck();
     console.log(deck);
   });
 });
