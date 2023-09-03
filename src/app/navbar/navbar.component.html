@@ -10,11 +10,8 @@
                 </div>
                 <div class="player-text">
                     <h3>{{ this.currentPlayer }}</h3>
-                    <h3 *ngIf="this.isHost == true; else elseBlock" style="font-size: 0.5em;">pick any
+                    <h3 style="font-size: 0.5em;">pick any
                         card</h3>
-                    <ng-template #elseBlock>
-                        <h3 style="font-size: 0.5em;">get ready to count</h3>
-                    </ng-template>
                 </div>
             </div>
         </div>

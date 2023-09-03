@@ -31,6 +31,9 @@ export class StackComponent {
 
   @Input()
   public cards: any = [];
+  
+  @Input()
+  public currentPlayer: any;
 
   @Output()
   private clickedCardEmitter: EventEmitter<Card> = new EventEmitter();
@@ -43,6 +46,7 @@ export class StackComponent {
     if (changes.cards.currentValue.length > 1) {
       this.added = true;
     }
+    console.log(changes);
   }
 
   public add(card: Card) {
@@ -50,7 +54,13 @@ export class StackComponent {
   }
 
   onCardClick(stack: Card) {
-    this.selectedStack = stack;
+    if(this.currentPlayer === sessionStorage.getItem('player')) {
+      this.selectedStack = stack;
+    } else {
+      console.log("it's not your turn.");
+      // do nothing
+    }
+
     // this.clickedCardEmitter.emit(this.cards[0].cardName);
   }
 

@@ -1,3 +1,4 @@
+import { Card } from "./card/card";
 import { Player } from "./player";
 
 export class Game {
@@ -8,6 +9,8 @@ export class Game {
     seconds?: number;
     counting?: boolean;
     players?: Array<Player>
+    deck?: Array<Card>
+    stacks?: Array<Card> 
 
     constructor(
         id?: string,
@@ -15,13 +18,17 @@ export class Game {
         currentPlayer?: string,
         seconds?: number,
         counting?: boolean,
-        players?: Array<Player>) {
+        players?: Array<Player>,
+        deck? : Array<Card>,
+        stacks? : Array<Card>) {
         this.id = id;
         this.started = started;
         this.currentPlayer = currentPlayer;
         this.seconds = seconds;
         this.counting = counting;
         this.players = players;
+        this.deck = deck;
+        this.stacks = stacks;
     }
 
     public getGameId() {
@@ -30,6 +37,14 @@ export class Game {
 
     public getPlayers() {
         return this.players;
+    }
+
+    public getDeck() {
+        return this.deck;
+    }
+
+    public getStacks() {
+        return this.stacks;
     }
 
 }

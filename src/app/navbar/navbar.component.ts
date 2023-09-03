@@ -15,13 +15,8 @@ export class NavbarComponent implements OnInit {
   @Output() backToBoard = new EventEmitter<boolean>();
 
   ngOnInit(): void {
-    if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
       this.currentPlayer = this.player;
-    } else {
-      this.isHost = false;
-      this.currentPlayer = sessionStorage.getItem('player');
-    }
   }
 
   ngOnChanges(changes: SimpleChanges) {

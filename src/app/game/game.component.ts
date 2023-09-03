@@ -79,8 +79,10 @@ export class GameComponent implements OnInit {
     }
     if (sessionStorage.getItem('host') == 'true') {
       this.isHost = true;
-      this.deck = this._gameService.createDeck();
-      this.stacks = this._gameService.createStacks(this.deck);
+      this.deck = this._gameService.createDeck(this.id);
+      this.stacks = this._gameService.createStacks(this.id, this.deck);
+      console.log("deck: ", this.deck);
+      console.log("stacks: ", this.stacks);
     } else {
       this.isHost = false;
     }
@@ -92,6 +94,10 @@ export class GameComponent implements OnInit {
       this.game.players = gameData.players;
       this.game.seconds = gameData.seconds;
       this.game.started = gameData.started;
+      this.game.deck = gameData.deck;
+      this.game.stacks = gameData.stacks;
+      this.deck = this.game.deck;
+      this.stacks = this.game.stacks
       console.log("game data: ", this.game);
       const tmpPlayers = [];
       console.log("player data from fb", this.game.players);
@@ -146,6 +152,7 @@ export class GameComponent implements OnInit {
   addToStack(i: number, card: Card) {
     // add card to the top of the stack
     this.stacks[i].unshift(card);
+    this.db.setStacks(this.id, this.stacks);
   }
 
   cardChoice(ch: string) {
@@ -153,19 +160,24 @@ export class GameComponent implements OnInit {
   }
 
   chooseCard(card: Card) {
-    if (this.deck.length > 1) {
-      const clickedCard = card[0];
-      console.log("BEFORE CARD PULLED: ", this.deck);
-      const newCard = this.deck.pop();
-      console.log("AFTER CARD PULLED: ", this.deck);
-      const i = this.stacks.indexOf(card);
-      const stackLength = this.stacks[i].length;
-      const gameId = this.getId();
-      this.clickedData = { clickedCard, newCard, stackLength, gameId };
-      console.log(this.clickedData);
-      this.cardSelected = true;
+    if (this.currentTurn === sessionStorage.getItem('player')) {
+      if (this.deck.length > 1) {
+        const clickedCard = card[0];
+        console.log("BEFORE CARD PULLED: ", this.deck);
+        const newCard = this.deck.pop();
+        console.log("AFTER CARD PULLED: ", this.deck);
+        this.db.setDeck(this.id, this.deck);
+        const i = this.stacks.indexOf(card);
+        const stackLength = this.stacks[i].length;
+        const gameId = this.getId();
+        this.clickedData = { clickedCard, newCard, stackLength, gameId };
+        console.log(this.clickedData);
+        this.cardSelected = true;
+      } else {
+        this.removeStacks();
+      }
     } else {
-      this.removeStacks();
+      new alert('It is not your turn to choose a card');
     }
   }
 
@@ -213,6 +225,7 @@ export class GameComponent implements OnInit {
     console.log("AFTER PUTTING BACK: ", this.deck);
     this._gameService.shuffle(this.deck);
     console.log("AFTER SHUFFLE: ", this.deck);
+    this.db.setDeck(this.id, this.deck);
     this.cardSelected = false;
   }
 
@@ -279,5 +292,7 @@ export class GameComponent implements OnInit {
       }
     });
     this._gameService.shuffle(this.deck);
+    this.db.setDeck(this.id, this.deck);
+    this.db.setStacks(this.id, this.stacks);
   }
 }

@@ -1,10 +1,10 @@
 <app-navbar [renderBack]="this.cardSelected && (this.counting == false || !this.counting)" [player]="this.currentTurn"
   (backToBoard)="endCounting(this.clickedData.newCard)"></app-navbar>
 <div class="game">
-  <div *ngIf="this.isHost == true" class="container">
+  <div class="container">
     <div *ngIf="!this.cardSelected && !this.arrowClicked" class="card-container">
       <ng-container *ngFor="let stack of stacks">
-        <app-stack [cards]="stack" (cardChoiceEmitter)="cardChoice($event)"
+        <app-stack [cards]="stack" [currentPlayer]="this.currentTurn" (cardChoiceEmitter)="cardChoice($event)"
           (click)="chooseCard(stack)"
           ></app-stack>
       </ng-container>
@@ -15,4 +15,4 @@
   </div>
   <app-count [game]="this.game" (nextCounter)="getNextCounter($event)"></app-count>
 </div>
-<app-deck *ngIf="!this.cardSelected && !this.arrowClicked && this.isHost" [deckCount]="this.deck.length"></app-deck>
+<app-deck *ngIf="!this.cardSelected && !this.arrowClicked" [deckCount]="this.deck.length"></app-deck>

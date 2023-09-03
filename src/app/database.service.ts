@@ -42,6 +42,14 @@ export class DatabaseService {
     });
   }
 
+  setDeck(id: string, deck: any) {
+    this.db.database.ref('games/' + id + '/deck').set(deck);
+  }
+
+  setStacks(id: string, stacks: any) {
+    this.db.database.ref('games/' + id + '/stacks').set(stacks);
+  }
+
   addPlayer(id: string, name: string) {
     this.db.database.ref('/games/' + id + '/players/').update({
       [name]: {

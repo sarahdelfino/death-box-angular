@@ -25,7 +25,7 @@ export class GameService {
     private route: ActivatedRoute,
     private db: DatabaseService) { }
 
-  public createDeck(): Array<Card> {
+  public createDeck(id: string): Array<Card> {
     const values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
     const suits = ['D', 'C', 'H', 'S']
     suits.forEach((s) => {
@@ -34,6 +34,7 @@ export class GameService {
       }
     });
     this.shuffle(this.deck);
+    this.db.setDeck(id, this.deck);
     return this.deck;
   }
 
@@ -56,17 +57,14 @@ export class GameService {
     return id;
   }
 
-  createStacks(deck: Array<Card>) {
+  createStacks(id: string, deck: Array<Card>) {
     for (let i = 0; i < 9; i++) {
       const stack = [];
       stack.push(deck.pop());
       this.stacks.push(stack);
     }
+    this.db.setStacks(id, this.stacks);
     return this.stacks;
-  }
-
-  public drawCard() {
-    return this.deck.pop();
   }
 
   compare(choice: string, card, newCard) {
@@ -85,8 +83,6 @@ getPlayers(): Observable<any> {
 setPlayers(players: any) {
   this._players.next(players);
 }
-
-
 
 getNextPlayer(playerIndex: number, playerList: any) {
   let newIndex = 0;
