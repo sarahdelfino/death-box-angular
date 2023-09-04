@@ -11,7 +11,7 @@
                 <div class="player-text">
                     <div class="nav-flex">
                     <h3>{{ this.currentPlayer }}</h3>
-                    <!-- <img style="width: 25px; margin-left: 5px;" src="../../assets/check.svg"> -->
+                    <img *ngFor="let i of this.correctGuesses" style="width: 25px; margin-left: 5px;" src="../../assets/check.svg">
                 </div>
                     <h3 style="font-size: 0.5em;">pick any
                         card</h3>

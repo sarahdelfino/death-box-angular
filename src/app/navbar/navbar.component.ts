@@ -9,6 +9,7 @@ export class NavbarComponent implements OnInit {
 
   isHost: boolean;
   currentPlayer: string;
+  correctGuesses: Array<number>;
   @Input() gameId: string;
   @Input() renderBack: boolean;
   @Input() correct: number;
@@ -21,8 +22,12 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
     if (this.isHost == true && changes.player && changes?.player?.currentValue !== this.currentPlayer) {
       this.currentPlayer = changes.player.currentValue
+    }
+    if (changes?.correct?.currentValue) {
+      this.correctGuesses = new Array(changes.correct.currentValue);
     }
   }
 
