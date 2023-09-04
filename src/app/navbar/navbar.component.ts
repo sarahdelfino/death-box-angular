@@ -11,6 +11,7 @@ export class NavbarComponent implements OnInit {
   currentPlayer: string;
   @Input() gameId: string;
   @Input() renderBack: boolean;
+  @Input() correct: number;
   @Input() player: string;
   @Output() backToBoard = new EventEmitter<boolean>();
 

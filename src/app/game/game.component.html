@@ -1,4 +1,4 @@
-<app-navbar [renderBack]="this.cardSelected && (this.counting == false || !this.counting)" [player]="this.currentTurn"
+<app-navbar [renderBack]="this.cardSelected && (this.counting == false || !this.counting)" [player]="this.currentTurn" [correct]="this.turns"
   (backToBoard)="endCounting(this.clickedData.newCard)"></app-navbar>
 <div class="game">
   <div class="container">
@@ -13,6 +13,6 @@
       <app-high-low [cardsInfo]="this.clickedData" (isFinished)="endHighLow($event)"></app-high-low>
     </div>
   </div>
-  <app-count [game]="this.game" (nextCounter)="getNextCounter($event)"></app-count>
+  <app-count class="count" [game]="this.game" (nextCounter)="getNextCounter($event)"></app-count>
 </div>
 <app-deck *ngIf="!this.cardSelected && !this.arrowClicked" [deckCount]="this.deck.length"></app-deck>

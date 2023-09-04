@@ -100,6 +100,14 @@ body {
   margin-right: auto;
 }
 
+.count {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -1%);
+  z-index: 999;
+}
+
 /*
 .card-container {
     max-width: 750px;

@@ -9,6 +9,11 @@ h3, h4 {
     background-color: #FF6666;
 }
 
+.nav-flex {
+    display: flex;
+    align-items: end;
+}
+
 img {
     width: 50px;
     margin-top: 5px;
