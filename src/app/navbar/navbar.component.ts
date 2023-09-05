@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { DatabaseService } from '../database.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,12 +10,14 @@ export class NavbarComponent implements OnInit {
 
   isHost: boolean;
   currentPlayer: string;
-  correctGuesses: Array<number>;
+  correctGuesses: any[];
   @Input() gameId: string;
   @Input() renderBack: boolean;
   @Input() correct: number;
   @Input() player: string;
   @Output() backToBoard = new EventEmitter<boolean>();
+
+  constructor(private db: DatabaseService) { }
 
   ngOnInit(): void {
       this.isHost = true;
@@ -27,7 +30,10 @@ export class NavbarComponent implements OnInit {
       this.currentPlayer = changes.player.currentValue
     }
     if (changes?.correct?.currentValue) {
+      console.log("TADAAAAAAA::::::", changes?.correct?.currentValue);
       this.correctGuesses = new Array(changes.correct.currentValue);
+    } else {
+      this.correctGuesses = new Array(0);
     }
   }
 

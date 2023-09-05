@@ -15,4 +15,5 @@
   </div>
   <app-count class="count" [game]="this.game" (nextCounter)="getNextCounter($event)"></app-count>
 </div>
-<app-deck *ngIf="!this.cardSelected && !this.arrowClicked" [deckCount]="this.deck.length"></app-deck>
+<app-messages [gameId]="this.id"></app-messages>
+<!-- <app-deck *ngIf="!this.cardSelected && !this.arrowClicked" [deckCount]="this.deck.length"></app-deck> -->

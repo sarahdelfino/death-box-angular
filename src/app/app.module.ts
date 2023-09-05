@@ -23,6 +23,7 @@ import { DeckComponent } from './deck/deck.component';
 import { CountComponent } from './count/count.component';
 import { InfoComponent } from './info/info.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { MessagesComponent } from './messages/messages.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     CountComponent,
     InfoComponent,
     NavbarComponent,
+    MessagesComponent,
   ],
   imports: [
     BrowserModule,

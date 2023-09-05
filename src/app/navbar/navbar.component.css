@@ -11,7 +11,7 @@ h3, h4 {
 
 .nav-flex {
     display: flex;
-    align-items: end;
+    align-items: flex-end;
 }
 
 img {

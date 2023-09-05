@@ -63,6 +63,7 @@ export class GameService {
       stack.push(deck.pop());
       this.stacks.push(stack);
     }
+    this.db.setDeck(id, deck);
     this.db.setStacks(id, this.stacks);
     return this.stacks;
   }

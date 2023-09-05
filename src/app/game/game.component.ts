@@ -98,13 +98,26 @@ export class GameComponent implements OnInit {
       this.game.stacks = gameData.stacks;
       this.deck = this.game.deck;
       this.stacks = this.game.stacks
+      // console.log("HEEEEEEEEEEEREEEEEEEE::: ", gameData.players);
+
+      // if (gameData.players['correctGuesses']) { 
+      //   console.log("HEEEEEEEEEEEREEEEEEEE");
+      //   this.turns = gameData.players['correctGuesses'];
+      // } else {
+      //   this.turns = 0;
+      // }
       console.log("game data: ", this.game);
       const tmpPlayers = [];
       console.log("player data from fb", this.game.players);
       for (const p in gameData.players) {
         if (gameData.players[p].currentPlayer) {
           this.currentTurn = p;
-          console.log("current turn: ", this.currentTurn);
+          if(gameData.players[p].correctGuesses && gameData.players[p].correctGuesses !== 3) {
+            console.log("CHANGING TURNS FROM: ", this.turns, "TO: ", gameData.players[p].correctGuesses);
+            this.turns = gameData.players[p].correctGuesses;
+          } else {
+            this.turns = 0;
+          }
         } else {
           tmpPlayers.push(p);
         }
@@ -113,7 +126,7 @@ export class GameComponent implements OnInit {
       this.filteredPlayers = tmpPlayers;
       // const playersSubject = new BehaviorSubject(this.filteredPlayers[0]);
       this.playerObj['filtered'] = this.filteredPlayers;
-      this.playerObj['currentTurn'] = this.currentTurn;
+      // this.playerObj['currentTurn'] = this.currentTurn;
       if (!gameData.counter) {
         this.db.setCounter(this.id, this.filteredPlayers[0]).then(() => {
           console.log("successfully updated counter to: ", this.filteredPlayers[0]);
@@ -160,6 +173,7 @@ export class GameComponent implements OnInit {
   }
 
   chooseCard(card: Card) {
+    console.log(card);
     if (this.currentTurn === sessionStorage.getItem('player')) {
       if (this.deck.length > 1) {
         const clickedCard = card[0];
@@ -177,7 +191,7 @@ export class GameComponent implements OnInit {
         this.removeStacks();
       }
     } else {
-      new alert('It is not your turn to choose a card');
+      new alert(`It's ${this.currentTurn}'s turn`);
     }
   }
 
@@ -231,17 +245,28 @@ export class GameComponent implements OnInit {
 
   endHighLow(wrongGuess: boolean) {
     for (const stack in this.stacks) {
+      console.log("running...");
       if (this.stacks[stack][0].cardName === this.clickedData.clickedCard.cardName) {
         this.addToStack(parseInt(stack), this.clickedData.newCard);
         if (!wrongGuess) {
+          console.log("turns before:::::: ", this.turns);
           this.turns += 1;
-          if (this.turns == 3) {
-            this.turns = 0;
-            this.getNextPlayer();
+          if (this.turns === 3) {
+            console.log("TURNS EQUAL 3: ", this.id, this.currentTurn, this.turns);
+            this.db.setTurns(this.id, this.currentTurn, 0).then(() => {
+              console.log("inside of equal 3: ", this.turns);
+              this.getNextPlayer();
+            });
+          } else {
+            console.log("TURNS NOT EQUAL 3: ", this.id, this.currentTurn, this.turns);
+           this.db.setTurns(this.id, this.currentTurn, this.turns).then(() => {
+            console.log("inside of else");
+          });
           }
         }
         console.log(this.turns);
         this.cardSelected = false;
+        break;
       }
     }
   }
