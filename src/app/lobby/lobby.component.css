@@ -98,11 +98,12 @@ div.players.scroll {
   .list-flex {
     display: flex;
     align-items: center;
-    height: 60px;
+    height: 70px;
+    margin-bottom: 10px;
   }
 
-  img.bullet {
-    width: 40px;
+  img.avatar {
+    width: 25%;
     margin-right: 10px;
   }
 

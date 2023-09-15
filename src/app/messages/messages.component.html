@@ -1,14 +1,38 @@
 <div class="messages-container">
-    <div class="chats">
-  <div #messageList class="messages" *ngFor="let msg of this.messages | keyvalue">
-    <div [id]="msg.key" class="message">
-      <div class="username">{{ msg.value.player }}:</div>
-      <div class="message-body">
-        {{ msg.value.message }}
+  <div class="chats">
+    <div
+      #messageList
+      class="messages"
+      *ngFor="let msg of this.messages | keyvalue"
+    >
+      <div
+        [id]="msg.key"
+        class="message"
+        [ngClass]="
+          msg.value.player === this.user ? 'my-message' : 'other-message'
+        "
+      >
+        <div class="message-flex">
+          <div class="message-avatar">
+            <img
+              id="avatar"
+              src="{{
+                'https://robohash.org/' + this.gameId + msg.value.player + '?set=set5'
+              }}"
+            />
+          </div>
+          <div class="body-flex">
+            <div class="username" *ngIf="msg.value.player !== this.user">
+              {{ msg.value.player }}
+            </div>
+            <div class="message-body">
+              {{ msg.value.message }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
   <div class="submit-form">
     <form class="form" [formGroup]="sendMessageForm" method="POST">
       <div class="message-input">

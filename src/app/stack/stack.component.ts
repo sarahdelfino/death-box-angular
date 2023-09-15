@@ -46,7 +46,6 @@ export class StackComponent {
     if (changes.cards.currentValue.length > 1) {
       this.added = true;
     }
-    console.log(changes);
   }
 
   public add(card: Card) {

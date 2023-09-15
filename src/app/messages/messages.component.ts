@@ -47,6 +47,7 @@ export class MessagesComponent implements OnInit {
   }
 
   sendMessage(sendMessageFormData: string) {
+    console.log(sendMessageFormData);
     if (this.sendMessageForm.invalid) {
       return;
     } else {

@@ -27,7 +27,8 @@
     </div>
     <div class="players" [ngClass]="this.isHost ? 'scroll' : ''">
       <div class="list-flex" *ngFor="let player of playerList">
-        <img class="bullet" src="../../assets/drink.png" alt="player-icon" />
+        <!-- <img class="bullet" src="../../assets/drink.png" alt="player-icon" /> -->
+        <img class="avatar" src='{{ "https://robohash.org/" + this.id + player + "?set=set5" }}'>
         <p>{{ player }}</p>
       </div>
     </div>
