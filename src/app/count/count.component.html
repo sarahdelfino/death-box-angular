@@ -1,12 +1,14 @@
-<div *ngIf="this.sessionPlayer === this.currentCounter && this.game.counting" class="count-container">
-<div class="button enabled" (click)="count()">
-    <img class="button-img" src="../../assets/count.png">
-    <div class="button-text">
+@if (this.sessionPlayer === this.currentCounter && this.game.counting) {
+  <div class="count-container">
+    <div class="button enabled" (click)="count()">
+      <img class="button-img" src="../../assets/count.png">
+      <div class="button-text">
         <h1>Count down</h1>
         <h3>Tap anywhere on the card</h3>
+      </div>
     </div>
-</div>
-<div class="countdown">
-    <h2>{{ this.game.seconds }} {{ this.text }} left</h2>
-</div>
-</div>
+    <div class="countdown">
+      <h2>{{ this.game.seconds }} {{ this.text }} left</h2>
+    </div>
+  </div>
+}

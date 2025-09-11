@@ -1,44 +1,53 @@
 <!-- <div class="high-low-container"> -->
-<div *ngIf="!this.revealCount" id="cards-container">
-  <div *ngIf="this.arrowClicked">
+@if (!this.revealCount) {
+  <div id="cards-container">
+    @if (this.arrowClicked) {
+      <div>
+        <img
+          [ngClass]="this.cardsInfo['choice'] ? 'card-enter' : ''"
+          class="new-img"
+          [src]="cardsInfo.newCard.cardPath"
+          />
+      </div>
+    }
     <img
-      [ngClass]="this.cardsInfo['choice'] ? 'card-enter' : ''"
-      class="new-img"
-      [src]="cardsInfo.newCard.cardPath"
-    />
+      id="selectedImg"
+      [ngClass]="this.cardsInfo['choice'] ? 'move-card' : ''"
+      class="selected-img"
+      [src]="cardsInfo.clickedCard.cardPath"
+      />
+    @if (!this.arrowClicked) {
+      <div>
+        <p>Will the next card be higher or lower than the one above?</p>
+        <div class="arrow-container">
+          <img
+            id="upArrow"
+            (click)="arrowClick('higher')"
+            class="arrow-img"
+            src="../../assets/up-arrow.png"
+            />
+          <img
+            id="downArrow"
+            (click)="arrowClick('lower')"
+            class="arrow-img"
+            src="../../assets/down-arrow.png"
+            />
+        </div>
+      </div>
+    }
   </div>
-  <img
-    id="selectedImg"
-    [ngClass]="this.cardsInfo['choice'] ? 'move-card' : ''"
-    class="selected-img"
-    [src]="cardsInfo.clickedCard.cardPath"
-  />
-  <div *ngIf="!this.arrowClicked">
-    <p>Will the next card be higher or lower than the one above?</p>
-    <div class="arrow-container">
-      <img
-        id="upArrow"
-        (click)="arrowClick('higher')"
-        class="arrow-img"
-        src="../../assets/up-arrow.png"
-      />
-      <img
-        id="downArrow"
-        (click)="arrowClick('lower')"
-        class="arrow-img"
-        src="../../assets/down-arrow.png"
-      />
+}
+@if (this.revealCount) {
+  <div class="reveal-container" [ngClass]="this.revealCount ? 'reveal-enter' : 'reveal-leave'">
+    <div class="reveal-img-container">
+      <img class="reveal-img" src="{{ this.imgPath }}" />
     </div>
+    <h2>{{ this.title }}</h2>
+    @if (this.wrongGuess) {
+      <h3>Just for {{ this.uiCounter }} {{ this.text }}</h3>
+    } @else {
+      <h3>Why are you even playing?</h3>
+    }
   </div>
-</div>
-<div class="reveal-container" *ngIf="this.revealCount" [ngClass]="this.revealCount ? 'reveal-enter' : 'reveal-leave'">
-  <div class="reveal-img-container">
-    <img class="reveal-img" src="{{ this.imgPath }}" />
-  </div>
-  <h2>{{ this.title }}</h2>
-  <h3 *ngIf="this.wrongGuess; else rightGuess">Just for {{ this.uiCounter }} {{ this.text }}</h3>
-  <ng-template #rightGuess>
-    <h3>Why are you even playing?</h3>
-  </ng-template>
-</div>
+}
 <!-- </div> -->

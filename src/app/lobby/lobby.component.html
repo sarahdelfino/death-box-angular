@@ -1,12 +1,12 @@
 <div class="container">
-    <dialog id="dialog">
-      <form [formGroup]="joinGameForm" id="join" method="dialog">
-        <label for="name">Who goes there?</label>
-        <input id="name" formControlName="name" required autocomplete="off" placeholder="Name" />
-        <button style="background-color: #6a985c;" gaEvent gaAction="join_game_link"
-          (click)="joinGame(joinGameForm.value)" type="submit">Join game</button>
-      </form>
-    </dialog>
+  <dialog id="dialog">
+    <form [formGroup]="joinGameForm" id="join" method="dialog">
+      <label for="name">Who goes there?</label>
+      <input id="name" formControlName="name" required autocomplete="off" placeholder="Name" />
+      <button style="background-color: #6a985c;" gaEvent gaAction="join_game_link"
+      (click)="joinGame(joinGameForm.value)" type="submit">Join game</button>
+    </form>
+  </dialog>
   <div class="logo-container">
     <img class="logo" src="../../assets/logo-text.png" alt="deathbox-logo" />
   </div>
@@ -15,25 +15,33 @@
   </div>
   <div class="lobby-content">
     <div class="invite-container">
-    <div @copyPopup *ngIf="showPopup" class="popup">
-      <p class="popup-text">Copied to clipboard</p>
-    </div>
-    <div (click)="inviteClicked()">
-      <h3 class="invite">Invite a friend</h3>
-    </div>
-  </div>
-    <div *ngIf="!this.isHost">
-      <h3>Waiting on host to start the game...</h3>
-    </div>
-    <div class="players" [ngClass]="this.isHost ? 'scroll' : ''">
-      <div class="list-flex" *ngFor="let player of playerList">
-        <!-- <img class="bullet" src="../../assets/drink.png" alt="player-icon" /> -->
-        <img class="avatar" src='{{ "https://robohash.org/" + this.id + player + "?set=set5" }}'>
-        <p>{{ player }}</p>
+      @if (showPopup) {
+        <div @copyPopup class="popup">
+          <p class="popup-text">Copied to clipboard</p>
+        </div>
+      }
+      <div (click)="inviteClicked()">
+        <h3 class="invite">Invite a friend</h3>
       </div>
     </div>
-    <div *ngIf="this.isHost">
-      <button gaEvent gaAction="start_game" (click)="startGame()">Everybody's Ready</button>
+    @if (!this.isHost) {
+      <div>
+        <h3>Waiting on host to start the game...</h3>
+      </div>
+    }
+    <div class="players" [ngClass]="this.isHost ? 'scroll' : ''">
+      @for (player of playerList; track player) {
+        <div class="list-flex">
+          <!-- <img class="bullet" src="../../assets/drink.png" alt="player-icon" /> -->
+          <img class="avatar" src='{{ "https://robohash.org/" + this.id + player + "?set=set5" }}'>
+          <p>{{ player }}</p>
+        </div>
+      }
     </div>
+    @if (this.isHost) {
+      <div>
+        <button gaEvent gaAction="start_game" (click)="startGame()">Everybody's Ready</button>
+      </div>
+    }
   </div>
 </div>

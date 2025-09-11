@@ -3,21 +3,26 @@
     <img class="logo" src="../../assets/logo-text.png" alt="deathbox-logo" />
   </div>
   <!-- <h3 gaEvent="button_click" gaAction="info" class="info" (click)="infoClick()">
-    How to play
-  </h3> -->
-  <div class="content">
-    <div *ngIf="this.createClicked" id="create">
-      <form class="form" *ngIf="this.createClicked" [formGroup]="createGameForm" id="create" method="POST">
-        <div class="input-container">
-          <label for="name">Who goes there?</label>
-          <input id="name" formControlName="name" required autocomplete="off" placeholder="Name" />
-        </div>
-        <button gaEvent gaAction="create_game" (click)="createGame(createGameForm.value)" type="submit">
-          Create Game
-        </button>
-      </form>
+  How to play
+</h3> -->
+<div class="content">
+  @if (this.createClicked) {
+    <div id="create">
+      @if (this.createClicked) {
+        <form class="form" [formGroup]="createGameForm" id="create" method="POST">
+          <div class="input-container">
+            <label for="name">Who goes there?</label>
+            <input id="name" formControlName="name" required autocomplete="off" placeholder="Name" />
+          </div>
+          <button gaEvent gaAction="create_game" (click)="createGame(createGameForm.value)" type="submit">
+            Create Game
+          </button>
+        </form>
+      }
     </div>
-    <div *ngIf="this.joinClicked" id="join">
+  }
+  @if (this.joinClicked) {
+    <div id="join">
       <form class="form" [formGroup]="joinGameForm" id="join" method="POST">
         <div class="input-container">
           <label for="name">Who goes there?</label>
@@ -32,7 +37,9 @@
         </button>
       </form>
     </div>
-    <div *ngIf="!this.joinClicked && !this.createClicked" class="button-container">
+  }
+  @if (!this.joinClicked && !this.createClicked) {
+    <div class="button-container">
       <button gaEvent gaAction="create_game" (click)="createTrigger()" type="submit">
         Launch Game
       </button>
@@ -40,5 +47,6 @@
         Join Game
       </button>
     </div>
-  </div>
+  }
+</div>
 </div>
