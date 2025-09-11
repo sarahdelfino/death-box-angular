@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,42 +25,36 @@ import { InfoComponent } from './info/info.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MessagesComponent } from './messages/messages.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    GameComponent,
-    CardComponent,
-    HighLowComponent,
-    StackComponent,
-    StartComponent,
-    LobbyComponent,
-    DeckComponent,
-    CountComponent,
-    InfoComponent,
-    NavbarComponent,
-    MessagesComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireDatabaseModule,
-    NgxGoogleAnalyticsModule.forRoot(environment.firebase.measurementId),
-    NgxGoogleAnalyticsRouterModule,
-    HttpClientModule,
-    RouterModule.forRoot([
-    {
-        path: '',
-        component: GameComponent
-    }
-], {}),
-    BrowserAnimationsModule
-  ],
-  providers: [
-    GameService,
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        GameComponent,
+        CardComponent,
+        HighLowComponent,
+        StackComponent,
+        StartComponent,
+        LobbyComponent,
+        DeckComponent,
+        CountComponent,
+        InfoComponent,
+        NavbarComponent,
+        MessagesComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireDatabaseModule,
+        NgxGoogleAnalyticsModule.forRoot(environment.firebase.measurementId),
+        NgxGoogleAnalyticsRouterModule,
+        RouterModule.forRoot([
+            {
+                path: '',
+                component: GameComponent
+            }
+        ], {}),
+        BrowserAnimationsModule], providers: [
+        GameService,
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }
