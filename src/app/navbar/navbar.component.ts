@@ -30,16 +30,12 @@ export class NavbarComponent implements OnInit {
     if (this.isHost == true && changes.player && changes?.player?.currentValue !== this.currentPlayer) {
       this.currentPlayer = changes.player.currentValue
     }
-<<<<<<< HEAD
-    console.log(changes);
-=======
     if (changes?.correct?.currentValue) {
       console.log("TADAAAAAAA::::::", changes?.correct?.currentValue);
       this.correctGuesses = new Array(changes.correct.currentValue);
     } else {
       this.correctGuesses = new Array(0);
     }
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
   }
 
   goBack() {

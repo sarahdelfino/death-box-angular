@@ -113,8 +113,6 @@ export class GameComponent implements OnInit, AfterViewInit {
       this.game.players = gameData.players;
       this.game.seconds = gameData.seconds;
       this.game.started = gameData.started;
-<<<<<<< HEAD
-=======
       this.game.deck = gameData.deck;
       this.game.stacks = gameData.stacks;
       this.deck = this.game.deck;
@@ -128,13 +126,10 @@ export class GameComponent implements OnInit, AfterViewInit {
       //   this.turns = 0;
       // }
       console.log("game data: ", this.game);
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
       const tmpPlayers = [];
       for (const p in gameData.players) {
         if (gameData.players[p].currentPlayer) {
           this.currentTurn = p;
-<<<<<<< HEAD
-=======
           let cGuesses = gameData.players[p].correctGuesses
           if(cGuesses && cGuesses !== 3 && this.turns !== 3 ) {
             // console.log("CHANGING TURNS FROM: ", this.turns, "TO: ", gameData.players[p].correctGuesses);
@@ -142,7 +137,6 @@ export class GameComponent implements OnInit, AfterViewInit {
           } else {
             this.turns = 0;
           }
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
         } else {
           tmpPlayers.push(p);
         }
@@ -200,18 +194,7 @@ export class GameComponent implements OnInit, AfterViewInit {
   addToStack(i: number, card: Card) {
     // add card to the top of the stack
     this.stacks[i].unshift(card);
-<<<<<<< HEAD
-    // this.children.map((selectedStack) => {
-    //   console.log("#####################", selectedStack);
-    // });
-    // const timer = setTimeout(() => {
-    // }, 1000);
-    this.db.updateDeck(this.id, this.deck);
-    this.checkDeck();
-    // this.checkDeck();
-=======
     this.db.setStacks(this.id, this.stacks);
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
   }
 
   cardChoice(ch: string) {
@@ -219,16 +202,6 @@ export class GameComponent implements OnInit, AfterViewInit {
   }
 
   chooseCard(card: Card) {
-<<<<<<< HEAD
-    if (this.deck.length > 1) {
-      const clickedCard = card[0];
-      const newCard = this.deck.pop();
-      const i = this.stacks.indexOf(card);
-      const stackLength = this.stacks[i].length;
-      const gameId = this.getId();
-      this.clickedData = { clickedCard, newCard, stackLength, gameId };
-      this.cardSelected = true;
-=======
     console.log(card);
     if (this.currentTurn === sessionStorage.getItem('player')) {
       if (this.deck.length > 1) {
@@ -246,7 +219,6 @@ export class GameComponent implements OnInit, AfterViewInit {
       } else {
         this.removeStacks();
       }
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
     } else {
       new alert(`It's ${this.currentTurn}'s turn`);
     }
@@ -285,11 +257,8 @@ export class GameComponent implements OnInit, AfterViewInit {
   endCounting(card: any) {
     this.deck.push(card);
     this._gameService.shuffle(this.deck);
-<<<<<<< HEAD
-=======
     console.log("AFTER SHUFFLE: ", this.deck);
     this.db.setDeck(this.id, this.deck);
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
     this.cardSelected = false;
   }
 
@@ -337,16 +306,6 @@ export class GameComponent implements OnInit, AfterViewInit {
     for (const stack in this.stacks) {
       if (this.stacks[stack][0].cardName === this.clickedData.clickedCard.cardName) {
         this.addToStack(parseInt(stack), this.clickedData.newCard);
-<<<<<<< HEAD
-        if (!wrongGuess) {
-          this.turns += 1;
-          if (this.turns == 3) {
-            this.turns = 0;
-            this.getNextPlayer();
-          }
-        }
-=======
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
         this.cardSelected = false;
         break;
       }
@@ -390,36 +349,33 @@ export class GameComponent implements OnInit, AfterViewInit {
       console.log("getNextPlayer -- updated players successfully: ", this.players);
     });
   }
-<<<<<<< HEAD
-=======
 
-  removeStacks() {
-    let removedArray;
-    console.log("BEFORE: " + this.stacks);
-    if (this.stacks.length == 9) {
-      const removedArray = this.stacks.splice(this.stacks.length - 3, 3);
-      console.log("Removing: ", removedArray);
-    } else if (this.stacks.length == 6) {
-      const removedArray = this.stacks.splice(this.stacks.length - 3, 2);
-      console.log("Removing: ", removedArray);
-    } else {
-      const removedArray = this.stacks.splice(this.stacks.length - 3, 1);
-      console.log("Removing: ", removedArray);
-    }
-    removedArray.forEach(card => {
-      for (const c in card) {
-        this.deck.push(card[c]);
-      }
-    });
-    this._gameService.shuffle(this.deck);
-    this.db.setDeck(this.id, this.deck);
-    this.db.setStacks(this.id, this.stacks);
-  }
+  // removeStacks() {
+  //   let removedArray;
+  //   console.log("BEFORE: " + this.stacks);
+  //   if (this.stacks.length == 9) {
+  //     const removedArray = this.stacks.splice(this.stacks.length - 3, 3);
+  //     console.log("Removing: ", removedArray);
+  //   } else if (this.stacks.length == 6) {
+  //     const removedArray = this.stacks.splice(this.stacks.length - 3, 2);
+  //     console.log("Removing: ", removedArray);
+  //   } else {
+  //     const removedArray = this.stacks.splice(this.stacks.length - 3, 1);
+  //     console.log("Removing: ", removedArray);
+  //   }
+  //   removedArray.forEach(card => {
+  //     for (const c in card) {
+  //       this.deck.push(card[c]);
+  //     }
+  //   });
+  //   this._gameService.shuffle(this.deck);
+  //   this.db.setDeck(this.id, this.deck);
+  //   this.db.setStacks(this.id, this.stacks);
+  // }
 
   clickMessages() {
     console.log("clicked!")
     this.messagesClicked = !this.messagesClicked;
   }
 
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
 }

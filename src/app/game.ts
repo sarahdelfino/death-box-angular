@@ -6,7 +6,7 @@ export class Game {
     started?: boolean;
     counter?: string;
     currentPlayer?: string;
-    deck?: Array<string>;
+    // deck?: Array<string>;
     seconds?: number;
     counting?: boolean;
     players?: Array<Player>
@@ -17,7 +17,7 @@ export class Game {
         id?: string,
         started?: boolean,
         currentPlayer?: string,
-        deck?: Array<string>,
+        // deck?: Array<string>,
         seconds?: number,
         counting?: boolean,
         players?: Array<Player>,
@@ -46,11 +46,8 @@ export class Game {
         return this.deck;
     }
 
-<<<<<<< HEAD
-=======
     public getStacks() {
         return this.stacks;
     }
 
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
 }

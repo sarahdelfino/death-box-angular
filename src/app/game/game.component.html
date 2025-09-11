@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-<app-navbar [renderBack]="this.cardSelected && (this.counting == false || !this.counting)" [player]="this.currentTurn"
-  (backToBoard)="endCounting(this.clickedData.newCard)" [checks]="this.turns"></app-navbar>
-<div class="game">
-  <!-- <app-board></app-board> -->
-  <div class="container">
-    <div *ngIf="!this.cardSelected && !this.arrowClicked" class="card-container">
-      <ng-container *ngFor="let stack of stacks">
-        <app-stack [@removeStacks]="this.deck.length < 40" #test [id]="stacks.indexOf(stack)" [cards]="stack" [currentPlayer]="this.currentTurn" (cardChoiceEmitter)="cardChoice($event)"
-=======
 <app-navbar
   [renderBack]="this.cardSelected && (this.counting == false || !this.counting)"
   [player]="this.currentTurn"
@@ -26,7 +16,6 @@
           [cards]="stack"
           [currentPlayer]="this.currentTurn"
           (cardChoiceEmitter)="cardChoice($event)"
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
           (click)="chooseCard(stack)"
         ></app-stack>
       </ng-container>
@@ -38,11 +27,6 @@
       ></app-high-low>
     </div>
   </div>
-<<<<<<< HEAD
-  <app-count [game]="this.game" (nextCounter)="getNextCounter($event)"></app-count>
-  <app-deck *ngIf="!this.cardSelected && !this.arrowClicked" [id]="this.id"></app-deck>
-</div>
-=======
   <app-count
     class="count"
     [game]="this.game"
@@ -59,4 +43,3 @@
   <img class="score-icon" src="../../assets/high-score.png" />
 </div>
 <!-- <app-deck *ngIf="!this.cardSelected && !this.arrowClicked" [deckCount]="this.deck.length"></app-deck> -->
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be

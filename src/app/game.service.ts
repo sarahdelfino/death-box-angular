@@ -34,15 +34,7 @@ export class GameService {
       }
     });
     this.shuffle(this.deck);
-<<<<<<< HEAD
-    // console.log(this.deck);
-    // const dbDeck = []
-    // this.deck.forEach(card => {
-    //   dbDeck.push(card.cardName)
-    // });
-=======
     this.db.setDeck(id, this.deck);
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
     return this.deck;
   }
 
@@ -71,13 +63,8 @@ export class GameService {
       stack.push(deck.pop());
       this.stacks.push(stack);
     }
-<<<<<<< HEAD
-    this.db.createDeckandStacks(this.getId(), this.deck, this.stacks);
-    console.log(this.stacks);
-=======
     this.db.setDeck(id, deck);
     this.db.setStacks(id, this.stacks);
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
     return this.stacks;
   }
 
@@ -90,16 +77,9 @@ export class GameService {
     }
   }
 
-<<<<<<< HEAD
-  getPlayers(): Observable<any> {
-    return this._players$;
-  }
-
   setPlayers(players: any) {
     this._players.next(players);
   }
-
-
 
   getNextPlayer(playerIndex: number, playerList: any) {
     let newIndex = 0;
@@ -112,25 +92,6 @@ export class GameService {
       newIndex = playerIndex + 1;
       playerList[newIndex].currentPlayer = true;
     }
-    this.db.updatePlayers(this.getId(), playerList).then(() => {
-      console.log("Updated players successfully!");
-    });
-=======
-setPlayers(players: any) {
-  this._players.next(players);
-}
 
-getNextPlayer(playerIndex: number, playerList: any) {
-  let newIndex = 0;
-
-  delete playerList[playerIndex].currentPlayer;
-
-  if (playerIndex == playerList.length - 1) {
-    playerList[newIndex].currentPlayer = true;
-  } else {
-    newIndex = playerIndex + 1;
-    playerList[newIndex].currentPlayer = true;
->>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
   }
-
 }
