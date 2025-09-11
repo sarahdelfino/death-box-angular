@@ -14,11 +14,11 @@
   "dependencies": {
     "12": "^1.0.2",
     "@angular/animations": "^19.2.15",
-    "@angular/cdk": "^18.2.14",
+    "@angular/cdk": "^19.2.19",
     "@angular/common": "^19.2.15",
     "@angular/compiler": "^19.2.15",
     "@angular/core": "^19.2.15",
-    "@angular/fire": "18.0.1",
+    "@angular/fire": "19.2.0",
     "@angular/forms": "^19.2.15",
     "@angular/platform-browser": "^19.2.15",
     "@angular/platform-browser-dynamic": "^19.2.15",
