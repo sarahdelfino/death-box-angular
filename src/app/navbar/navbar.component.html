@@ -5,11 +5,20 @@
         </div>
         <div class="player-container">
             <div class="host-view">
+<<<<<<< HEAD
                 <div>
                     <img class="player-img" src="../../assets/drink.png">
+=======
+                <div class="player-img">
+                    <img src="{{
+                        'https://robohash.org/' + gameId + this.player + '?set=set5'
+                      }}">
+>>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
                 </div>
                 <div class="player-text">
+                    <div class="nav-flex">
                     <h3>{{ this.currentPlayer }}</h3>
+<<<<<<< HEAD
                     <!-- <h3 *ngIf="this.isHost == true; else elseBlock" style="font-size: 0.5em;">pick any
                         card</h3>
                     <ng-template #elseBlock>
@@ -21,6 +30,12 @@
                 <div *ngIf="checks > 0">
                     <img class="checks" src="../../assets/check.png">
                     <img *ngIf="checks > 1" class="checks" src="../../assets/check.png">
+=======
+                    <img *ngFor="let i of this.correctGuesses" style="width: 25px; margin-left: 5px;" src="../../assets/check.svg">
+                </div>
+                    <h3 style="font-size: 0.5em;">pick any
+                        card</h3>
+>>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
                 </div>
             </div>
         </div>

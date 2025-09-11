@@ -115,7 +115,11 @@ export class HighLowComponent implements OnInit, OnDestroy {
       const timer = setTimeout(() => {
         console.log("ending high low...");
         this.isFinished.emit(this.wrongGuess);
+<<<<<<< HEAD
       }, 2000);
+=======
+      }, 1000);
+>>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
     }
   }
 

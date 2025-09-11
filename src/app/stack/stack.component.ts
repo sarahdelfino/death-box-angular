@@ -30,6 +30,9 @@ export class StackComponent implements OnInit {
 
   @Input()
   public cards: any = [];
+  
+  @Input()
+  public currentPlayer: any;
 
   @Input() public id: any;
 
@@ -56,9 +59,19 @@ export class StackComponent implements OnInit {
   }
 
   onCardClick(stack: Card) {
+<<<<<<< HEAD
       this.selectedStack = stack;
     // console.log("HMMM: ", this.selectedStack[0]);
     // console.log("HMMM: ", this.cards[0]);
+=======
+    if(this.currentPlayer === sessionStorage.getItem('player')) {
+      this.selectedStack = stack;
+    } else {
+      console.log("it's not your turn.");
+      // do nothing
+    }
+
+>>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
     // this.clickedCardEmitter.emit(this.cards[0].cardName);
   }
 

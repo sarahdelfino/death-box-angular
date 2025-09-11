@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <app-navbar [renderBack]="this.cardSelected && (this.counting == false || !this.counting)" [player]="this.currentTurn"
   (backToBoard)="endCounting(this.clickedData.newCard)" [checks]="this.turns"></app-navbar>
 <div class="game">
@@ -6,14 +7,56 @@
     <div *ngIf="!this.cardSelected && !this.arrowClicked" class="card-container">
       <ng-container *ngFor="let stack of stacks">
         <app-stack [@removeStacks]="this.deck.length < 40" #test [id]="stacks.indexOf(stack)" [cards]="stack" [currentPlayer]="this.currentTurn" (cardChoiceEmitter)="cardChoice($event)"
+=======
+<app-navbar
+  [renderBack]="this.cardSelected && (this.counting == false || !this.counting)"
+  [player]="this.currentTurn"
+  [correct]="this.turns"
+  [gameId]="this.id"
+  (backToBoard)="endCounting(this.clickedData.newCard)"
+></app-navbar>
+<div class="game">
+  <div class="container">
+    <div
+      *ngIf="!this.cardSelected && !this.arrowClicked"
+      class="card-container"
+    >
+      <ng-container *ngFor="let stack of stacks">
+        <app-stack
+          [cards]="stack"
+          [currentPlayer]="this.currentTurn"
+          (cardChoiceEmitter)="cardChoice($event)"
+>>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
           (click)="chooseCard(stack)"
-          ></app-stack>
+        ></app-stack>
       </ng-container>
     </div>
     <div *ngIf="this.cardSelected">
-      <app-high-low [cardsInfo]="this.clickedData" (isFinished)="endHighLow($event)"></app-high-low>
+      <app-high-low
+        [cardsInfo]="this.clickedData"
+        (isFinished)="endHighLow($event)"
+      ></app-high-low>
     </div>
   </div>
+<<<<<<< HEAD
   <app-count [game]="this.game" (nextCounter)="getNextCounter($event)"></app-count>
   <app-deck *ngIf="!this.cardSelected && !this.arrowClicked" [id]="this.id"></app-deck>
 </div>
+=======
+  <app-count
+    class="count"
+    [game]="this.game"
+    (nextCounter)="getNextCounter($event)"
+  ></app-count>
+  <app-messages *ngIf="this.messagesClicked" [gameId]="this.id"></app-messages>
+</div>
+<div class="bottom-nav">
+  <img
+    class="message-icon"
+    src="../../assets/message.png"
+    (click)="clickMessages()"
+  />
+  <img class="score-icon" src="../../assets/high-score.png" />
+</div>
+<!-- <app-deck *ngIf="!this.cardSelected && !this.arrowClicked" [deckCount]="this.deck.length"></app-deck> -->
+>>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be

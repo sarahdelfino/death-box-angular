@@ -172,7 +172,7 @@
     display: flex;
     max-width: 90vw;
     justify-content: space-around;
-    margin-top: 50px;
+    /* margin-top: 50px; */
   }
   
   .arrow-img {

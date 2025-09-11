@@ -5,6 +5,7 @@ import { increment } from 'firebase/database';
 import { Card } from './card/card';
 import { Game } from './game';
 import { Player } from './player';
+import { Message } from './message';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class DatabaseService {
   private dbPath = '/games';
   gameObj: AngularFireObject<Game>;
   // gameRef: AngularFireList<Game>;
+  messagesObject: AngularFireObject<Message>;
   playersObj: AngularFireObject<Player> = null;
   playersRef: AngularFireList<Player>;
   deckList: AngularFireList<Card> = null;
@@ -41,6 +43,33 @@ export class DatabaseService {
         }
       }
     });
+  }
+
+  setDeck(id: string, deck: any) {
+    this.db.database.ref('games/' + id + '/deck').set(deck);
+  }
+
+  setStacks(id: string, stacks: any) {
+    this.db.database.ref('games/' + id + '/stacks').set(stacks);
+  }
+
+  setTurns(id: string, player: string, turns: number) {
+    return this.db.database.ref('games/' + id + '/players/' + player + '/correctGuesses').set(turns);
+  }
+
+  getTurns(id: string, player: string) {
+    return this.db.object('games/' + id + '/players/' + player + '/turns');
+  }
+
+  sendMessage(id: string, time: string, player: string, message: string ) {
+    this.db.database.ref('messages/' + id + '/' + time).update({
+      message: message,
+      player: player
+    });
+  }
+
+  getMessages(id: string) {
+    return this.messagesObject = this.db.object('messages/' + id);
   }
 
   addPlayer(id: string, name: string) {

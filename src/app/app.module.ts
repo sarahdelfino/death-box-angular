@@ -23,7 +23,11 @@ import { DeckComponent } from './deck/deck.component';
 import { CountComponent } from './count/count.component';
 import { InfoComponent } from './info/info.component';
 import { NavbarComponent } from './navbar/navbar.component';
+<<<<<<< HEAD
 import { BoardComponent } from './board/board.component';
+=======
+import { MessagesComponent } from './messages/messages.component';
+>>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
 
 @NgModule({
   declarations: [
@@ -38,7 +42,11 @@ import { BoardComponent } from './board/board.component';
     CountComponent,
     InfoComponent,
     NavbarComponent,
+<<<<<<< HEAD
     BoardComponent,
+=======
+    MessagesComponent,
+>>>>>>> 33761f206bcf5fba8467fd4789bdac2a45b380be
   ],
   imports: [
     BrowserModule,
