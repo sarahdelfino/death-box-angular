@@ -65,6 +65,7 @@ export class HighLowComponent implements OnInit, OnDestroy {
       }
       if (this.uiCounter == 0 && this.wrongGuess) {
         const timer = setTimeout(() => {
+          console.log("ending high low...");
           this.isFinished.emit(this.wrongGuess);
         }, 1500);
       }
@@ -112,8 +113,9 @@ export class HighLowComponent implements OnInit, OnDestroy {
         this.revealCount = true;
       }, 1000);
       const timer = setTimeout(() => {
+        console.log("ending high low...");
         this.isFinished.emit(this.wrongGuess);
-      }, 2500);
+      }, 2000);
     }
   }
 

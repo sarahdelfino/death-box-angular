@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { DatabaseService } from '../database.service';
 
 export interface CardData {
   imageId: string;
@@ -11,8 +12,18 @@ export interface CardData {
   styleUrls: ['./deck.component.css']
 })
 
-export class DeckComponent {
+export class DeckComponent implements OnInit {
 
-  @Input() deckCount: number;
+  constructor(private db: DatabaseService) {}
+
+  public deckCount: number;
+  @Input() id: string;
+
+  ngOnInit() {
+    this.db.getDeck(this.id).valueChanges().subscribe(deckData => {
+      console.log(deckData);
+      this.deckCount = deckData.length;
+    })
+  }
 
 }

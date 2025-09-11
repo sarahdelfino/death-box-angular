@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren } from '@angular/core';
+import { animate, state, keyframes, style, transition, trigger } from '@angular/animations';
 import { GameService } from '../game.service';
 import { Card } from '../card/card';
 import { ActivatedRoute } from '@angular/router';
@@ -13,31 +13,43 @@ import { StackComponent } from '../stack/stack.component';
   styleUrls: ['./game.component.css'],
   providers: [GameService],
   animations: [
-    trigger('openClose', [
-      state('open', style({
-        transform: 'translateY(0px)'
-      })),
-      state('closed', style({
-        transform: 'translateY(200px)'
-      })),
-      state('void', style({
-        transform: 'translateY(200px)'
-      })),
-      transition('open <=> closed', [
-        animate('.25s')
-      ]),
-      transition(':enter', [
-        animate('.25s ease-in')
-      ]),
-      transition(':leave', [
-        animate('.25s .25s ease-out')
-      ]),
-    ]),
+    // trigger('openClose', [
+    //   state('open', style({
+    //     transform: 'translateY(0px)'
+    //   })),
+    //   state('closed', style({
+    //     transform: 'translateY(200px)'
+    //   })),
+    //   state('void', style({
+    //     transform: 'translateY(200px)'
+    //   })),
+    //   transition('open <=> closed', [
+    //     animate('.25s')
+    //   ]),
+    //   transition(':enter', [
+    //     animate('.25s ease-in')
+    //   ]),
+    //   transition(':leave', [
+    //     animate('.25s .25s ease-out')
+    //   ]),
+    // ]),
+    trigger('removeStacks', [
+      transition(':leave',
+        animate('1s', keyframes([
+          style({'opacity': '1'}),
+          style({'opacity': '.5'}),
+          style({'opacity': '0'})
+        ]))
+      )
+    ])
   ],
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, AfterViewInit {
 
   @ViewChild(StackComponent) stackChild: StackComponent;
+  @ViewChild('test') child: HTMLElement;
+  @ViewChildren(StackComponent) stackChildren: StackComponent;
+  @ViewChildren(StackComponent) children;
 
   public deck: Array<Card>;
   data = { state: "open" };
@@ -68,7 +80,7 @@ export class GameComponent implements OnInit {
   constructor(private _gameService: GameService,
     private db: DatabaseService,
     private route: ActivatedRoute,
-  ) { }
+  ) {}
 
 
   ngOnInit() {
@@ -83,7 +95,13 @@ export class GameComponent implements OnInit {
       this.stacks = this._gameService.createStacks(this.deck);
     } else {
       this.isHost = false;
-    }
+    };
+    this.db.getDeck(this.id).valueChanges().subscribe(deckData => {
+      this.deck = deckData;
+    })
+    this.db.getStacks(this.id).valueChanges().subscribe(stackData => {
+      this.stacks = stackData;
+    });
     this.db.getGame(this.id).valueChanges().subscribe(gameData => {
       this.game = gameData;
       this.game.id = this.id;
@@ -92,13 +110,10 @@ export class GameComponent implements OnInit {
       this.game.players = gameData.players;
       this.game.seconds = gameData.seconds;
       this.game.started = gameData.started;
-      console.log("game data: ", this.game);
       const tmpPlayers = [];
-      console.log("player data from fb", this.game.players);
       for (const p in gameData.players) {
         if (gameData.players[p].currentPlayer) {
           this.currentTurn = p;
-          console.log("current turn: ", this.currentTurn);
         } else {
           tmpPlayers.push(p);
         }
@@ -115,7 +130,17 @@ export class GameComponent implements OnInit {
         });
       }
     });
-    console.log(this.game);
+  }
+
+  ngAfterViewInit() {
+    console.log(this.child);
+    console.log(this.stackChildren);
+    console.log(this.children);
+    this.children.map((x) => {
+      if(x.id === 8) {
+        console.log(x);
+      }
+    })
   }
 
   getId(): string {
@@ -146,6 +171,14 @@ export class GameComponent implements OnInit {
   addToStack(i: number, card: Card) {
     // add card to the top of the stack
     this.stacks[i].unshift(card);
+    // this.children.map((selectedStack) => {
+    //   console.log("#####################", selectedStack);
+    // });
+    // const timer = setTimeout(() => {
+    // }, 1000);
+    this.db.updateDeck(this.id, this.deck);
+    this.checkDeck();
+    // this.checkDeck();
   }
 
   cardChoice(ch: string) {
@@ -155,14 +188,11 @@ export class GameComponent implements OnInit {
   chooseCard(card: Card) {
     if (this.deck.length > 1) {
       const clickedCard = card[0];
-      console.log("BEFORE CARD PULLED: ", this.deck);
       const newCard = this.deck.pop();
-      console.log("AFTER CARD PULLED: ", this.deck);
       const i = this.stacks.indexOf(card);
       const stackLength = this.stacks[i].length;
       const gameId = this.getId();
       this.clickedData = { clickedCard, newCard, stackLength, gameId };
-      console.log(this.clickedData);
       this.cardSelected = true;
     } else {
       this.removeStacks();
@@ -174,8 +204,6 @@ export class GameComponent implements OnInit {
   }
 
   count() {
-    console.log("current counter: ", this.currentCounter);
-    console.log("filtered: ", this.filteredPlayers);
     this.db.decrementSeconds(this.game.id);
     if (this.game.seconds > 0) {
       this.getNextCounter(this.currentCounter);
@@ -190,30 +218,60 @@ export class GameComponent implements OnInit {
   }
 
   getNextCounter(currentCounter: string) {
-    console.log(this.filteredPlayers);
     const curCountIndex = this.filteredPlayers.indexOf(currentCounter);
-    console.log(curCountIndex);
     let newIndex = curCountIndex + 1;
-    console.log("bef: ", newIndex);
-    console.log(this.filteredPlayers.length);
     if (newIndex == this.filteredPlayers.length) {
       newIndex = 0;
     }
-    console.log(newIndex);
     this.currentCounter = this.filteredPlayers[newIndex];
-    console.log("next counter: ", this.currentCounter);
     this.db.setCounter(this.game.id, this.currentCounter).then(() => {
       console.log("set counter successfully: ", this.currentCounter);
     });
   }
 
   endCounting(card: any) {
-    console.log("BEFORE PUTTING BACK: ", this.deck);
     this.deck.push(card);
-    console.log("AFTER PUTTING BACK: ", this.deck);
     this._gameService.shuffle(this.deck);
-    console.log("AFTER SHUFFLE: ", this.deck);
     this.cardSelected = false;
+  }
+
+  removeStacks() {
+    let removedArray;
+    console.log("BEFORE: " + this.stacks);
+    if (this.stacks.length == 9) {
+      removedArray = this.stacks.splice(this.stacks.length - 3, 3);
+      alert(`Removing: ${removedArray}`)
+      console.log("Removing: ", removedArray);
+    } else if (this.stacks.length == 6) {
+      removedArray = this.stacks.splice(this.stacks.length - 2, 2);
+      // let tmp = this.stacks.splice(this.stacks.length,)
+      alert(`Removing: ${removedArray}`)
+      console.log("Removing: ", removedArray);
+    } else {
+      removedArray = this.stacks.splice(this.stacks.length - 3, 1);
+      alert(`Removing: ${removedArray}`)
+      console.log("Removing: ", removedArray);
+    }
+    console.log(removedArray)
+    removedArray.forEach(card => {
+      for (const c in card) {
+        this.deck.push(card[c]);
+      }
+    });
+    this.db.updateStacks(this.id, this.stacks).then(() => {
+      console.log("successfully updated stacks", this.stacks);
+    })
+    this.db.updateDeck(this.id, this.deck);
+    this._gameService.shuffle(this.deck);
+    console.log(this.deck.length);
+  }
+
+  checkDeck() {
+    console.log("hi");
+    if (this.deck.length < 42) {
+      this.removeStacks();
+    }
+    this.db.updateStacks(this.id, this.stacks);
   }
 
   endHighLow(wrongGuess: boolean) {
@@ -227,14 +285,12 @@ export class GameComponent implements OnInit {
             this.getNextPlayer();
           }
         }
-        console.log(this.turns);
         this.cardSelected = false;
       }
     }
   }
 
   getNextPlayer() {
-    console.log("in get next player");
     const list = Object.keys(this.players);
     const nextIndex = list.indexOf(this.currentTurn) + 1;
     let nextPlayer = '';
@@ -258,26 +314,5 @@ export class GameComponent implements OnInit {
     this.db.updatePlayers(this.id, this.players).then(() => {
       console.log("getNextPlayer -- updated players successfully: ", this.players);
     });
-  }
-
-  removeStacks() {
-    let removedArray;
-    console.log("BEFORE: " + this.stacks);
-    if (this.stacks.length == 9) {
-      const removedArray = this.stacks.splice(this.stacks.length - 3, 3);
-      console.log("Removing: ", removedArray);
-    } else if (this.stacks.length == 6) {
-      const removedArray = this.stacks.splice(this.stacks.length - 3, 2);
-      console.log("Removing: ", removedArray);
-    } else {
-      const removedArray = this.stacks.splice(this.stacks.length - 3, 1);
-      console.log("Removing: ", removedArray);
-    }
-    removedArray.forEach(card => {
-      for (const c in card) {
-        this.deck.push(card[c]);
-      }
-    });
-    this._gameService.shuffle(this.deck);
   }
 }

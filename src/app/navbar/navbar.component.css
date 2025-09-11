@@ -26,6 +26,7 @@ img {
 }
 
 .player-img {
+    width: 30px;
     margin-right: 5px;
 }
 
@@ -50,4 +51,14 @@ img {
 .logo {
     margin-left: auto;
     justify-content: center;
+}
+
+.checks-div {
+    display: flex;
+    width: 100px;
+}
+  
+.checks {
+    width: 30px;
+    margin-left: 5px;
 }

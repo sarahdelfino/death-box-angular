@@ -12,6 +12,7 @@ export class NavbarComponent implements OnInit {
   @Input() gameId: string;
   @Input() renderBack: boolean;
   @Input() player: string;
+  @Input() checks: number;
   @Output() backToBoard = new EventEmitter<boolean>();
 
   ngOnInit(): void {
@@ -28,6 +29,7 @@ export class NavbarComponent implements OnInit {
     if (this.isHost == true && changes.player && changes?.player?.currentValue !== this.currentPlayer) {
       this.currentPlayer = changes.player.currentValue
     }
+    console.log(changes);
   }
 
   goBack() {

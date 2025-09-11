@@ -5,16 +5,22 @@
         </div>
         <div class="player-container">
             <div class="host-view">
-                <div class="player-img">
-                    <img style="width: 30px;" src="../../assets/drink.png">
+                <div>
+                    <img class="player-img" src="../../assets/drink.png">
                 </div>
                 <div class="player-text">
                     <h3>{{ this.currentPlayer }}</h3>
-                    <h3 *ngIf="this.isHost == true; else elseBlock" style="font-size: 0.5em;">pick any
+                    <!-- <h3 *ngIf="this.isHost == true; else elseBlock" style="font-size: 0.5em;">pick any
                         card</h3>
                     <ng-template #elseBlock>
-                        <h3 style="font-size: 0.5em;">get ready to count</h3>
-                    </ng-template>
+                        <h3 style="font-size: 0.15em;">get ready to count</h3>
+                    </ng-template> -->
+                </div>
+            </div>
+            <div class="checks-div">
+                <div *ngIf="checks > 0">
+                    <img class="checks" src="../../assets/check.png">
+                    <img *ngIf="checks > 1" class="checks" src="../../assets/check.png">
                 </div>
             </div>
         </div>

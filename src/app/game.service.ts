@@ -34,6 +34,11 @@ export class GameService {
       }
     });
     this.shuffle(this.deck);
+    // console.log(this.deck);
+    // const dbDeck = []
+    // this.deck.forEach(card => {
+    //   dbDeck.push(card.cardName)
+    // });
     return this.deck;
   }
 
@@ -62,6 +67,8 @@ export class GameService {
       stack.push(deck.pop());
       this.stacks.push(stack);
     }
+    this.db.createDeckandStacks(this.getId(), this.deck, this.stacks);
+    console.log(this.stacks);
     return this.stacks;
   }
 
@@ -71,37 +78,37 @@ export class GameService {
 
   compare(choice: string, card, newCard) {
     console.log(choice, card, newCard);
-  if ((choice == "higher" && (Number(newCard) > Number(card))) || (choice == "lower" && (Number(newCard) < Number(card)))) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-getPlayers(): Observable<any> {
-  return this._players$;
+    if ((choice == "higher" && (Number(newCard) > Number(card))) || (choice == "lower" && (Number(newCard) < Number(card)))) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-setPlayers(players: any) {
-  this._players.next(players);
-}
-
-
-
-getNextPlayer(playerIndex: number, playerList: any) {
-  let newIndex = 0;
-
-  delete playerList[playerIndex].currentPlayer;
-
-  if (playerIndex == playerList.length - 1) {
-    playerList[newIndex].currentPlayer = true;
-  } else {
-    newIndex = playerIndex + 1;
-    playerList[newIndex].currentPlayer = true;
+  getPlayers(): Observable<any> {
+    return this._players$;
   }
-  this.db.updatePlayers(this.getId(), playerList).then(() => {
-    console.log("Updated players successfully!");
-  });
-}
+
+  setPlayers(players: any) {
+    this._players.next(players);
+  }
+
+
+
+  getNextPlayer(playerIndex: number, playerList: any) {
+    let newIndex = 0;
+
+    delete playerList[playerIndex].currentPlayer;
+
+    if (playerIndex == playerList.length - 1) {
+      playerList[newIndex].currentPlayer = true;
+    } else {
+      newIndex = playerIndex + 1;
+      playerList[newIndex].currentPlayer = true;
+    }
+    this.db.updatePlayers(this.getId(), playerList).then(() => {
+      console.log("Updated players successfully!");
+    });
+  }
 
 }

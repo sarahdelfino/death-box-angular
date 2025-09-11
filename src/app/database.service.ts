@@ -17,6 +17,7 @@ export class DatabaseService {
   playersObj: AngularFireObject<Player> = null;
   playersRef: AngularFireList<Player>;
   deckList: AngularFireList<Card> = null;
+  stackList: AngularFireObject<any> = null;
   playersObject: AngularFireObject<Player> = null;
   playersList: AngularFireList<Player> = null;
   host = null;
@@ -48,6 +49,33 @@ export class DatabaseService {
         secondsDrank: 0
       }
     });
+  }
+
+  createDeckandStacks(id: string, deck: any, stacks: any) {
+    console.log(deck, stacks);
+    this.db.database.ref('/games/' + id +'/').update({
+      deck: deck,
+      stacks: stacks
+    });
+  }
+
+  getDeck(id: string) {
+    this.deckList = this.db.list('games/' + id + '/deck/');
+    return this.deckList;
+  }
+
+  updateDeck(id: string, deck: any) {
+    return this.db.database.ref('/games/' + id + '/deck/').set(deck);
+  }
+
+
+  getStacks(id: string) {
+    this.stackList = this.db.object('games/' + id + '/stacks/');
+    return this.stackList;
+  }
+
+  updateStacks(id: string, stacks: any) {
+    return this.db.database.ref('/games/' + id + '/stacks/').set(stacks);
   }
 
   getPlayers(id: string) {

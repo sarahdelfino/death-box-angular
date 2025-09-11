@@ -1,4 +1,8 @@
 <div class="stack">
-  <img [@stackAdd]="this.added ? 'added' : null" class="playing-card" id="playing-card" [src]="cards[0].cardPath"
+  <img [@stackAdd]="this.selectedStack === this.cards[0] ? 'added' : null" class="playing-card" id="playing-card" [src]="cards[0].cardPath"
     (click)="onCardClick(cards)" [class.selected]="cards === selectedStack" />
 </div>
+<!-- <div class="stack">
+  <img [@stackAdd]="" class="playing-card" id="playing-card" [src]="cards[0].cardPath"
+    (click)="onCardClick(cards)"/>
+</div> -->

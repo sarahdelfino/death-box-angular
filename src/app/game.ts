@@ -5,6 +5,7 @@ export class Game {
     started?: boolean;
     counter?: string;
     currentPlayer?: string;
+    deck?: Array<string>;
     seconds?: number;
     counting?: boolean;
     players?: Array<Player>
@@ -13,12 +14,14 @@ export class Game {
         id?: string,
         started?: boolean,
         currentPlayer?: string,
+        deck?: Array<string>,
         seconds?: number,
         counting?: boolean,
         players?: Array<Player>) {
         this.id = id;
         this.started = started;
         this.currentPlayer = currentPlayer;
+        this.deck = deck;
         this.seconds = seconds;
         this.counting = counting;
         this.players = players;
@@ -30,6 +33,10 @@ export class Game {
 
     public getPlayers() {
         return this.players;
+    }
+
+    public getDeck() {
+        return this.deck;
     }
 
 }
