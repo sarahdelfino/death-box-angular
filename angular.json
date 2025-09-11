@@ -67,19 +67,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "death-box-angular:build",
-            "proxyConfig": "proxy.conf.json"
+            "proxyConfig": "proxy.conf.json",
+            "buildTarget": "death-box-angular:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "death-box-angular:build:production"
+              "buildTarget": "death-box-angular:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "death-box-angular:build"
+            "buildTarget": "death-box-angular:build"
           }
         },
         "test": {
