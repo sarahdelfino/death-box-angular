@@ -55,7 +55,7 @@ import { MessagesComponent } from './messages/messages.component';
         path: '',
         component: GameComponent
     }
-], { relativeLinkResolution: 'legacy' }),
+], {}),
     BrowserAnimationsModule
   ],
   providers: [
