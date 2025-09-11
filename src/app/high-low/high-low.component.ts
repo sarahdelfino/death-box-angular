@@ -10,9 +10,10 @@ export interface CardData {
 }
 
 @Component({
-  selector: 'app-high-low',
-  templateUrl: './high-low.component.html',
-  styleUrls: ['./high-low.component.css'],
+    selector: 'app-high-low',
+    templateUrl: './high-low.component.html',
+    styleUrls: ['./high-low.component.css'],
+    standalone: false
 })
 
 export class HighLowComponent implements OnInit, OnDestroy {

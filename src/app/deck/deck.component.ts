@@ -7,9 +7,10 @@ export interface CardData {
 }
 
 @Component({
-  selector: 'app-deck',
-  templateUrl: './deck.component.html',
-  styleUrls: ['./deck.component.css']
+    selector: 'app-deck',
+    templateUrl: './deck.component.html',
+    styleUrls: ['./deck.component.css'],
+    standalone: false
 })
 
 export class DeckComponent implements OnInit {

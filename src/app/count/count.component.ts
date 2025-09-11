@@ -3,9 +3,10 @@ import { DatabaseService } from '../database.service';
 import { Game } from '../game';
 
 @Component({
-  selector: 'app-count',
-  templateUrl: './count.component.html',
-  styleUrls: ['./count.component.css']
+    selector: 'app-count',
+    templateUrl: './count.component.html',
+    styleUrls: ['./count.component.css'],
+    standalone: false
 })
 export class CountComponent {
 

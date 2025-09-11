@@ -9,20 +9,21 @@ import { GameService } from '../game.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-lobby',
-  templateUrl: './lobby.component.html',
-  styleUrls: ['./lobby.component.css'],
-  animations: [
-    trigger('copyPopup', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('1s ease', style({ opacity: 1, bottom: '.5rem' }))
-      ]),
-      transition(':leave', [
-        animate('1s ease', style({ opacity: 0, bottom: '0rem' }))
-      ]),
-    ]),
-  ],
+    selector: 'app-lobby',
+    templateUrl: './lobby.component.html',
+    styleUrls: ['./lobby.component.css'],
+    animations: [
+        trigger('copyPopup', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('1s ease', style({ opacity: 1, bottom: '.5rem' }))
+            ]),
+            transition(':leave', [
+                animate('1s ease', style({ opacity: 0, bottom: '0rem' }))
+            ]),
+        ]),
+    ],
+    standalone: false
 })
 export class LobbyComponent implements OnInit, OnDestroy {
   id: string;

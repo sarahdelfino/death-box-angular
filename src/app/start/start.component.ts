@@ -8,9 +8,10 @@ import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { GameService } from '../game.service';
 
 @Component({
-  selector: 'app-start',
-  templateUrl: './start.component.html',
-  styleUrls: ['./start.component.css']
+    selector: 'app-start',
+    templateUrl: './start.component.html',
+    styleUrls: ['./start.component.css'],
+    standalone: false
 })
 export class StartComponent implements OnInit {
 

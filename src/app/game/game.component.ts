@@ -8,41 +8,40 @@ import { Game } from '../game';
 import { StackComponent } from '../stack/stack.component';
 
 @Component({
-  selector: 'app-game',
-  templateUrl: './game.component.html',
-  styleUrls: ['./game.component.css'],
-  providers: [GameService],
-  animations: [
-    // trigger('openClose', [
-    //   state('open', style({
-    //     transform: 'translateY(0px)'
-    //   })),
-    //   state('closed', style({
-    //     transform: 'translateY(200px)'
-    //   })),
-    //   state('void', style({
-    //     transform: 'translateY(200px)'
-    //   })),
-    //   transition('open <=> closed', [
-    //     animate('.25s')
-    //   ]),
-    //   transition(':enter', [
-    //     animate('.25s ease-in')
-    //   ]),
-    //   transition(':leave', [
-    //     animate('.25s .25s ease-out')
-    //   ]),
-    // ]),
-    trigger('removeStacks', [
-      transition(':leave',
-        animate('1s', keyframes([
-          style({'opacity': '1'}),
-          style({'opacity': '.5'}),
-          style({'opacity': '0'})
-        ]))
-      )
-    ])
-  ],
+    selector: 'app-game',
+    templateUrl: './game.component.html',
+    styleUrls: ['./game.component.css'],
+    providers: [GameService],
+    animations: [
+        // trigger('openClose', [
+        //   state('open', style({
+        //     transform: 'translateY(0px)'
+        //   })),
+        //   state('closed', style({
+        //     transform: 'translateY(200px)'
+        //   })),
+        //   state('void', style({
+        //     transform: 'translateY(200px)'
+        //   })),
+        //   transition('open <=> closed', [
+        //     animate('.25s')
+        //   ]),
+        //   transition(':enter', [
+        //     animate('.25s ease-in')
+        //   ]),
+        //   transition(':leave', [
+        //     animate('.25s .25s ease-out')
+        //   ]),
+        // ]),
+        trigger('removeStacks', [
+            transition(':leave', animate('1s', keyframes([
+                style({ 'opacity': '1' }),
+                style({ 'opacity': '.5' }),
+                style({ 'opacity': '0' })
+            ])))
+        ])
+    ],
+    standalone: false
 })
 export class GameComponent implements OnInit, AfterViewInit {
 

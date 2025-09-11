@@ -5,20 +5,20 @@ import { GameService } from '../game.service';
 import { DatabaseService } from '../database.service';
 
 @Component({
-  selector: 'app-stack',
-  templateUrl: './stack.component.html',
-  styleUrls: ['./stack.component.css'],
-  animations: [
-    trigger('stackAdd', [
-      transition(':enter',
-      animate('800ms', keyframes([
-        style({'box-shadow': 'none', offset: 0}),
-        style({'box-shadow': 'rgba(106, 152, 92, 0.4) 5px 5px, rgba(106, 152, 92, 0.3) 10px 10px, rgba(106, 152, 92, 0.2) 15px 15px, rgba(106, 152, 92, 0.1) 20px 20px, rgba(106, 152, 92, 0.05) 25px 25px', offset: 0.4}),
-        style({'box-shadow': 'rgba(106, 152, 92, 0.4) 5px 5px, rgba(106, 152, 92, 0.3) 10px 10px, rgba(106, 152, 92, 0.2) 15px 15px, rgba(106, 152, 92, 0.1) 20px 20px, rgba(106, 152, 92, 0.05) 25px 25px', offset: 0.8}),
-        style({'box-shadow': 'none', offset: 1.0}),
-      ]))),
-    ]),
-  ]
+    selector: 'app-stack',
+    templateUrl: './stack.component.html',
+    styleUrls: ['./stack.component.css'],
+    animations: [
+        trigger('stackAdd', [
+            transition(':enter', animate('800ms', keyframes([
+                style({ 'box-shadow': 'none', offset: 0 }),
+                style({ 'box-shadow': 'rgba(106, 152, 92, 0.4) 5px 5px, rgba(106, 152, 92, 0.3) 10px 10px, rgba(106, 152, 92, 0.2) 15px 15px, rgba(106, 152, 92, 0.1) 20px 20px, rgba(106, 152, 92, 0.05) 25px 25px', offset: 0.4 }),
+                style({ 'box-shadow': 'rgba(106, 152, 92, 0.4) 5px 5px, rgba(106, 152, 92, 0.3) 10px 10px, rgba(106, 152, 92, 0.2) 15px 15px, rgba(106, 152, 92, 0.1) 20px 20px, rgba(106, 152, 92, 0.05) 25px 25px', offset: 0.8 }),
+                style({ 'box-shadow': 'none', offset: 1.0 }),
+            ]))),
+        ]),
+    ],
+    standalone: false
 })
 export class StackComponent implements OnInit {
   selectedStack: Card;
