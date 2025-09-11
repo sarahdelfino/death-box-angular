@@ -18,7 +18,7 @@
     "@angular/common": "^18.2.14",
     "@angular/compiler": "^18.2.14",
     "@angular/core": "^18.2.14",
-    "@angular/fire": "17.1",
+    "@angular/fire": "18.0.1",
     "@angular/forms": "^18.2.14",
     "@angular/platform-browser": "^18.2.14",
     "@angular/platform-browser-dynamic": "^18.2.14",
@@ -29,7 +29,7 @@
     "nanoid": "^3.3.1",
     "ngx-google-analytics": "^14.0.1",
     "nvm": "^0.0.4",
-    "rxjs": "~6.6.0",
+    "rxjs": "~7.8.2",
     "tslib": "^2.0.0",
     "use": "^3.1.1",
     "zone.js": "~0.14.10"
