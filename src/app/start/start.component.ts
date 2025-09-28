@@ -1,103 +1,81 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Game } from '../game';
-import { DatabaseService } from '../database.service';
-import { nanoid } from "nanoid";
-import { GoogleAnalyticsService } from 'ngx-google-analytics';
-import { GameService } from '../game.service';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { nanoid } from 'nanoid';
+import { GameStore } from '../game.store';
+import { MatDialog } from '@angular/material/dialog';
+import { HowToPlayComponent } from '../how-to-play/how-to-play.component';
 
 @Component({
   selector: 'app-start',
   templateUrl: './start.component.html',
-  styleUrls: ['./start.component.css']
+  styleUrls: ['./start.component.scss'],
 })
-export class StartComponent implements OnInit {
+export class StartComponent {
 
-  game: Game;
-  joinGameForm: UntypedFormGroup;
-  createGameForm: UntypedFormGroup;
-  submitted = false;
-  name: string;
-  create = false;
-  currentGame: string;
-  loggedIn: boolean;
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private store = inject(GameStore);
+  private dialog = inject(MatDialog);
+
+  joinGameForm: FormGroup = this.fb.group({
+    id: ['', [Validators.required, Validators.minLength(5)]],
+    name: ['', [Validators.required, Validators.minLength(2)]]
+  });
+
+  createGameForm: FormGroup = this.fb.group({
+    name: ['', [Validators.required, Validators.minLength(2)]]
+  });
+
   joinClicked = false;
   createClicked = false;
-  isMobile: boolean;
-  start = false;
+  isMobile = window.innerWidth < 500;
+  infoClicked = false;
 
-  constructor(
-    private formBuilder: UntypedFormBuilder,
-    private router: Router,
-    private dbService: DatabaseService,
-    private _gameService: GameService,
-    protected $gaService: GoogleAnalyticsService
-  ) { 
-    this.createForm();
+  toggleJoin(): void {
+    this.joinClicked = !this.joinClicked;
+    if (this.joinClicked) this.createClicked = false;
   }
 
-  ngOnInit() {
-    this.$gaService.pageView('/', 'home page load');
-    if (window.innerWidth < 500) {
-      this.isMobile = true;
-    }
+  toggleCreate(): void {
+    this.createClicked = !this.createClicked;
+    if (this.createClicked) this.joinClicked = false;
   }
 
-  createForm(): void {
-    this.joinGameForm = this.formBuilder.group({
-      id: ['', [Validators.required, Validators.minLength(5)]],
-      name: ['', [Validators.required, Validators.minLength(2)]]
-    });
-
-    this.createGameForm = this.formBuilder.group ({
-      name: ['', [Validators.required, Validators.minLength(2)]]
+  toggleInfo(): void {
+    this.infoClicked = true;
+    this.dialog.open(HowToPlayComponent, {
+      width: '400px',
+      height: 'fit-content',
+      panelClass: 'how-to-play-dialog',
     });
   }
 
-  joinGame(joinFormData) {
-    if (this.joinGameForm.invalid) {
-      return;
-    } else {
-      this.dbService.addPlayer(joinFormData.id, joinFormData.name);
-      sessionStorage.setItem('player', joinFormData.name);
-      sessionStorage.setItem('host', 'false');
-      this.router.navigateByUrl(`/lobby/${joinFormData.id}`);
-    }
+  joinGame(name: string, id: string): void {
+    console.log(name, id);
+    if (!name || !id) { return }
+    sessionStorage.setItem('player', name);
+    sessionStorage.setItem('host', 'false');
+
+    this.store.addPlayer({ gameId: id.toUpperCase(), playerName: name });
+    // setTimeout(() => this.router.navigateByUrl(`/lobby/${id}`), 250);
+    this.router.navigateByUrl(`/lobby/${id.toUpperCase()}`)
   }
 
-  onReset() {
-    this.submitted = false;
-  }
+  createGame(host: string): void {
+    if (!host) { return }
 
-  createGame(createFormData) {
-    this.createGameId();
+    const id = nanoid(5).toUpperCase();
+    const name = host;
+
+    sessionStorage.setItem('player', name);
     sessionStorage.setItem('host', 'true');
-    sessionStorage.setItem('player', createFormData.name);
-    this.dbService.createGame(this.game.id, createFormData.name);
-    this.router.navigateByUrl(`/lobby/${this.game.id}`);
-  }
 
-  joinTrigger() {
-    if (this.joinClicked == true) {
-      this.joinClicked = false;
-    } else {
-      this.joinClicked = true;
-      this.createClicked = false;
-    }
-  }
+    console.log(id, name);
 
-  createTrigger() {
-    if (this.createClicked == true) {
-      this.createClicked = false;
-    } else {
-      this.createClicked = true;
-      this.joinClicked = false;
-    }
-  }
+    this.store.createGame({ gameId: id, playerName: name });
+    this.router.navigateByUrl(`/lobby/${id}`)
 
-  createGameId() {
-    const id = nanoid(5);
-    this.game = new Game(id, false,);
+    // setTimeout(() => this.router.navigateByUrl(`/lobby/${id}`), 250);
   }
 }

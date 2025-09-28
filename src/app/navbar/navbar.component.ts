@@ -1,45 +1,46 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { DatabaseService } from '../database.service';
+import { Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { HowToPlayComponent } from '../how-to-play/how-to-play.component';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
 
-  isHost: boolean;
-  currentPlayer: string;
-  correctGuesses: any[];
-  @Input() gameId: string;
-  @Input() renderBack: boolean;
-  @Input() correct: number;
-  @Input() player: string;
-  @Input() checks: number;
-  @Output() backToBoard = new EventEmitter<boolean>();
+  private dialog = inject(MatDialog);
 
-  constructor(private db: DatabaseService) { }
+  currentPlayer: string = '';
+  correctGuesses: any[] = [];
+  infoClicked = false;
+  @Input() gameId: string = '';
+  @Input() correct: number = 0;
+  @Input() player: string = '';
 
   ngOnInit(): void {
-      this.isHost = true;
-      this.currentPlayer = this.player;
+    this.currentPlayer = this.player;
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-    if (this.isHost == true && changes.player && changes?.player?.currentValue !== this.currentPlayer) {
-      this.currentPlayer = changes.player.currentValue
+    if (changes['player'] && changes['player']?.currentValue !== this.currentPlayer) {
+      this.currentPlayer = changes['player'].currentValue
     }
-    if (changes?.correct?.currentValue) {
-      console.log("TADAAAAAAA::::::", changes?.correct?.currentValue);
-      this.correctGuesses = new Array(changes.correct.currentValue);
+    if (changes['correct']?.currentValue) {
+      this.correctGuesses = new Array(changes['correct'].currentValue);
     } else {
       this.correctGuesses = new Array(0);
     }
   }
 
-  goBack() {
-    this.backToBoard.emit(true);
+  toggleInfo(): void {
+    this.infoClicked = true;
+    this.dialog.open(HowToPlayComponent, {
+      width: '400px',
+      height: 'fit-content',
+      panelClass: 'how-to-play-dialog',
+    });
   }
 
 }

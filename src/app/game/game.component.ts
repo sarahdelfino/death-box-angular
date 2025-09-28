@@ -1,381 +1,346 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren } from '@angular/core';
-import { animate, state, keyframes, style, transition, trigger } from '@angular/animations';
-import { GameService } from '../game.service';
-import { Card } from '../card/card';
+import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, inject, viewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DatabaseService } from '../database.service';
-import { Game } from '../game';
+import { GameStore } from '../game.store';
+import { Card, StackGrid, Player, GameState } from '../models/game-state.model';
+import { of, take } from 'rxjs';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { CountComponent } from '../count/count.component';
+import { CommonModule } from '@angular/common';
 import { StackComponent } from '../stack/stack.component';
+import { MessagesComponent } from '../messages/messages.component';
+import { DeckComponent } from '../deck/deck.component';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
-  styleUrls: ['./game.component.css'],
-  providers: [GameService],
-  animations: [
-    // trigger('openClose', [
-    //   state('open', style({
-    //     transform: 'translateY(0px)'
-    //   })),
-    //   state('closed', style({
-    //     transform: 'translateY(200px)'
-    //   })),
-    //   state('void', style({
-    //     transform: 'translateY(200px)'
-    //   })),
-    //   transition('open <=> closed', [
-    //     animate('.25s')
-    //   ]),
-    //   transition(':enter', [
-    //     animate('.25s ease-in')
-    //   ]),
-    //   transition(':leave', [
-    //     animate('.25s .25s ease-out')
-    //   ]),
-    // ]),
-    trigger('removeStacks', [
-      transition(':leave',
-        animate('1s', keyframes([
-          style({'opacity': '1'}),
-          style({'opacity': '.5'}),
-          style({'opacity': '0'})
-        ]))
-      )
-    ])
+  styleUrls: ['./game.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    NavbarComponent,
+    CountComponent,
+    DeckComponent,
+    StackComponent,
+    MessagesComponent
   ],
+  providers: [GameStore],
 })
-export class GameComponent implements OnInit, AfterViewInit {
+export class GameComponent {
+  private route = inject(ActivatedRoute);
+  readonly store = inject(GameStore);
 
-  @ViewChild(StackComponent) stackChild: StackComponent;
-  @ViewChild('test') child: HTMLElement;
-  @ViewChildren(StackComponent) stackChildren: StackComponent;
-  @ViewChildren(StackComponent) children;
+  @ViewChild('deckEl', { read: ElementRef }) deckEl!: ElementRef;
+@ViewChildren(StackComponent) stacks!: QueryList<StackComponent>;
 
-  public deck: Array<Card>;
-  data = { state: "open" };
-  public stacks = [];
-  public turns = 0;
-  public game = new Game();
-  public cardSelected = false;
-  public arrowClicked = false;
-  public messagesClicked = false;
-  public sessionPlayer = sessionStorage.getItem('player');
-  public currentCounter;
-  currentTurn: string;
-  filteredPlayers: any = [];
-  playerObj = {};
-  id: string;
-  newCard: Card;
-  isMobile: boolean;
-  isHost: boolean;
-  seconds: number;
-  players: any = [];
-  openMobile: boolean;
-  clickedData;
-  choice: string;
-  added: boolean;
-  playersView: boolean;
-  player: string;
-  counting: boolean;
+flyingStyle: { top: string; left: string; transform: string } = {
+  top: '0px',
+  left: '0px',
+  transform: 'translate(0,0)',
+};
 
-  constructor(private _gameService: GameService,
-    private db: DatabaseService,
-    private route: ActivatedRoute,
-  ) {}
+cardTransform = 'translate(0,0)';
 
+  // === Reactive state ===
+  game$ = this.store.game$;
+  loading$ = this.store.loading$;
+  error$ = this.store.error$;
 
-  ngOnInit() {
-    this.id = this._gameService.getId();
-    this.player = sessionStorage.getItem('player');
-    if (window.innerWidth < 500) {
-      this.isMobile = true;
-    }
-    if (sessionStorage.getItem('host') == 'true') {
-      this.isHost = true;
-      this.deck = this._gameService.createDeck(this.id);
-      this.stacks = this._gameService.createStacks(this.id, this.deck);
-      console.log("deck: ", this.deck);
-      console.log("stacks: ", this.stacks);
-    } else {
-      this.isHost = false;
-    };
-    this.db.getDeck(this.id).valueChanges().subscribe(deckData => {
-      this.deck = deckData;
-    })
-    this.db.getStacks(this.id).valueChanges().subscribe(stackData => {
-      this.stacks = stackData;
-    });
-    this.db.getGame(this.id).valueChanges().subscribe(gameData => {
-      this.game = gameData;
-      this.game.id = this.id;
-      this.game.counting = gameData.counting;
-      this.game.counter = gameData.counter;
-      this.game.players = gameData.players;
-      this.game.seconds = gameData.seconds;
-      this.game.started = gameData.started;
-      this.game.deck = gameData.deck;
-      this.game.stacks = gameData.stacks;
-      this.deck = this.game.deck;
-      this.stacks = this.game.stacks
-      // console.log("HEEEEEEEEEEEREEEEEEEE::: ", gameData.players);
+  // === Session state ===
+  sessionPlayer = sessionStorage.getItem('player');
+  isHost = sessionStorage.getItem('host') === 'true';
+  isMobile = window.innerWidth < 500;
 
-      // if (gameData.players['correctGuesses']) { 
-      //   console.log("HEEEEEEEEEEEREEEEEEEE");
-      //   this.turns = gameData.players['correctGuesses'];
-      // } else {
-      //   this.turns = 0;
-      // }
-      console.log("game data: ", this.game);
-      const tmpPlayers = [];
-      for (const p in gameData.players) {
-        if (gameData.players[p].currentPlayer) {
-          this.currentTurn = p;
-          let cGuesses = gameData.players[p].correctGuesses
-          if(cGuesses && cGuesses !== 3 && this.turns !== 3 ) {
-            // console.log("CHANGING TURNS FROM: ", this.turns, "TO: ", gameData.players[p].correctGuesses);
-            this.turns = gameData.players[p].correctGuesses;
-          } else {
-            this.turns = 0;
+  // === UI flags ===
+  cardSelected = false;
+  messagesClicked = false;
+  playersView = false;
+  choice: 'higher' | 'lower' | null = null;
+  selectedCard: Card | null = null;
+  counting = false;
+  unreadMessages = false;
+
+  clickedData: {
+    clickedCard: Card;
+    // newCard: Card;
+    stackKey: string;
+    stackLength: number;
+  } | null = null;
+
+  deck: Card[] = [];
+  newCard: Card | null = null;
+  lastAddedCardId: string | null = null;
+  flyingCard: Card | null = null;
+  flyingTransform = 'translate(0,0)';
+
+  constructor() {
+    const gameId = this.route.snapshot.paramMap.get('id');
+    if (gameId) {
+      this.store.loadGame(gameId);
+      this.store.game$.subscribe(game => {
+        if (game) {
+          this.deck = game.deck;
+          this.counting = game.counting;
+          let currentDrinker = game.currentTurn
+          let players = Object.keys(game.players);
+          if (game.players[currentDrinker].correctGuesses === 3) {
+            let currentIndex = players.indexOf(currentDrinker);
+            let nextIndex = (currentIndex + 1) % players.length;
+            let nextDrinker = players[nextIndex];
+            this.store.setCurrentTurnAndResetGuesses({ gameId: game.id, newPlayerId: nextDrinker, oldPlayerId: currentDrinker });
           }
-        } else {
-          tmpPlayers.push(p);
+        }
+      })
+    }
+  }
+
+  // === UI Actions ===
+  toggleMessages() {
+    this.messagesClicked = !this.messagesClicked;
+    if (this.messagesClicked) {
+      this.unreadMessages = false;
+    }
+  }
+
+  toggleScores() {
+    this.playersView = !this.playersView;
+  }
+
+  chooseCard(card: Card, deck: Card[], stackGrid: StackGrid) {
+    const gameId = this.route.snapshot.paramMap.get('id');
+    if (!gameId || !this.sessionPlayer) return;
+
+    console.log(card, deck, stackGrid);
+    this.selectedCard = card;
+
+    if (deck && deck.length > 0) {
+      // Find which stack the clicked card belongs to
+      const stackKey = Object.keys(stackGrid).find(
+        key => stackGrid[key].cards.some(c => c.cardName === card.cardName)
+      );
+      if (!stackKey) return;
+
+      this.clickedData = {
+        clickedCard: card,
+        stackKey,
+        stackLength: stackGrid[stackKey].cards.length,
+      };
+      console.log(this.clickedData);
+    } else {
+        this.removeStacks(stackGrid);
+    }
+  }
+
+  getNextCounter(nextPlayer: string) {
+    const gameId = this.route.snapshot.paramMap.get('id');
+    if (!gameId) return;
+    this.store.setCounter({ gameId, name: nextPlayer });
+  }
+
+drawFromDeck(prediction: 'higher' | 'lower') {
+  const gameId = this.route.snapshot.paramMap.get('id')!;
+  if (this.deck.length === 0 || !this.clickedData) return;
+
+  this.choice = prediction;
+  const drawCard = this.deck.shift()!;
+  drawCard.tilt = Math.random() * 12 - 6;
+  this.flyingCard = drawCard;
+
+  const { stackKey } = this.clickedData;
+
+  const deckRect = this.deckEl.nativeElement.getBoundingClientRect();
+  const stackCmp = this.stacks.find(cmp => cmp.id === stackKey);
+  if (!stackCmp) return;
+
+  const stackRect = stackCmp.el.nativeElement.getBoundingClientRect();
+
+  // centers
+  const deckCenterX = deckRect.left + deckRect.width / 2;
+  const deckCenterY = deckRect.top + deckRect.height / 2;
+  const stackCenterX = stackRect.left + stackRect.width / 2;
+  const stackCenterY = stackRect.top + stackRect.height / 2;
+
+  // set starting position
+  this.flyingStyle = {
+    top: `${deckCenterY - 70}px`,   // 70 = half of card height (140px)
+    left: `${deckCenterX - 50}px`,  // 50 = half of card width (100px)
+    transform: 'translate(0,0)',
+  };
+
+  // target offsets
+  const dx = stackCenterX - deckCenterX;
+  const dy = stackCenterY - deckCenterY;
+  const tilt = drawCard.tilt ?? 0;
+
+  // animate
+  requestAnimationFrame(() => {
+    this.flyingStyle = {
+      ...this.flyingStyle,
+      transform: `translate(${dx}px, ${dy}px) rotateZ(${tilt}deg)`,
+    };
+  });
+
+  // after flight
+  setTimeout(() => {
+    this.flyingCard = null;
+
+    this.store.game$.pipe(take(1)).subscribe(current => {
+      if (!current) return;
+      const newGrid: StackGrid = { ...current.stackGrid };
+      newGrid[stackKey] = { cards: [drawCard, ...newGrid[stackKey].cards] };
+
+      this.store.updateStackGrid({ gameId, grid: newGrid });
+      this.store.updateDeck({ gameId, deck: this.deck });
+
+      this.lastAddedCardId = drawCard.cardName;
+      setTimeout(() => (this.lastAddedCardId = null), 600);
+    });
+
+    this.compareCards(drawCard);
+  }, 600);
+}
+  compareCards(drawnCard: any) {
+    console.log(drawnCard, this.clickedData, this.choice);
+    if (!this.clickedData || !this.choice) return;
+    const gameId = this.route.snapshot.paramMap.get('id');
+    if (!gameId || !this.sessionPlayer) return;
+
+    const { clickedCard, stackKey } = this.clickedData;
+
+    const higher = drawnCard.value > clickedCard.value;
+    const lower = drawnCard.value < clickedCard.value;
+    const correctGuess =
+      (this.choice === 'higher' && higher) ||
+      (this.choice === 'lower' && lower);
+
+    console.log(
+      `Drawn: ${drawnCard.cardName} (${drawnCard.value}), Clicked: ${clickedCard.cardName} (${clickedCard.value})`
+    );
+    console.log(`Player guessed ${this.choice}, which is ${correctGuess}`);
+
+    this.store.game$.pipe(take(1)).subscribe((current) => {
+      if (!current) return;
+      const newGrid: StackGrid = { ...current.stackGrid };
+      newGrid[stackKey] = {
+        cards: [drawnCard, ...newGrid[stackKey].cards],
+      };
+
+      setTimeout(() => {
+        this.lastAddedCardId = null;
+        this.cardSelected = false;
+        this.clickedData = null;
+        this.choice = null;
+        this.selectedCard = null;
+      }, 600);
+
+      if (!correctGuess) {
+        this.store.updateGameSecondsAndCounting({ gameId, seconds: this.clickedData!.stackLength });
+        const updatedPlayers: Record<string, Player> = {
+          ...current.players,
+          [this.sessionPlayer!]: {
+            ...current.players[this.sessionPlayer!],
+            secondsDrank: current.players[this.sessionPlayer!].secondsDrank + (current.seconds ?? 0),
+          },
+        };
+        this.store.updatePlayers({ gameId, players: updatedPlayers });
+      } else {
+        const turns =
+          (current.players[this.sessionPlayer!]?.correctGuesses ?? 0) + 1;
+
+        const updatedPlayers: Record<string, Player> = {
+          ...current.players,
+          [this.sessionPlayer!]: {
+            ...current.players[this.sessionPlayer!],
+            correctGuesses: turns,
+          },
+        };
+        this.store.updatePlayers({ gameId, players: updatedPlayers });
+        if (turns === 3) {
+          // alert(`You've survived this round! The next player is up.`);
+          const players = Object.keys(current.players);
+          const currentIndex = players.indexOf(current.currentTurn);
+          const nextIndex = (currentIndex + 1) % players.length;
+          const nextPlayer = players[nextIndex];
+
+          this.store.setCurrentTurnAndResetGuesses({ gameId, newPlayerId: nextPlayer, oldPlayerId: current.currentTurn });
+
+          // Set the counter for the next player
+          this.getNextCounter(nextPlayer);
+
+          // Reset local UI state
+          this.cardSelected = false;
+          this.clickedData = null;
+          this.choice = null;
+          this.selectedCard = null;
         }
       }
-      this.players = gameData.players;
-      this.filteredPlayers = tmpPlayers;
-      // const playersSubject = new BehaviorSubject(this.filteredPlayers[0]);
-      this.playerObj['filtered'] = this.filteredPlayers;
-      // this.playerObj['currentTurn'] = this.currentTurn;
-      if (!gameData.counter) {
-        this.db.setCounter(this.id, this.filteredPlayers[0]).then(() => {
-          console.log("successfully updated counter to: ", this.filteredPlayers[0]);
-          this.currentCounter = this.filteredPlayers[0];
-        });
-      }
     });
   }
 
-  ngAfterViewInit() {
-    console.log(this.child);
-    console.log(this.stackChildren);
-    console.log(this.children);
-    this.children.map((x) => {
-      if(x.id === 8) {
-        console.log(x);
-      }
-    })
-  }
+  removeStacks(stackGrid: StackGrid) {
+    const gameId = this.route.snapshot.paramMap.get('id');
+    if (!gameId) return;
 
-  getId(): string {
-    const id = this.route.snapshot.paramMap.get('id');
-    return id;
-  }
+    const stacks = Object.entries(stackGrid);
+    const sorted = stacks.sort(
+      (a, b) => b[1].cards.length - a[1].cards.length
+    );
+    const toRemove = sorted.slice(0, 3);
 
-  scoresClick() {
-    if (this.playersView) {
-      this.playersView = false
-    } else {
-      this.playersView = true;
-    }
-  }
+    let newDeck: Card[] = [];
+    const newGrid: StackGrid = { ...stackGrid };
 
-  getCurPlayer(event: any) {
-    this.currentTurn = event;
-  }
-
-  getPlayerList(event: any) {
-    this.players = event;
-  }
-
-  getLength(i) {
-    return this.stacks[i].length;
-  }
-
-  addToStack(i: number, card: Card) {
-    // add card to the top of the stack
-    this.stacks[i].unshift(card);
-    this.db.setStacks(this.id, this.stacks);
-  }
-
-  cardChoice(ch: string) {
-    this.choice = ch;
-  }
-
-  chooseCard(card: Card) {
-    console.log(card);
-    if (this.currentTurn === sessionStorage.getItem('player')) {
-      if (this.deck.length > 1) {
-        const clickedCard = card[0];
-        console.log("BEFORE CARD PULLED: ", this.deck);
-        const newCard = this.deck.pop();
-        console.log("AFTER CARD PULLED: ", this.deck);
-        this.db.setDeck(this.id, this.deck);
-        const i = this.stacks.indexOf(card);
-        const stackLength = this.stacks[i].length;
-        const gameId = this.getId();
-        this.clickedData = { clickedCard, newCard, stackLength, gameId };
-        console.log(this.clickedData);
-        this.cardSelected = true;
-      } else {
-        this.removeStacks();
-      }
-    } else {
-      new alert(`It's ${this.currentTurn}'s turn`);
-    }
-  }
-
-  goBack() {
-    this.cardSelected = false;
-  }
-
-  count() {
-    this.db.decrementSeconds(this.game.id);
-    if (this.game.seconds > 0) {
-      this.getNextCounter(this.currentCounter);
-    } else {
-      const timer = setTimeout(() => {
-        this.db.endCounting(this.game.id).then(() => {
-          console.log("ended counting successfully!");
-          this.counting = false;
-        });
-      }, 1000);
-    }
-  }
-
-  getNextCounter(currentCounter: string) {
-    const curCountIndex = this.filteredPlayers.indexOf(currentCounter);
-    let newIndex = curCountIndex + 1;
-    if (newIndex == this.filteredPlayers.length) {
-      newIndex = 0;
-    }
-    this.currentCounter = this.filteredPlayers[newIndex];
-    this.db.setCounter(this.game.id, this.currentCounter).then(() => {
-      console.log("set counter successfully: ", this.currentCounter);
+    toRemove.forEach(([key, stack]) => {
+      newDeck.push(...stack.cards);
+      newGrid[key] = { cards: [] };
     });
+
+    this.store.updateStackGrid({ gameId, grid: newGrid });
+    this.store.updateDeck({ gameId, deck: newDeck });
   }
 
-  endCounting(card: any) {
-    this.deck.push(card);
-    this._gameService.shuffle(this.deck);
-    console.log("AFTER SHUFFLE: ", this.deck);
-    this.db.setDeck(this.id, this.deck);
-    this.cardSelected = false;
-  }
+  endHighLow(wrongGuess: boolean, stackGrid: StackGrid) {
+    if (!this.clickedData) return;
+    const gameId = this.route.snapshot.paramMap.get('id');
+    if (!gameId || !this.sessionPlayer) return;
 
-  removeStacks() {
-    let removedArray;
-    console.log("BEFORE: " + this.stacks);
-    if (this.stacks.length == 9) {
-      removedArray = this.stacks.splice(this.stacks.length - 3, 3);
-      alert(`Removing: ${removedArray}`)
-      console.log("Removing: ", removedArray);
-    } else if (this.stacks.length == 6) {
-      removedArray = this.stacks.splice(this.stacks.length - 2, 2);
-      // let tmp = this.stacks.splice(this.stacks.length,)
-      alert(`Removing: ${removedArray}`)
-      console.log("Removing: ", removedArray);
-    } else {
-      removedArray = this.stacks.splice(this.stacks.length - 3, 1);
-      alert(`Removing: ${removedArray}`)
-      console.log("Removing: ", removedArray);
-    }
-    console.log(removedArray)
-    removedArray.forEach(card => {
-      for (const c in card) {
-        this.deck.push(card[c]);
-      }
-    });
-    this.db.updateStacks(this.id, this.stacks).then(() => {
-      console.log("successfully updated stacks", this.stacks);
-    })
-    this.db.updateDeck(this.id, this.deck);
-    this._gameService.shuffle(this.deck);
-    console.log(this.deck.length);
-  }
+    const { clickedCard, stackKey } = this.clickedData;
 
-  checkDeck() {
-    console.log("hi");
-    if (this.deck.length < 42) {
-      this.removeStacks();
-    }
-    this.db.updateStacks(this.id, this.stacks);
-  }
+    const newGrid: StackGrid = { ...stackGrid };
+    newGrid[stackKey] = {
+      cards: [...newGrid[stackKey].cards],
+    };
 
-  endHighLow(wrongGuess: boolean) {
-    if (this.currentTurn == sessionStorage.getItem('player')) {
-    for (const stack in this.stacks) {
-      if (this.stacks[stack][0].cardName === this.clickedData.clickedCard.cardName) {
-        this.addToStack(parseInt(stack), this.clickedData.newCard);
-        this.cardSelected = false;
-        break;
-      }
-    }
+    this.store.updateStackGrid({ gameId, grid: newGrid });
+
     if (!wrongGuess) {
-      this.turns += 1;
-      if (this.turns === 3) {
-        this.db.setTurns(this.id, this.currentTurn, 0).then(() => {
-          this.getNextPlayer();
-        });
-      } else {
-       this.db.setTurns(this.id, this.currentTurn, this.turns).then(() => {
+      this.store.game$.pipe(take(1)).subscribe((current) => {
+        if (!current) return;
+        const turns =
+          (current.players[this.sessionPlayer!]?.correctGuesses ?? 0) + 1;
+
+        const updatedPlayers: Record<string, Player> = {
+          ...current.players,
+          [this.sessionPlayer!]: {
+            ...current.players[this.sessionPlayer!],
+            correctGuesses: turns,
+          },
+        };
+        this.store.updatePlayers({ gameId, players: updatedPlayers });
       });
-      }
-    }
-  }
-  }
-
-  getNextPlayer() {
-    const list = Object.keys(this.players);
-    const nextIndex = list.indexOf(this.currentTurn) + 1;
-    let nextPlayer = '';
-    if (list[nextIndex]) {
-      nextPlayer = list[nextIndex];
-    } else {
-      nextPlayer = list[0];
     }
 
-    this._gameService.setPlayers(this.players);
-
-    const tempPlayers = this.players;
-
-    // delete currentPlayer from old
-    delete tempPlayers[this.currentTurn].currentPlayer;
-    // add currentPlayer to next
-    tempPlayers[nextPlayer].currentPlayer = true;
-
-    this.currentTurn = nextPlayer;
-    this.players = tempPlayers;
-    this.db.updatePlayers(this.id, this.players).then(() => {
-      console.log("getNextPlayer -- updated players successfully: ", this.players);
-    });
+    this.cardSelected = false;
+    this.clickedData = null;
   }
 
-  // removeStacks() {
-  //   let removedArray;
-  //   console.log("BEFORE: " + this.stacks);
-  //   if (this.stacks.length == 9) {
-  //     const removedArray = this.stacks.splice(this.stacks.length - 3, 3);
-  //     console.log("Removing: ", removedArray);
-  //   } else if (this.stacks.length == 6) {
-  //     const removedArray = this.stacks.splice(this.stacks.length - 3, 2);
-  //     console.log("Removing: ", removedArray);
-  //   } else {
-  //     const removedArray = this.stacks.splice(this.stacks.length - 3, 1);
-  //     console.log("Removing: ", removedArray);
-  //   }
-  //   removedArray.forEach(card => {
-  //     for (const c in card) {
-  //       this.deck.push(card[c]);
-  //     }
-  //   });
-  //   this._gameService.shuffle(this.deck);
-  //   this.db.setDeck(this.id, this.deck);
-  //   this.db.setStacks(this.id, this.stacks);
-  // }
-
-  clickMessages() {
-    console.log("clicked!")
-    this.messagesClicked = !this.messagesClicked;
+  // === Counting logic ===
+  decrementTimer() {
+    const gameId = this.route.snapshot.paramMap.get('id');
+    if (gameId) this.store.decrementSeconds(gameId);
   }
 
+  endCounting() {
+    const gameId = this.route.snapshot.paramMap.get('id');
+    if (gameId) this.store.endCounting(gameId);
+  }
 }

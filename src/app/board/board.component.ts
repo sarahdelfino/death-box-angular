@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { StackComponent } from '../stack/stack.component';
 
 @Component({
-  selector: 'app-board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.css']
+    selector: 'app-board',
+    templateUrl: './board.component.html',
+    styleUrls: ['./board.component.css'],
+    standalone: false
 })
 export class BoardComponent implements OnInit {
 

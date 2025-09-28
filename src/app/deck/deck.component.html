@@ -1,9 +1,12 @@
-<div class="deck-container">
-  <div class="deck-image">
-    <img style="width: 100px;" src="../../assets/back.svg">
-  </div>
-  <div class="deck-text">
-    <h4 style="color: darkgray;">How many cards are left?</h4>
-    <h3>{{ this.deckCount }} cards remain</h3>
+<div class="deck">
+  <img class="card" src="../../assets/deathbox-logo.png" alt="Deck" />
+  <!-- <div class="card" [class.flip]="isFlipped"> -->
+      <div class="card">
+    <div class="card-face card-back">
+      <img src="../../assets/deathbox-logo.png" alt="Back" />
+    </div>
+    <!-- <div class="card-face card-front">
+      <img [src]="`../..${card?.cardPath}`" alt="Front" />
+    </div> -->
   </div>
 </div>

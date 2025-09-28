@@ -1,0 +1,45 @@
+@if (!shortened) {
+<h2>How to Play</h2>
+<div>
+  <p>
+    The table is set with <strong>9 stacks of cards</strong>.  
+    On your turn, you must choose a stack of cards and declare whether the next card from the deck will be <strong>higher or lower</strong>.
+  </p>
+  <p>
+    Guess correctly <strong>3 times</strong> and you survive your turn.  
+    Guess wrong, and your fate is sealed...
+  </p>
+  <p>
+    A cursed potion appears. You must drink until the potion is completely drained. The other players become your tormentors, counting down by draining the poison until your sentence is served.
+  </p>
+  <p>
+    You cannot stop until the counter runs out.  
+    Choose your friends wisely... and pray the deck is merciful.
+  </p>
+</div>
+} @else {
+<div class="shortened">
+  <h2>On Your Turn</h2>
+  <ul>
+    <li>Choose a stack of cards.</li>
+    <li>Guess whether the next card will be <strong>higher</strong> or <strong>lower</strong>.</li>
+    <li>Survive <strong>3 correct guesses</strong> to end your turn safely.</li>
+  </ul>
+
+  <h2>If You're Wrong</h2>
+  <ul>
+    <li>A cursed potion appears.</li>
+    <li>You must drink until the potion is completely drained.</li>
+  </ul>
+
+  <h2>The Counters</h2>
+  <ul>
+    <li>Other players tap the potion to drain it, second by second.</li>
+    <li>Will they show mercy… or let you suffer? Their choice decides your fate.</li>
+  </ul>
+</div>
+}
+
+<div mat-dialog-actions align="end">
+  <button class="primary" mat-dialog-close>Got it</button>
+</div>

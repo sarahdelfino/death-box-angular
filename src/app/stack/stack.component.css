@@ -1,47 +1,37 @@
-img {
-  /* max-width: 20vw; */
-  /* max-height: 20vh; */
-  max-width: 20vw;
-  max-height: 28vh;
-  /* max-height: 28vw; */
-  /* margin: 10px; */
-  /* border: 5px solid #fff; */
-  margin: 5px;
-  border-radius: 10px;
-  /* animation: deal 2s; */
-}
-
-img.playing-card {
-  box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
-}
-
-img.arrow {
-  height: 50px;
-  margin: 0;
-  border: none;
-}
-
-@keyframes deal {
-  from { transform : translateX(100%)}
-    to   { transform : translateX(0%) }
-}
-
-h2 {
-  margin: 0;
-}
-
 .stack {
   position: relative;
+  width: 80px;
+  height: 120px;
 }
 
-img.playing-card:hover {
+.playing-card {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  pointer-events: none;
+}
+
+.playing-card.top-card {
+  pointer-events: auto;
   cursor: pointer;
 }
 
-@media (max-width: 400px) {
-  img {
-      max-width: 100px;
-      max-height: 150px;
-      margin: 2.5px;
-  }
+.playing-card.selected {
+  border: 2px solid #39FF14;
+  box-shadow: 0 0 12px #39FF14;
+}
+
+@keyframes cardDrop {
+  0% { transform: translateY(-200px) scale(1.1); opacity: 0; }
+  60% { transform: translateY(20px) scale(1.05); opacity: 1; }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.playing-card.drop {
+  animation: cardDrop 0.6s ease-out;
 }

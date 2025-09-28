@@ -1,66 +1,81 @@
-import { Component, ElementRef, Input, OnInit, AfterViewInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { GoogleAnalyticsService } from 'ngx-google-analytics';
-import { DatabaseService } from '../database.service';
+import {
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+  AfterViewInit,
+  inject,
+  DestroyRef,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { GameStore } from '../game.store';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-messages',
+  standalone: true,
+  imports: [CommonModule, AsyncPipe],
   templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.css']
+  styleUrls: ['./messages.component.css'],
 })
-export class MessagesComponent implements OnInit {
+export class MessagesComponent implements AfterViewInit, OnChanges {
+  private store = inject(GameStore);
+  private destroyRef = inject(DestroyRef);
 
-  @ViewChild('scroll', { static: true }) scroll: any;
-  @ViewChildren('messageList') messageList: QueryList<ElementRef>
+  @ViewChild('message') message!: ElementRef<HTMLInputElement>;
 
-  @Input()
-  public gameId: string;
-  sendMessageForm: UntypedFormGroup;
-  // messages: Array<Message>;
-  // messages = new Message(this.gameId);
-  messages: any;
+  @Input() gameId!: string;
+  @Input() isOpen = false;
+  @Output() unread = new EventEmitter<boolean>();
 
-  constructor(private formBuilder: UntypedFormBuilder,
-    protected $gaService: GoogleAnalyticsService,
-    private dbService: DatabaseService) { 
-      this.createForm();
-    }
+  user = sessionStorage.getItem('player') ?? '';
+  messages$ = this.store.messages$;
 
-  public user: string;
+ngAfterViewInit() {
+  this.messages$
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe((messages) => {
+      this.scrollToBottom();
 
-  ngOnInit(): void {
-    this.user = sessionStorage.getItem('player');
-    this.dbService.getMessages(this.gameId).valueChanges().subscribe(messages => {
-      let tmp = [];
-      tmp = Object.keys(messages)
-      this.messages = messages;
-      this.messageList.changes.subscribe((r) => {
-        this.scrollToBottom(tmp[tmp.length - 1]);
-      });
+      if (!this.isOpen && messages?.length) {
+        const lastMsg = messages[messages.length - 1];
+        if (lastMsg.player !== this.user) {
+          this.unread.emit(true);
+        }
+      }
+    });
+}
+
+ngOnChanges(changes: SimpleChanges) {
+  if (changes['isOpen']?.currentValue === true) {
+    this.unread.emit(false);
+  }
+}
+
+  sendMessage(msg: string) {
+    const text = msg.trim();
+    if (!text) return;
+
+    this.message.nativeElement.value = '';
+
+    const timestamp = new Date().toISOString().replace(/[\.][0-9]*\w/g, '');
+
+    this.store.sendMessage({
+      gameId: this.gameId,
+      player: this.user,
+      message: text,
+      timestamp,
     });
   }
 
-  createForm(): void {
-    this.sendMessageForm = this.formBuilder.group({
-      message: ['', [Validators.required, Validators.minLength(1)]]
-    });
-  }
-
-  sendMessage(sendMessageFormData: string) {
-    console.log(sendMessageFormData);
-    if (this.sendMessageForm.invalid) {
-      return;
-    } else {
-    this.sendMessageForm.reset()
-    let date = new Date();
-    let formatted = date.toISOString();
-    formatted = formatted.replace(/[\.][0-9]*\w/g, '')
-    this.dbService.sendMessage(this.gameId, formatted, this.user, sendMessageFormData['message']);
+  private scrollToBottom() {
+    const container = document.querySelector('.chats');
+    if (container) {
+      container.scrollTop = container.scrollHeight;
     }
   }
-
-  scrollToBottom(id: string) {
-    document.getElementById(id).scrollIntoView();
-  }
-
 }

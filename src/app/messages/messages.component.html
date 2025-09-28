@@ -1,57 +1,45 @@
-<div class="messages-container">
-  <div class="chats">
-    <div
-      #messageList
-      class="messages"
-      *ngFor="let msg of this.messages | keyvalue"
-    >
-      <div
-        [id]="msg.key"
-        class="message"
-        [ngClass]="
-          msg.value.player === this.user ? 'my-message' : 'other-message'
-        "
-      >
-        <div class="message-flex">
-          <div class="message-avatar">
-            <img
-              id="avatar"
-              src="{{
-                'https://robohash.org/' + this.gameId + msg.value.player + '?set=set5'
-              }}"
-            />
-          </div>
-          <div class="body-flex">
-            <div class="username" *ngIf="msg.value.player !== this.user">
-              {{ msg.value.player }}
-            </div>
-            <div class="message-body">
-              {{ msg.value.message }}
+@if (isOpen) {
+  <div class="messages-container">
+    <div class="chats">
+      @for (msg of (messages$ | async); track msg.key) {
+        <div #messageList class="messages">
+          <div
+            [id]="msg.key"
+            class="message"
+            [ngClass]="msg.player === user ? 'my-message' : 'other-message'"
+          >
+            <div class="message-flex">
+              <div class="message-avatar">
+                <img
+                  id="avatar"
+                  [src]="'https://robohash.org/' + gameId + msg.player + '?set=set5'"
+                />
+              </div>
+              <div class="body-flex">
+                @if (msg.player !== user) {
+                  <div class="username">{{ msg.player }}</div>
+                }
+                <div class="message-body">
+                  {{ msg.message }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }
     </div>
-  </div>
-  <div class="submit-form">
-    <form class="form" [formGroup]="sendMessageForm" method="POST">
-      <div class="message-input">
-        <input
-          id="message"
-          formControlName="message"
-          required
-          autocomplete="off"
-        />
-      </div>
+
+    <div class="submit-form">
+        <input #message id="message" autocomplete="off" />
       <button
         class="message-button"
         gaEvent
         gaAction="send_message"
-        (click)="sendMessage(sendMessageForm.value)"
+        (click)="sendMessage(message.value)"
         type="submit"
       >
         Send
       </button>
-    </form>
+    </div>
   </div>
-</div>
+}

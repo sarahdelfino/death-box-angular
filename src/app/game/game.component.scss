@@ -1,0 +1,107 @@
+@use '../deathbox-theme.scss'as db;
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+div.game-buttons button {
+  width: 120px;
+  height: 50px;
+  background-color: db.$void-black;
+  color: db.$neon-skull-green;
+  border: 2px solid db.$neon-skull-green
+}
+
+div.game-buttons button:first-child {
+  margin: 10px 10px 10px auto;
+}
+
+.enabled {
+  border: 2px solid db.$neon-skull-green !important;
+  color: db.$neon-skull-green !important;
+}
+
+.disabled {
+  color: db.$dead-pixel-gray !important;
+  border: 2px solid db.$dead-pixel-gray !important;
+}
+
+app-messages {
+  position: absolute;
+  bottom: 55px;
+}
+
+.card-container {
+  width: fit-content;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 10px auto;
+}
+
+.bottom-nav {
+  width: 100%;
+  padding: 10px 0px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-around;
+  background-color: db.$night-violet;
+}
+
+.flying-card {
+  position: fixed;
+  width: 80px;
+  height: 120px;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 2000;
+  pointer-events: none;
+}
+
+.flying-card img {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.chat-icon,
+.score-icon {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+
+  .material-symbols-outlined {
+    font-size: 32px;
+    color: #fff
+  }
+
+  .badge {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 10px;
+    height: 10px;
+    background: db.$crimson-glitch-red;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(db.$crimson-glitch-red, 0.8),
+      0 0 12px rgba(db.$crimson-glitch-red, 0.6);
+    animation: badgePulse 1.5s infinite alternate;
+  }
+}
+
+@keyframes badgePulse {
+  from {
+    transform: scale(1);
+    box-shadow: 0 0 6px rgba(db.$crimson-glitch-red, 0.8),
+      0 0 12px rgba(db.$crimson-glitch-red, 0.6);
+  }
+
+  to {
+    transform: scale(1.2);
+    box-shadow: 0 0 12px rgba(db.$crimson-glitch-red, 1),
+      0 0 24px rgba(db.$crimson-glitch-red, 0.8);
+  }
+}
