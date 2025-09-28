@@ -1,0 +1,50 @@
+@use '@angular/material' as mat;
+@use './app/deathbox-theme.scss' as db;
+
+html, body, button, input, select, textarea {
+  font-family: 'Press Start 2P', monospace;
+}
+
+body {
+  margin: 0;
+  color: db.$glitch-purple;
+  background-color: db.$void-black;
+}
+
+.material-symbols-outlined:hover {
+  cursor: pointer;
+}
+
+button,
+.button {
+  background-color: db.$glitch-purple;
+  border: none;
+  border-radius: 5px;
+  color: db.$void-black;
+  font-size: 1.25rem;
+  font-weight: 500;
+  cursor: pointer;
+
+}
+
+button.primary {
+  background-color: db.$neon-skull-green;
+  color: db.$void-black;
+  border: 2px solid db.$neon-skull-green;
+
+  &:hover {
+    color: db.$neon-skull-green;
+    background-color: db.$void-black;
+    border: 2px solid db.$neon-skull-green
+  }
+}
+
+button.secondary {
+  background-color: db.$glitch-purple;
+
+  &:hover {
+    color: db.$glitch-purple;
+    background-color: db.$void-black;
+    border: 2px solid db.$glitch-purple
+  }
+}

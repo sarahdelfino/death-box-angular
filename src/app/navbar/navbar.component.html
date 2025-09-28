@@ -1,38 +1,26 @@
 <div class="nav-container">
   <div class="nav-items">
-    <div class="back-container">
-      @if (this.renderBack) {
-        <img class="back-button" src="../../assets/back.png" (click)="goBack()" />
-      }
-    </div>
     <div class="player-container">
-      <div class="host-view">
-        <div class="player-img">
-                    <img src="{{
+      <div class="player-img">
+        <img src="{{
                         'https://robohash.org/' + gameId + this.player + '?set=set5'
                       }}">
+      </div>
+      <div class="player-text">
+        <div class="nav-flex">
+          <h3>{{ this.currentPlayer }}</h3>
+          @for (i of this.correctGuesses; track $index) {
+          <span class="material-symbols-outlined">
+            check_small
+          </span>
+          }
         </div>
-        <div class="player-text">
-          <div class="nav-flex">
-            <h3>{{ this.currentPlayer }}</h3>
-            @for (i of this.correctGuesses; track i) {
-              <img style="width: 25px; margin-left: 5px;" src="../../assets/check.svg">
-            }
-          </div>
-          <h3 style="font-size: 0.5em;">pick any
+        <h3 style="font-size: 0.5em;">pick any
           card</h3>
-        </div>
       </div>
     </div>
-    <div class="logo">
-      <img src="../../assets/logo.png" />
-    </div>
-    <!-- <div class="game">
-    <h2>{{ gameId }}</h2>
-  </div> -->
-  <!-- <div class="nav-item">
-  <h3 (click)="scoresClick()">Scores</h3>
-</div> -->
+    <span class="material-symbols-outlined help" (click)="toggleInfo()">
+      help
+    </span>
+  </div>
 </div>
-</div>
-<!-- <app-players class="playersView" *ngIf="this.playersView"></app-players> -->

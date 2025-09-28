@@ -1,8 +1,14 @@
 <div class="stack">
-  <img [@stackAdd]="this.selectedStack === this.cards[0] ? 'added' : null" class="playing-card" id="playing-card" [src]="cards[0].cardPath"
-    (click)="onCardClick(cards)" [class.selected]="cards === selectedStack" />
+  @for(card of cards; track $index) {
+  <img
+    class="playing-card"
+    [src]="'../..' + card.cardPath"
+    (click)="onCardClick(cards[0])"
+    [class.selected]="selectedCard?.cardName === card?.cardName"
+      [style.zIndex]="visibleCards.length - $index"
+      [style.transform]="getTilt(card)"
+      [class.top-card]="$index === 0"
+      [alt]="altName(card)"
+  />
+  }
 </div>
-<!-- <div class="stack">
-  <img [@stackAdd]="" class="playing-card" id="playing-card" [src]="cards[0].cardPath"
-    (click)="onCardClick(cards)"/>
-</div> -->

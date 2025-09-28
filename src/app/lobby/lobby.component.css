@@ -4,10 +4,16 @@
     margin-right: auto;
 }
 
-button {
-    width: 300px;
+.help {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+button.primary {
+    width: 200px;
     height: 50px;
-    /* animation: wiggle 3s linear 5s infinite; */
+    animation: wiggle 3s linear 5s infinite;
 }
 
 form#join {
@@ -42,7 +48,6 @@ label {
 
 .logo-container {
   text-align: center;
-  margin-top: 50px;
 }
 
 div.players.scroll {
@@ -52,9 +57,8 @@ div.players.scroll {
 
 .logo {
   width: 200px;
-  margin-left: auto;
-  margin-right: auto;
-  display: inline-block;
+  margin: auto auto 20px;
+  display: block;
 }
 
 .lobby-content {
@@ -110,13 +114,5 @@ div.players.scroll {
 .gameId {
     text-align: center;
     font-size: 5rem;
-    font-family: 'Roboto Slab', serif;
 
-}
-
-@media (max-width: 400px) {
-    .container {
-        width: 300px;
-        height: auto;
-    }
 }

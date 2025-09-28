@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { DatabaseService } from '../database.service';
+import { Component, EventEmitter, inject, input, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Card } from '../models/game-state.model';
+import { GameStore } from '../game.store';
 
 export interface CardData {
   imageId: string;
@@ -7,24 +8,26 @@ export interface CardData {
 }
 
 @Component({
-    selector: 'app-deck',
-    templateUrl: './deck.component.html',
-    styleUrls: ['./deck.component.css'],
-    standalone: false
+  selector: 'app-deck',
+  templateUrl: './deck.component.html',
+  styleUrls: ['./deck.component.css'],
 })
 
-export class DeckComponent implements OnInit {
+export class DeckComponent {
 
-  constructor(private db: DatabaseService) {}
+  @Input() card: Card | null = null;
+  @Input() isFlipped: boolean = false;
 
-  public deckCount: number;
-  @Input() id: string;
+  drawCard() {
+    console.log(this.card);
+    if (!this.card) return;
 
-  ngOnInit() {
-    this.db.getDeck(this.id).valueChanges().subscribe(deckData => {
-      console.log(deckData);
-      this.deckCount = deckData.length;
-    })
+    this.isFlipped = true;
+
+    setTimeout(() => {
+      this.isFlipped = false;
+      this.card = null;
+    }, 800);
   }
 
 }

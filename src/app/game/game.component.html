@@ -1,50 +1,52 @@
-<app-navbar
-  [renderBack]="this.cardSelected && (this.counting == false || !this.counting)"
-  [player]="this.currentTurn"
-  [correct]="this.turns"
-  [gameId]="this.id"
-  (backToBoard)="endCounting(this.clickedData.newCard)"
-></app-navbar>
+@if (game$ | async; as game) {
+<app-navbar [player]="game.currentTurn"
+  [correct]="game.players[sessionPlayer!].correctGuesses" [gameId]="game.id"
+  (backToBoard)="endCounting()"></app-navbar>
+
+@if (!game.counting) {
 <div class="game">
-  <div class="container">
-    @if (!this.cardSelected && !this.arrowClicked) {
-      <div
-        class="card-container"
-        >
-        @for (stack of stacks; track stack) {
-          <app-stack
-            [cards]="stack"
-            [currentPlayer]="this.currentTurn"
-            (cardChoiceEmitter)="cardChoice($event)"
-            (click)="chooseCard(stack)"
-          ></app-stack>
-        }
-      </div>
-    }
-    @if (this.cardSelected) {
-      <div>
-        <app-high-low
-          [cardsInfo]="this.clickedData"
-          (isFinished)="endHighLow($event)"
-        ></app-high-low>
-      </div>
-    }
+  <!-- Board view -->
+  @if (!cardSelected) {
+  <div class="card-container">
+    <ng-container *ngFor="let stack of (game.stackGrid | keyvalue)">
+      <app-stack [id]="stack.key" [cards]="stack.value.cards" [currentPlayer]="game.currentTurn"
+        (clickedCardEmitter)="chooseCard($event, game.deck, game.stackGrid)" [selectedCard]="selectedCard" [lastAddedCardId]="lastAddedCardId"></app-stack>
+    </ng-container>
   </div>
-  <app-count
-    class="count"
-    [game]="this.game"
-    (nextCounter)="getNextCounter($event)"
-  ></app-count>
-  @if (this.messagesClicked) {
-    <app-messages [gameId]="this.id"></app-messages>
+  <div class="game-buttons">
+    <button [class.disabled]="!clickedData || choice === 'lower'" (click)="drawFromDeck('higher')">Higher</button>
+    <button [class.disabled]="!clickedData || choice === 'higher'" (click)="drawFromDeck('lower')">Lower</button>
+  </div>
+  <div #deckEl class="deck">
+    <app-deck [isFlipped]="!!choice && !!clickedData" [card]="newCard" (newCardEmitter)="compareCards($event)"></app-deck>
+  </div>
+
+  <!-- Flying card overlay -->
+  @if (flyingCard) {
+  <div class="flying-card" [ngStyle]="flyingStyle">
+    <img [src]="'../..' + flyingCard.cardPath" />
+  </div>
   }
+  }
+
+  <!-- Messages -->
+  <app-messages [isOpen]="messagesClicked" [gameId]="game.id" (unread)="unreadMessages = $event">
+  </app-messages>
 </div>
+} @else {
+<!-- Counter -->
+<app-count class="count" [game]="game" [sessionPlayer]="sessionPlayer"
+  (nextCounter)="getNextCounter($event)"></app-count>
+}
 <div class="bottom-nav">
-  <img
-    class="message-icon"
-    src="../../assets/message.png"
-    (click)="clickMessages()"
-    />
-  <img class="score-icon" src="../../assets/high-score.png" />
+  <span class="chat-icon" (click)="toggleMessages()">
+    <span class="material-symbols-outlined">chat_bubble</span>
+    <span *ngIf="unreadMessages" class="badge"></span>
+  </span>
+  <span class="score-icon">
+    <span class="material-symbols-outlined">
+      sports_score
+    </span>
+  </span>
 </div>
-<!-- <app-deck *ngIf="!this.cardSelected && !this.arrowClicked" [deckCount]="this.deck.length"></app-deck> -->
+}

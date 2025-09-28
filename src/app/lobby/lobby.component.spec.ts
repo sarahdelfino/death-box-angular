@@ -8,7 +8,7 @@ describe('LobbyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LobbyComponent ]
+      imports: [ LobbyComponent ]
     })
     .compileComponents();
   });

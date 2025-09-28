@@ -1,47 +1,76 @@
 <div class="container">
+    <span class="material-symbols-outlined help" (click)="toggleInfo()">
+help
+</span>
+  <!-- Join dialog -->
   <dialog id="dialog">
     <form [formGroup]="joinGameForm" id="join" method="dialog">
       <label for="name">Who goes there?</label>
-      <input id="name" formControlName="name" required autocomplete="off" placeholder="Name" />
-      <button style="background-color: #6a985c;" gaEvent gaAction="join_game_link"
-      (click)="joinGame(joinGameForm.value)" type="submit">Join game</button>
+      <input
+        id="name"
+        formControlName="playerName"
+        required
+        autocomplete="off"
+        placeholder="Name"
+      />
+      <button class="primary" (click)="joinGame()" type="submit">
+        Join game
+      </button>
     </form>
   </dialog>
-  <div class="logo-container">
-    <img class="logo" src="../../assets/logo-text.png" alt="deathbox-logo" />
-  </div>
-  <div class="gameId">
-    <h1 style="margin-top: -40px; margin-bottom: 0px;" class="gameId">{{ this.id }}</h1>
-  </div>
-  <div class="lobby-content">
-    <div class="invite-container">
-      @if (showPopup) {
-        <div @copyPopup class="popup">
-          <p class="popup-text">Copied to clipboard</p>
-        </div>
-      }
-      <div (click)="inviteClicked()">
-        <h3 class="invite">Invite a friend</h3>
-      </div>
+
+  <!-- Logo -->
+    <img
+      class="logo"
+      src="../../assets/deathbox-logo.png"
+      alt="deathbox-logo"
+    />
+
+  <!-- Game details -->
+  @if (game$ | async; as game) {
+    <!-- Game ID -->
+    <div class="gameId">
+      <h1 class="gameId" style="margin-top: -40px; margin-bottom: 0px;">
+        {{ game.id }}
+      </h1>
     </div>
-    @if (!this.isHost) {
-      <div>
+
+    <div class="lobby-content">
+      <!-- Invite link -->
+      <div class="invite-container">
+        @if (showPopup) {
+          <div class="popup">
+            <p class="popup-text">Copied to clipboard</p>
+          </div>
+        }
+        <div (click)="inviteClicked()">
+          <h3 class="invite">Invite a friend</h3>
+        </div>
+      </div>
+
+      <!-- Player list -->
+      <div class="players" [class.scroll]="isHost">
+        @for (player of game.players | keyvalue; track player.key) {
+          <div class="list-flex">
+            <img
+              class="avatar"
+              [src]="'https://robohash.org/' + game.id + player.key + '?set=set5'"
+              alt="player-avatar"
+            />
+            <p>{{ player.key }}</p>
+          </div>
+        }
+      </div>
+
+      <!-- Host controls -->
+       <div style="margin: auto;">
+      @if (isHost) {
+        
+          <button class="primary" (click)="startGame()">Let's play!</button>
+      } @else {
         <h3>Waiting on host to start the game...</h3>
-      </div>
-    }
-    <div class="players" [ngClass]="this.isHost ? 'scroll' : ''">
-      @for (player of playerList; track player) {
-        <div class="list-flex">
-          <!-- <img class="bullet" src="../../assets/drink.png" alt="player-icon" /> -->
-          <img class="avatar" src='{{ "https://robohash.org/" + this.id + player + "?set=set5" }}'>
-          <p>{{ player }}</p>
-        </div>
       }
-    </div>
-    @if (this.isHost) {
-      <div>
-        <button gaEvent gaAction="start_game" (click)="startGame()">Everybody's Ready</button>
       </div>
-    }
-  </div>
+    </div>
+  }
 </div>

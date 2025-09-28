@@ -1,0 +1,58 @@
+/* src/styles/_deathbox-theme.scss */
+
+/* ===== Tokens (configurable) ===== */
+$neon-skull-green: #39FF14 !default;
+$glitch-purple:    #A259FF !default;
+$matrix-green:     #00B85C !default;
+$void-black:       #0A0A0F !default;
+$dead-pixel-gray:  #3C3C47 !default;
+$night-violet:     #5E3A87 !default;
+$toxic-mint:       #7AFFB1 !default;
+$crimson-glitch-red:#FF4F64 !default;
+
+/* Derived tokens (also configurable) */
+$primary-color:     $neon-skull-green !default;
+$secondary-color:   $glitch-purple    !default;
+$background-color:  $void-black       !default;
+$text-color:        $glitch-purple    !default;
+$hover-color:       $matrix-green     !default;
+$border-color:      $dead-pixel-gray  !default;
+$danger-color:      $crimson-glitch-red !default;
+
+/* ===== Mixins ===== */
+
+/* Base global styles (emit once, in styles.scss) */
+@mixin base() {
+  body {
+    background-color: $background-color;
+    color: $text-color;
+    font-family: 'Press Start 2P', monospace;
+  }
+}
+
+/* Optional CSS variables (emit once, for runtime usage) */
+@mixin vars() {
+  :root {
+    --db-primary: #{$primary-color};
+    --db-secondary: #{$secondary-color};
+    --db-bg: #{$background-color};
+    --db-text: #{$text-color};
+    --db-hover: #{$hover-color};
+    --db-border: #{$border-color};
+    --db-danger: #{$danger-color};
+  }
+}
+
+/* Example component utility */
+@mixin button($bg: $primary-color, $fg: $void-black) {
+  background-color: $bg;
+  border: 2px solid $border-color;
+  color: $fg;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  cursor: pointer;
+  transition: background-color .15s ease;
+
+  &:hover { background-color: $hover-color; }
+  &.danger { background-color: $danger-color; color: white; }
+}
