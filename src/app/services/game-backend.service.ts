@@ -223,7 +223,6 @@ return from(get(gameRef)).pipe(
   }
 
   setCounter(gameId: string, name: string) {
-    console.log("HELLOOOOOOOOO", gameId, name);
     const counterRef = ref(this.db, `games/${gameId}/counter`);
     return from(set(counterRef, name));
   }

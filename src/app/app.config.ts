@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideAuth(() => {
       const auth = getAuth();
       signInAnonymously(auth).catch(err => {
-        console.log('Anonymous auth failed', err);
+        console.log('Auth failed', err);
       });
       return auth;
     }),

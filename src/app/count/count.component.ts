@@ -99,21 +99,27 @@ count() {
 
     // Only rotate counters if there are multiple
     if (this.counters.length > 1) {
-      this.nextCounter.emit(this.getNextCounter());
+      // this.nextCounter.emit(this.getNextCounter() || this.counters[0]);
+      this.store.setCounter({ gameId: this.game.id, name: this.getNextCounter() || this.counters[0]})
     }
   } else {
     this.store.endCounting(this.game.id);
   }
 }
 
-getNextCounter(): string {
-  if (this.counters.length === 1) {
-    return this.counters[0];
-  }
+getNextCounter(): string | null {
+  if (!this.counters.length) return null;
 
   const currentIndex = this.counters.indexOf(this.game.counter!);
-  const nextIndex = (currentIndex + 1) % this.counters.length;
+  let nextIndex = (currentIndex + 1) % this.counters.length;
+
+  // Skip if next is the drinker
+  if (this.counters[nextIndex] === this.drinker) {
+    nextIndex = (nextIndex + 1) % this.counters.length;
+  }
+
   return this.counters[nextIndex];
 }
+
 
 }

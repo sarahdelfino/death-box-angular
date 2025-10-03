@@ -28,8 +28,6 @@ ngOnChanges(changes: SimpleChanges): void {
     id => id !== this.game.currentTurn
   );
 
-  console.log('Counters:', this.counters);
-
   this.drinker = this.game.currentTurn;
   // Reset counter at the start of each drinking round
   const prevTurn = changes['game']?.previousValue?.currentTurn;

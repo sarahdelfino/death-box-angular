@@ -19,7 +19,6 @@ export class DeckComponent {
   @Input() isFlipped: boolean = false;
 
   drawCard() {
-    console.log(this.card);
     if (!this.card) return;
 
     this.isFlipped = true;

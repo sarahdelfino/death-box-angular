@@ -109,7 +109,6 @@ cardTransform = 'translate(0,0)';
     const gameId = this.route.snapshot.paramMap.get('id');
     if (!gameId || !this.sessionPlayer) return;
 
-    console.log(card, deck, stackGrid);
     this.selectedCard = card;
 
     if (deck && deck.length > 0) {
@@ -124,16 +123,9 @@ cardTransform = 'translate(0,0)';
         stackKey,
         stackLength: stackGrid[stackKey].cards.length,
       };
-      console.log(this.clickedData);
     } else {
         this.removeStacks(stackGrid);
     }
-  }
-
-  getNextCounter(nextPlayer: string) {
-    const gameId = this.route.snapshot.paramMap.get('id');
-    if (!gameId) return;
-    this.store.setCounter({ gameId, name: nextPlayer });
   }
 
 drawFromDeck(prediction: 'higher' | 'lower') {
@@ -199,7 +191,6 @@ drawFromDeck(prediction: 'higher' | 'lower') {
   }, 600);
 }
   compareCards(drawnCard: any) {
-    console.log(drawnCard, this.clickedData, this.choice);
     if (!this.clickedData || !this.choice) return;
     const gameId = this.route.snapshot.paramMap.get('id');
     if (!gameId || !this.sessionPlayer) return;
@@ -211,11 +202,6 @@ drawFromDeck(prediction: 'higher' | 'lower') {
     const correctGuess =
       (this.choice === 'higher' && higher) ||
       (this.choice === 'lower' && lower);
-
-    console.log(
-      `Drawn: ${drawnCard.cardName} (${drawnCard.value}), Clicked: ${clickedCard.cardName} (${clickedCard.value})`
-    );
-    console.log(`Player guessed ${this.choice}, which is ${correctGuess}`);
 
     this.store.game$.pipe(take(1)).subscribe((current) => {
       if (!current) return;
@@ -264,7 +250,8 @@ drawFromDeck(prediction: 'higher' | 'lower') {
           this.store.setCurrentTurnAndResetGuesses({ gameId, newPlayerId: nextPlayer, oldPlayerId: current.currentTurn });
 
           // Set the counter for the next player
-          this.getNextCounter(nextPlayer);
+          // this.getNextCounter(nextPlayer);
+          // this.store.setCounter({ gameId: gameId, name: nextPlayer})
 
           // Reset local UI state
           this.cardSelected = false;

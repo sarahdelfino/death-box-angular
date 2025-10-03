@@ -20,7 +20,6 @@ export class StackComponent {
   @Output() clickedCardEmitter = new EventEmitter<Card>();
 
   onCardClick(card: Card) {
-    console.log(this.currentPlayer, this.sessionPlayer, card, this.id);
     if (this.currentPlayer === this.sessionPlayer && card) {
       this.clickedCardEmitter.emit(card);
     } else {
