@@ -2,16 +2,16 @@ h3, h4 {
     margin: 0px;
 }
 
-.nav-container {
+/* .nav-container {
     height: 65px;
     z-index: 999999;
     background-color: #5E3A87;
-}
+} */
 
 .nav-items {
     display: flex;
     height: 100%;
-    color: white;
+    color: #7AFFB1;
     align-items: center;
     font-family: 'Open Sans', sans-serif;
 }

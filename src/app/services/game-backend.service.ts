@@ -37,17 +37,17 @@ export class GameBackendService {
   /**
    * Create a game with the first host player included.
    */
-createGameWithHost(gameId: string, hostName: string) {
-  // Build initial game
+createGameWithHost(gameId: string, hostName: string, dumb?: string) {
+  if (dumb) {
+    return from(Promise.reject(new Error('Bot detected')));
+  }
+
   let deck = generateShuffledDeck(true);
   let stackGrid = initEmptyStackGrid();
 
-// Deal the first 9 cards into the grid right away
   const dealt = dealInitialStacks(deck, stackGrid);
   deck = dealt.deck;
   stackGrid = dealt.stackGrid;
-
-  console.log(deck, stackGrid);
 
   const game: GameState = {
     id: gameId,
@@ -68,6 +68,7 @@ createGameWithHost(gameId: string, hostName: string) {
     status: 'waiting',
     seconds: null,
     counting: false,
+    dumb: dumb ?? null 
   };
 
   const gameRef = ref(this.db, `games/${gameId}`);
@@ -122,17 +123,21 @@ createGameWithHost(gameId: string, hostName: string) {
 
   // === PLAYERS ===
 
-  addPlayer(gameId: string, playerName: string) {
-    const newPlayer: Player = {
-      id: playerName,
-      name: playerName,
-      secondsDrank: 0,
-      correctGuesses: 0,
-    };
-
-    const playerRef = ref(this.db, `games/${gameId}/players/${playerName}`);
-    return from(set(playerRef, newPlayer));
+addPlayer(gameId: string, playerName: string, dumb?: string) {
+  if (dumb) {
+    return from(Promise.reject(new Error('Bot detected')));
   }
+
+  const newPlayer: Player = {
+    id: playerName,
+    name: playerName,
+    secondsDrank: 0,
+    correctGuesses: 0,
+  };
+
+  const playerRef = ref(this.db, `games/${gameId}/players/${playerName}`);
+  return from(set(playerRef, newPlayer));
+}
 
   getPlayers(gameId: string) {
     const playersRef = ref(this.db, `games/${gameId}/players`);

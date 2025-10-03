@@ -1,0 +1,48 @@
+<div class="count-container">
+  <div class="text-container"> @if (isDrinking) { <h1>Bottoms up!</h1>
+    <h3>It's time to drink, {{ drinker }}.</h3>
+    <h3>You have {{ game.seconds }} {{ text }} left.<br>Good luck.</h3> } @else { <h1>Tap to drain the potion</h1>
+    <h3>Show
+      mercy for {{ drinker }}... or don't. It's their problem, not ours.</h3>
+    <!-- <h3>{{ game.seconds }} {{ text }} left</h3>  -->
+  }
+  </div>
+  <!-- <div class="glass"
+    [ngClass]="{ 'active': isActive &&!isDrinking, 'drinker': isDrinking, 'disabled': !isActive && !isDrinking }"
+    (click)="isActive ? count() : null">
+
+    <div class="cork"></div>
+    <div class="neck"></div>
+
+    <div class="bulb">
+      <div class="liquid" [style.height]="liquidHeight">
+        <div class="skull-wrapper" [style.bottom]="getSkullPosition()">
+          <img
+            [ngClass]="{ 'active': isActive && !isDrinking, 'drinker': isDrinking, 'disabled': !isActive && !isDrinking }"
+            src="../../assets/skull.png" class="skull" />
+        </div>
+
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+
+        <svg class="wave wave-1" viewBox="0 0 120 22" preserveAspectRatio="none">
+          <path d="M0,12 Q15,2 30,12 T60,12 T90,12 T120,12 V22 H0 Z" />
+        </svg>
+        <svg class="wave wave-2" viewBox="0 0 120 22" preserveAspectRatio="none">
+          <path d="M0,12 Q15,2 30,12 T60,12 T90,12 T120,12 V22 H0 Z" />
+        </svg>
+      </div>
+    </div>
+
+  </div> -->
+<div class="crt-counter" [ngClass]="{ 'active': isActive &&!isDrinking, 'drinker': isDrinking, 'disabled': !isActive && !isDrinking }"
+    (click)="isActive ? count() : null">
+  <div class="fill-bar" [style.height]="liquidHeight"></div>
+  <div class="skull-bg"></div>
+  <div class="timer">{{ game.seconds }}</div>
+</div>
+
+</div>

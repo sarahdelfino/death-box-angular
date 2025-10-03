@@ -7,17 +7,20 @@ import { Router } from '@angular/router';
   selector: 'app-how-to-play',
   imports: [CommonModule, MatDialogModule],
   templateUrl: './how-to-play.component.html',
-  styleUrl: './how-to-play.component.scss'
+  styleUrls: ['./how-to-play.component.scss']
 })
 export class HowToPlayComponent {
   private router = inject(Router);
   shortened = false;
 
   constructor() {
-    console.log(this.router.url);
+    // auto-shortened in "play" route
     if (this.router.url.includes('play')) {
       this.shortened = true;
     }
   }
 
+  toggleVersion() {
+    this.shortened = !this.shortened;
+  }
 }

@@ -5,11 +5,7 @@ import {
   ViewChild,
   AfterViewInit,
   inject,
-  DestroyRef,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
+  DestroyRef
 } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { GameStore } from '../game.store';
@@ -20,41 +16,26 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: true,
   imports: [CommonModule, AsyncPipe],
   templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.css'],
+  styleUrls: ['./messages.component.scss'],
 })
-export class MessagesComponent implements AfterViewInit, OnChanges {
+export class MessagesComponent implements AfterViewInit {
   private store = inject(GameStore);
   private destroyRef = inject(DestroyRef);
 
   @ViewChild('message') message!: ElementRef<HTMLInputElement>;
 
   @Input() gameId!: string;
-  @Input() isOpen = false;
-  @Output() unread = new EventEmitter<boolean>();
 
   user = sessionStorage.getItem('player') ?? '';
   messages$ = this.store.messages$;
 
-ngAfterViewInit() {
-  this.messages$
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe((messages) => {
-      this.scrollToBottom();
-
-      if (!this.isOpen && messages?.length) {
-        const lastMsg = messages[messages.length - 1];
-        if (lastMsg.player !== this.user) {
-          this.unread.emit(true);
-        }
-      }
-    });
-}
-
-ngOnChanges(changes: SimpleChanges) {
-  if (changes['isOpen']?.currentValue === true) {
-    this.unread.emit(false);
+  ngAfterViewInit() {
+    this.messages$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.scrollToBottom();
+      });
   }
-}
 
   sendMessage(msg: string) {
     const text = msg.trim();

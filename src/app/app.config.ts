@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideAuth, getAuth, signInAnonymously } from '@angular/fire/auth';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 
@@ -18,7 +18,13 @@ export const appConfig: ApplicationConfig = {
 
     // Firebase
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    // provideAuth(() => getAuth()),
+    provideAuth(() => {
+      const auth = getAuth();
+      signInAnonymously(auth).catch(err => {
+        console.log('Anonymous auth failed', err);
+      });
+      return auth;
+    }),
     provideDatabase(() => getDatabase()),
     // provideFirestore(() => getFirestore()),
   ],

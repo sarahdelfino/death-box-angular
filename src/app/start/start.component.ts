@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { nanoid } from 'nanoid';
 import { GameStore } from '../game.store';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,27 +10,50 @@ import { HowToPlayComponent } from '../how-to-play/how-to-play.component';
   selector: 'app-start',
   templateUrl: './start.component.html',
   styleUrls: ['./start.component.scss'],
+  imports: [ReactiveFormsModule]
 })
-export class StartComponent {
+export class StartComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private store = inject(GameStore);
   private dialog = inject(MatDialog);
+  private route = inject(ActivatedRoute);
 
   joinGameForm: FormGroup = this.fb.group({
-    id: ['', [Validators.required, Validators.minLength(5)]],
-    name: ['', [Validators.required, Validators.minLength(2)]]
+    id: ['', [Validators.required, Validators.maxLength(5)]],
+    name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(20)]],
+    dumb: ['']
   });
 
   createGameForm: FormGroup = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2)]]
+    name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(20)]],
+    dumb: ['']
   });
 
   joinClicked = false;
   createClicked = false;
   isMobile = window.innerWidth < 500;
   infoClicked = false;
+
+  ngOnInit() {
+    // Listen for ?join=GAMEID param
+    this.route.queryParamMap.subscribe(params => {
+      const joinId = params.get('join');
+      if (joinId) {
+        this.joinClicked = true;
+        this.createClicked = false;
+        // prefill game ID
+        this.joinGameForm.patchValue({ id: joinId.toUpperCase() });
+
+        // (optional) auto-focus name input after short delay
+        setTimeout(() => {
+          const nameInput = document.getElementById('joinName') as HTMLInputElement;
+          if (nameInput) nameInput.focus();
+        }, 200);
+      }
+    });
+  }
 
   toggleJoin(): void {
     this.joinClicked = !this.joinClicked;
@@ -51,31 +74,31 @@ export class StartComponent {
     });
   }
 
-  joinGame(name: string, id: string): void {
-    console.log(name, id);
-    if (!name || !id) { return }
+  joinGame(form: FormGroup): void {
+    const { name, id, dumb } = form.value;
+    if (!name || !id || dumb ) { return }
+    const img = new Image();
+    img.src = `https://robohash.org/${id}${name}?set=set5`;
+
     sessionStorage.setItem('player', name);
     sessionStorage.setItem('host', 'false');
 
     this.store.addPlayer({ gameId: id.toUpperCase(), playerName: name });
-    // setTimeout(() => this.router.navigateByUrl(`/lobby/${id}`), 250);
     this.router.navigateByUrl(`/lobby/${id.toUpperCase()}`)
   }
 
-  createGame(host: string): void {
-    if (!host) { return }
+  createGame(form: FormGroup): void {
+    const { name, dumb } = form.value;
+    if (!name || dumb.length) { return }
 
     const id = nanoid(5).toUpperCase();
-    const name = host;
+    const img = new Image();
+    img.src = `https://robohash.org/${id}${name}?set=set5`;
 
     sessionStorage.setItem('player', name);
     sessionStorage.setItem('host', 'true');
 
-    console.log(id, name);
-
     this.store.createGame({ gameId: id, playerName: name });
     this.router.navigateByUrl(`/lobby/${id}`)
-
-    // setTimeout(() => this.router.navigateByUrl(`/lobby/${id}`), 250);
   }
 }

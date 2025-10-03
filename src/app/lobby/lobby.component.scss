@@ -1,0 +1,161 @@
+@use '../deathbox-theme.scss' as db;
+
+.container {
+  max-width: 100vw;
+  margin: auto;
+  text-align: center;
+  background: db.$void-black;
+  border: 2px solid db.$glitch-purple;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(db.$glitch-purple, 0.6);
+  animation: retro-open 0.6s ease-out;
+  overflow-x: hidden;
+}
+
+span.material-symbols-outlined.help {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: db.$toxic-mint;
+}
+
+.lobby-content {
+  width: 100%;
+  max-width: 100%;
+  margin: auto;
+  overflow-x: hidden;
+}
+
+/* === GAME ID === */
+.gameId {
+  font-size: 3rem;
+  color: db.$neon-skull-green;
+  text-shadow: 0 0 6px db.$neon-skull-green, 0 0 12px db.$glitch-purple;
+  letter-spacing: 2px;
+  margin: 1.5rem 0 1rem;
+  animation: text-flicker 3s infinite;
+}
+
+/* Invite link */
+
+.invite {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: db.$glitch-purple;
+  text-shadow: 0 0 4px rgba(db.$glitch-purple, 0.6);
+}
+
+p.popup-text {
+  margin: 0;
+}
+
+/* === PLAYER GRID === */
+.players {
+  margin: 1.5rem auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* always 2 across */
+  gap: 1.2rem;
+  max-width: 500px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;   /* scroll vertically if too tall */
+  max-height: 60vh;   /* keep within screen */
+  padding-right: 0.5rem;
+}
+
+.list-flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.4rem;
+}
+
+.avatar-wrapper {
+  width: 96px;
+  height: 96px;
+  border: 2px solid db.$dead-pixel-gray;
+  border-radius: 4px;
+  background: #0a0a0f;
+  box-shadow: inset 0 0 12px rgba(db.$glitch-purple, 0.4);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  margin: 0 auto;
+
+  &.loading {
+    animation: glitch-flicker 1.2s infinite alternate;
+  }
+
+  &.loaded::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(db.$neon-skull-green, 0.05) 0px,
+      transparent 3px
+    );
+    animation: scanline-drift 8s linear infinite;
+    pointer-events: none;
+  }
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.list-flex p {
+  font-size: 0.75rem;
+  margin: 0;
+  color: db.$toxic-mint;
+  text-shadow: 0 0 4px rgba(db.$toxic-mint, 0.7);
+  text-align: center;
+  max-width: 96px;
+  overflow-wrap: break-word;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+button.arcade-btn {
+  padding: 0px;
+}
+
+h3 {
+  color: db.$crimson-glitch-red;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  animation: text-flicker 4s infinite;
+}
+
+/* === ANIMATIONS === */
+@keyframes retro-open {
+  0% { opacity: 0; transform: scale(0.9); filter: blur(6px); }
+  50% { opacity: 1; transform: scale(1.02); filter: blur(1px); }
+  100% { opacity: 1; transform: scale(1); filter: none; }
+}
+
+@keyframes text-flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 0.85; }
+  50% { opacity: 0.6; }
+  55% { opacity: 0.9; }
+  75% { opacity: 1; }
+}
+
+@keyframes glitch-flicker {
+  0% { border-color: db.$glitch-purple; }
+  50% { border-color: db.$neon-skull-green; }
+  100% { border-color: db.$glitch-purple; }
+}
+
+@keyframes scanline-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 100%; }
+}

@@ -1,18 +1,12 @@
 <div class="container">
-    <span class="material-symbols-outlined help" (click)="toggleInfo()">
-help
-</span>
+  <span class="material-symbols-outlined help" (click)="toggleInfo()">
+    help
+  </span>
   <!-- Join dialog -->
   <dialog id="dialog">
     <form [formGroup]="joinGameForm" id="join" method="dialog">
       <label for="name">Who goes there?</label>
-      <input
-        id="name"
-        formControlName="playerName"
-        required
-        autocomplete="off"
-        placeholder="Name"
-      />
+      <input id="name" formControlName="playerName" required autocomplete="off" placeholder="Name" />
       <button class="primary" (click)="joinGame()" type="submit">
         Join game
       </button>
@@ -20,57 +14,50 @@ help
   </dialog>
 
   <!-- Logo -->
-    <img
-      class="logo"
-      src="../../assets/deathbox-logo.png"
-      alt="deathbox-logo"
-    />
+  <img class="logo" src="../../assets/deathbox-logo.png" alt="deathbox-logo" />
 
   <!-- Game details -->
   @if (game$ | async; as game) {
-    <!-- Game ID -->
-    <div class="gameId">
-      <h1 class="gameId" style="margin-top: -40px; margin-bottom: 0px;">
-        {{ game.id }}
-      </h1>
-    </div>
+  <!-- Game ID -->
+  <div class="gameId">
+    <h1 class="gameId" style="margin-top: -40px; margin-bottom: 0px;">
+      {{ game.id }}
+    </h1>
+  </div>
 
-    <div class="lobby-content">
+  <div class="lobby-content">
+    <div class="buttons" [style.display]="isHost ? 'flex' : 'block'">
+      <!-- Host controls -->
+      @if (isHost) {
+
+      <button class="arcade-btn primary" (click)="startGame()">Let's play!</button>
+      } @else {
+      <h3>Waiting on host to start the game...</h3>
+      }
+
       <!-- Invite link -->
       <div class="invite-container">
         @if (showPopup) {
-          <div class="popup">
-            <p class="popup-text">Copied to clipboard</p>
-          </div>
+          <p class="popup-text">Copied to clipboard</p>
         }
-        <div (click)="inviteClicked()">
-          <h3 class="invite">Invite a friend</h3>
-        </div>
-      </div>
-
-      <!-- Player list -->
-      <div class="players" [class.scroll]="isHost">
-        @for (player of game.players | keyvalue; track player.key) {
-          <div class="list-flex">
-            <img
-              class="avatar"
-              [src]="'https://robohash.org/' + game.id + player.key + '?set=set5'"
-              alt="player-avatar"
-            />
-            <p>{{ player.key }}</p>
-          </div>
-        }
-      </div>
-
-      <!-- Host controls -->
-       <div style="margin: auto;">
-      @if (isHost) {
-        
-          <button class="primary" (click)="startGame()">Let's play!</button>
-      } @else {
-        <h3>Waiting on host to start the game...</h3>
-      }
+        <button class="arcade-btn secondary" (click)="inviteClicked()">
+          Invite a friend
+        </button>
       </div>
     </div>
+
+    <!-- Player list -->
+    <div class="players" [class.scroll]="isHost">
+      @for (player of game.players | keyvalue; track player.key) {
+      <div class="list-flex">
+        <div class="avatar-wrapper" [class.loading]="isLoadingAvatars[player.key] !== false">
+          <img class="avatar loading" [src]="'https://robohash.org/' + game.id + player.key + '?set=set5'"
+            (load)="onImageLoad(player.key)" />
+        </div>
+        <p>{{ player.key }}</p>
+      </div>
+      }
+    </div>
+  </div>
   }
 </div>

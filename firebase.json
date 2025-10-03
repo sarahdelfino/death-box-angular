@@ -1,6 +1,6 @@
 {
     "hosting": {
-      "public": "./dist/death-box-angular",
+      "public": "./dist/death-box-angular/browser",
       "ignore": [
         "firebase.json",
         "**/.*",

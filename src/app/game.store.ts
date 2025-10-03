@@ -89,11 +89,11 @@ export class GameStore extends ComponentStore<GameStoreState> {
     )
   );
 
-  // === EFFECT: CREATE GAME ===
-readonly createGame = this.effect<{ gameId: string, playerName: string }>(params$ =>
+// === EFFECT: CREATE GAME ===
+readonly createGame = this.effect<{ gameId: string, playerName: string, dumb?: string }>(params$ =>
   params$.pipe(
-    switchMap(({ gameId, playerName }) =>
-      this.backend.createGameWithHost(gameId, playerName).pipe(
+    switchMap(({ gameId, playerName, dumb }) =>
+      this.backend.createGameWithHost(gameId, playerName, dumb).pipe(
         tap({
           next: (initialGame) => {
             this.setGameId(gameId);
@@ -112,14 +112,14 @@ readonly createGame = this.effect<{ gameId: string, playerName: string }>(params
   )
 );
 
-  // === EFFECT: ADD PLAYER ===
-  readonly addPlayer = this.effect<{ gameId: string, playerName: string }>(params$ =>
-    params$.pipe(
-      switchMap(({ gameId, playerName }) =>
-        this.backend.addPlayer(gameId, playerName)
-      )
+// === EFFECT: ADD PLAYER ===
+readonly addPlayer = this.effect<{ gameId: string, playerName: string, dumb?: string }>(params$ =>
+  params$.pipe(
+    switchMap(({ gameId, playerName, dumb }) =>
+      this.backend.addPlayer(gameId, playerName, dumb)
     )
-  );
+  )
+);
 
   // === EFFECT: START GAME ===
 readonly startGame = this.effect<string>(gameId$ =>

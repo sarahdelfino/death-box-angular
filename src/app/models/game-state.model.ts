@@ -47,4 +47,5 @@ export interface GameState {
   players: {
     [name: string]: Player
   }
+  dumb?: string | null;
 }

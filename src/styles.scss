@@ -9,42 +9,193 @@ body {
   margin: 0;
   color: db.$glitch-purple;
   background-color: db.$void-black;
+  border-radius: 6px;
+    box-shadow: 0 0 12px rgba(db.$glitch-purple, 0.6);
+    height: 100vh;
+    animation: idle-pulse-purple 3s infinite alternate;
+}
+
+h2 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: db.$neon-skull-green;
+  text-shadow: 0 0 6px rgba(db.$neon-skull-green, 0.8);
+  margin: 1rem 0 0.5rem;
+  border-bottom: 1px solid db.$dead-pixel-gray;
+  padding-bottom: 0.25rem;
+}
+
+p, li {
+  color: db.$toxic-mint;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
 }
 
 .material-symbols-outlined:hover {
   cursor: pointer;
 }
 
-button,
-.button {
-  background-color: db.$glitch-purple;
-  border: none;
-  border-radius: 5px;
-  color: db.$void-black;
-  font-size: 1.25rem;
-  font-weight: 500;
+.arcade-input {
+  background: transparent;
+  color: db.$neon-skull-green;
+  border: 2px solid db.$glitch-purple;
+  border-radius: 4px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 18px;
+  padding: 10px;
+  outline: none;
+  width: 100%;
+  height: 50px;
+  box-shadow: 0 0 6px rgba(db.$glitch-purple, 0.8),
+              0 0 12px rgba(db.$glitch-purple, 0.6);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &::placeholder {
+    color: rgba(db.$neon-skull-green, 0.5);
+    text-shadow: 0 0 4px rgba(db.$neon-skull-green, 0.6);
+  }
+
+  &:focus {
+    border-color: db.$toxic-mint;
+    box-shadow: 0 0 6px rgba(db.$toxic-mint, 1),
+                0 0 14px rgba(db.$toxic-mint, 0.8),
+                0 0 24px rgba(db.$glitch-purple, 0.6);
+    animation: glitch-flicker 1.5s ease-out 2;
+  }
+}
+
+.arcade-btn {
+  position: relative;
+  display: inline-block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  width: 150px;
+  height: 50px;
+  margin: 5px;
+  padding: 12px 24px;
+  border: 2px solid db.$glitch-purple;
+  border-radius: 4px;
+  background: transparent;
+  color: db.$neon-skull-green;
   cursor: pointer;
+  transition: all 0.25s ease;
+  overflow: hidden;
 
-}
-
-button.primary {
-  background-color: db.$neon-skull-green;
-  color: db.$void-black;
-  border: 2px solid db.$neon-skull-green;
-
-  &:hover {
-    color: db.$neon-skull-green;
-    background-color: db.$void-black;
-    border: 2px solid db.$neon-skull-green
+  &:focus {
+    outline: none;
+    animation: glitch-flicker 1.5s ease-out 1;
+    border-color: db.$neon-skull-green;
+    box-shadow: 0 0 6px rgba(db.$neon-skull-green, 1),
+                0 0 14px rgba(db.$neon-skull-green, 0.8),
+                0 0 24px rgba(db.$glitch-purple, 0.6);
   }
-}
 
-button.secondary {
-  background-color: db.$glitch-purple;
+  &:active {
+    transform: scale(0.97);
+  }
 
-  &:hover {
+  // &.primary {
+  //   border-color: db.$neon-skull-green;
+  //   color: db.$neon-skull-green;
+  //   box-shadow: 0 0 6px rgba(db.$neon-skull-green, 0.8),
+  //               0 0 12px rgba(db.$neon-skull-green, 0.6);
+  //   animation: idle-pulse-green 3s infinite alternate;
+  // }
+
+    &.primary {
+        border-color: db.$toxic-mint;
+    color: db.$toxic-mint;
+    box-shadow: 0 0 6px rgba(db.$toxic-mint, 0.8),
+                0 0 12px rgba(db.$toxic-mint, 0.6);
+    animation: idle-pulse-mint 3s infinite alternate;
+  }
+
+  &.secondary {
+    border-color: db.$glitch-purple;
     color: db.$glitch-purple;
-    background-color: db.$void-black;
-    border: 2px solid db.$glitch-purple
+    box-shadow: 0 0 6px rgba(db.$glitch-purple, 0.8),
+                0 0 12px rgba(db.$glitch-purple, 0.6);
+    animation: idle-pulse-purple 3s infinite alternate;
   }
+
+  &.tertiary {
+        border-color: db.$toxic-mint;
+    color: db.$toxic-mint;
+    box-shadow: 0 0 6px rgba(db.$toxic-mint, 0.8),
+                0 0 12px rgba(db.$toxic-mint, 0.6);
+    animation: idle-pulse-mint 3s infinite alternate;
+  }
+
+  &.ghost,
+  &:disabled {
+    border-color: db.$dead-pixel-gray !important;
+    color: db.$dead-pixel-gray !important;
+    box-shadow: none !important;
+    animation: none !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &.selected {
+    border-color: db.$crimson-glitch-red !important;
+    color: db.$crimson-glitch-red !important;
+    box-shadow: 0 0 10px rgba(db.$crimson-glitch-red, 0.9),
+                0 0 22px rgba(db.$crimson-glitch-red, 0.6);
+    transform: translateY(-1px);
+    animation: idle-pulse-red 3s infinite alternate;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        0deg,
+        transparent 0%,
+        rgba(db.$crimson-glitch-red, 0.12) 50%,
+        transparent 100%
+      );
+      mix-blend-mode: screen;
+      animation: selected-scan 2.2s linear infinite;
+      border-radius: 4px;
+    }
+  }
+}
+
+@keyframes idle-pulse-green {
+  0%   { box-shadow: 0 0 4px rgba(db.$neon-skull-green, 0.6); }
+  100% { box-shadow: 0 0 12px rgba(db.$neon-skull-green, 0.9); }
+}
+
+@keyframes idle-pulse-purple {
+  0%   { box-shadow: 0 0 4px rgba(db.$glitch-purple, 0.6); }
+  100% { box-shadow: 0 0 12px rgba(db.$glitch-purple, 0.9); }
+}
+
+@keyframes idle-pulse-mint {
+  0%   { box-shadow: 0 0 4px rgba(db.$toxic-mint, 0.6); }
+  100% { box-shadow: 0 0 12px rgba(db.$toxic-mint, 0.9); }
+}
+
+@keyframes idle-pulse-red {
+  0%   { box-shadow: 0 0 4px rgba(db.$crimson-glitch-red, 0.6); }
+  100% { box-shadow: 0 0 12px rgba(db.$crimson-glitch-red, 0.9); }
+}
+
+@keyframes glitch-flicker {
+  0%   { text-shadow: 2px 0 db.$crimson-glitch-red; }
+  20%  { text-shadow: -2px 0 db.$glitch-purple; }
+  40%  { text-shadow: 2px 2px db.$crimson-glitch-red; }
+  60%  { text-shadow: -2px -2px db.$neon-skull-green; }
+  80%  { text-shadow: 2px -2px db.$glitch-purple; }
+  100% { text-shadow: -2px 2px db.$neon-skull-green; }
+}
+
+@keyframes selected-scan {
+  0%   { opacity: 0.12; transform: translateY(-8%); }
+  50%  { opacity: 0.22; transform: translateY(0%); }
+  100% { opacity: 0.12; transform: translateY(8%); }
 }

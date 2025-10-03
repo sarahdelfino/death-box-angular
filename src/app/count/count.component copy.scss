@@ -1,0 +1,412 @@
+@use '../deathbox-theme.scss' as db;
+
+:host {
+  font-family: 'Press Start 2P', monospace;
+  border: 2px solid db.$glitch-purple;
+    border-radius: 6px;
+  color: db.$neon-skull-green;
+  box-shadow: 0 0 12px rgba(db.$glitch-purple, 0.6);
+}
+
+h1 {
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  color: db.$neon-skull-green;
+  text-shadow: 0 0 6px rgba(db.$neon-skull-green, 0.8);
+  margin: 1rem 0 0.5rem;
+  border-bottom: 1px solid db.$dead-pixel-gray;
+  padding-bottom: 0.25rem;
+}
+
+h3 {
+  color: db.$toxic-mint;
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
+}
+
+.count-container {
+  width: 350px;
+  margin: auto;
+}
+
+.crt-counter {
+  position: relative;
+  width: 240px;
+  height: 280px;
+  margin: auto;
+  border: 4px solid db.$glitch-purple;
+  border-radius: 6px;
+  background: rgba(10,10,15,0.95);
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(db.$glitch-purple, 0.7);
+
+  /* Subtle CRT scanlines */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.04) 0px,
+      rgba(255,255,255,0.02) 2px,
+      transparent 4px
+    );
+    pointer-events: none;
+  }
+}
+
+.fill-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(57,255,20,0.85) 0%,
+    rgba(0,184,92,0.8) 100%
+  );
+  transition: height 0.3s ease;
+  z-index: 2;
+
+  /* Pixelated edges */
+  image-rendering: pixelated;
+}
+
+.skull-bg {
+  position: absolute;
+  inset: 0;
+  background: url('../../assets/skull.png') center/contain no-repeat;
+  opacity: 0.2;
+  z-index: 1;
+  filter: brightness(0.7) contrast(1.2);
+}
+
+.timer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 3rem;
+  color: db.$neon-skull-green;
+  text-shadow: 0 0 8px db.$glitch-purple;
+  z-index: 3;
+}
+
+
+.text-container {
+  width: 100%;
+}
+
+@keyframes glassRock {
+  0% {
+    transform: rotate(-2deg)
+  }
+
+  100% {
+    transform: rotate(2deg)
+  }
+}
+
+.glass {
+  position: relative;
+  margin: 10vh auto;
+  width: 160px;
+  height: 250px;
+  cursor: pointer;
+  animation: glassRock 3s ease-in-out infinite alternate;
+  transform-origin: center bottom;
+}
+
+/* Shadow under the flask */
+.glass::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  width: 120px;
+  height: 20px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 0%, transparent 80%);
+  border-radius: 50%;
+  transform: translateX(-50%) scaleX(1);
+  z-index: 0;
+  animation: shadowRock 5s ease-in-out infinite alternate;
+}
+
+@keyframes shadowRock {
+  0% {
+    transform: translateX(-50%) scaleX(0.95);
+  }
+
+  100% {
+    transform: translateX(-50%) scaleX(1.05);
+  }
+}
+
+/* Round bulb */
+.glass .bulb {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 180px;
+  height: 180px;
+  border: 4px solid #7AFFB1;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 10, 15, 0.9);
+  overflow: hidden;
+  clip-path: circle(50% at 50% 50%);
+  /* ensures no overflow outside glass */
+  box-shadow:
+    inset 0 0 20px rgba(122, 255, 177, 0.25),
+    inset 0 0 40px rgba(122, 255, 177, 0.15);
+  z-index: 1;
+}
+
+/* Neck above the bulb */
+.glass .neck {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 60px;
+  height: 70px;
+  background: rgba(10, 10, 15, 0.9);
+  border: 4px solid #7AFFB1;
+  border-bottom: none;
+  border-radius: 12px;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* Cork */
+.glass .cork {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  width: 50px;
+  height: 20px;
+  background: #5E3A20;
+  border-radius: 4px;
+  transform: translateX(-50%);
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.4);
+  z-index: 3;
+}
+
+@keyframes potionCounterSway {
+  0% {
+    transform: rotate(2deg);
+  }
+
+  100% {
+    transform: rotate(-2deg);
+  }
+}
+
+/* Liquid fills inside the bulb */
+.bulb .liquid {
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  /* extend beyond edges */
+  width: 120%;
+  /* overshoot to avoid side gaps */
+  height: 0;
+  background: linear-gradient(180deg, #00B85C 0%, #00B85C 60%, #7AFFB1 100%);
+  transition: height 0.3s ease;
+  transform-origin: center bottom;
+  animation: potionCounterSway 6s ease-in-out infinite alternate;
+  animation-delay: -3s;
+}
+
+.glass.disabled .wave,
+.glass.disabled .bubble, .glass.disabled .skull {
+  animation-play-state: paused;
+}
+
+/* Disabled counter — dimmed & frozen */
+.glass.disabled {
+  border-color: #3C3C47;
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Pulse effect for active glass */
+@keyframes glowPulse {
+  from {
+    box-shadow: 0 0 6px #39FF14, 0 0 12px rgba(57, 255, 20, 0.4);
+  }
+
+  to {
+    box-shadow: 0 0 18px #39FF14, 0 0 36px rgba(57, 255, 20, 0.8);
+  }
+}
+
+.liquid {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(180deg, #00B85C 0%, #00B85C 60%, #7AFFB1 100%);
+  transition: height 0.3s ease;
+  will-change: height;
+  overflow: visible;
+}
+
+/* Wave base style */
+.wave {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 200%;
+  height: 22px;
+  fill: rgba(0, 184, 92, 0.85);
+  animation: wave-slide 6s linear infinite, wave-bob 4s ease-in-out infinite;
+  transform-origin: center bottom;
+  animation-delay: -1.5s;
+}
+
+.wave-1 {
+  fill: rgba(0, 184, 92, 0.85);
+  animation-duration: 6s, 3s;
+  z-index: 2;
+  animation-direction: alternate;
+}
+
+.wave-2 {
+  fill: rgba(0, 184, 92, 0.85);
+  animation-direction: alternate-reverse;
+  animation-duration: 9s, 5s;
+  transform: scale(-1, 1);
+  opacity: 0.6;
+  z-index: 1;
+}
+
+@keyframes wave-slide {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.bubble {
+  position: absolute;
+  top: 100%;
+  border-radius: 50%;
+  background: #7AFFB1;
+  opacity: 0.7;
+  transform: translateX(-50%) scale(0.7);
+  animation: rise 6s infinite ease-in;
+}
+
+@keyframes rise {
+  0% {
+    top: 100%;
+    transform: translateX(-50%) scale(0.7);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: translateX(-52%) scale(1);
+    opacity: 0.9;
+  }
+
+  100% {
+    top: 10%;
+    transform: translateX(-48%) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Bubble variations */
+.bubble:nth-child(1) {
+  left: 20%;
+  width: 8px;
+  height: 8px;
+  animation-duration: 5s;
+  animation-delay: 0s;
+}
+
+.bubble:nth-child(2) {
+  left: 40%;
+  width: 12px;
+  height: 12px;
+  animation-duration: 7s;
+  animation-delay: 1s;
+}
+
+.bubble:nth-child(3) {
+  left: 60%;
+  width: 10px;
+  height: 10px;
+  animation-duration: 4.5s;
+  animation-delay: 2.5s;
+  animation-name: riseHalf;
+}
+
+.bubble:nth-child(4) {
+  left: 75%;
+  width: 14px;
+  height: 14px;
+  animation-duration: 6s;
+  animation-delay: 1.5s;
+}
+
+.bubble:nth-child(5) {
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  animation-duration: 5.5s;
+  animation-delay: 3s;
+  animation-name: riseHalf;
+}
+
+@keyframes riseHalf {
+  0% {
+    top: 100%;
+    opacity: 0.6;
+    transform: translateX(-50%) scale(0.7);
+  }
+
+  40% {
+    top: 60%;
+    opacity: 0.9;
+  }
+
+  100% {
+    top: 55%;
+    opacity: 0;
+    transform: translateX(-50%) scale(1.3);
+  }
+}
+
+.skull-wrapper {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.skull {
+  width: 60px;
+  height: auto;
+  animation: skullSway 6s ease-in-out infinite alternate;
+  animation-delay: -3s;
+}
+
+@keyframes skullSway {
+  0%   { transform: translateY(0) rotate(-3deg); }
+  25%  { transform: translateY(-3%) rotate(-1deg); }
+  50%  { transform: translateY(-6%) rotate(3deg); }
+  75%  { transform: translateY(-3%) rotate(-1deg); }
+  100% { transform: translateY(0) rotate(-3deg); }
+}
+
+
+
+
+

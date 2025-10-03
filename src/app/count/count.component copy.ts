@@ -22,19 +22,12 @@ export class CountComponent implements OnChanges {
 
   counters: string[] = [];
   drinker: string | null = null;
-  previousSeconds: number | null = null;
-  flash = false;
 
 ngOnChanges(changes: SimpleChanges): void {
   this.counters = Object.keys(this.game.players).filter(
     id => id !== this.game.currentTurn
   );
 
-    if (this.previousSeconds !== null && this.previousSeconds !== this.game.seconds) {
-    this.flash = true;
-    setTimeout(() => this.flash = false, 180); // matches animation length
-  }
-  this.previousSeconds = this.game.seconds;
   console.log('Counters:', this.counters);
 
   this.drinker = this.game.currentTurn;

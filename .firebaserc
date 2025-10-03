@@ -1,4 +1,7 @@
 {
+  "projects": {
+    "production": "death-box-28ecf"
+  },
   "targets": {
     "death-box-28ecf": {
       "hosting": {
@@ -7,5 +10,6 @@
         ]
       }
     }
-  }
+  },
+  "etags": {}
 }

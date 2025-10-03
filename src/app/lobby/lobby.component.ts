@@ -12,7 +12,7 @@ import { HowToPlayComponent } from '../how-to-play/how-to-play.component';
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
-  styleUrls: ['./lobby.component.css'],
+  styleUrls: ['./lobby.component.scss'],
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
 })
@@ -33,13 +33,13 @@ export class LobbyComponent implements OnInit {
   showPopup = false;
   isHost = sessionStorage.getItem('host') === 'true';
   infoClicked = false;
+  isLoadingAvatars: Record<string, boolean> = {};
 
   constructor() {
     this.joinGameForm = this.fb.group({
       playerName: ['', Validators.required],
     });
 
-    // 🔹 Watch game stream for "active" status and redirect
     this.game$
       .pipe(
         takeUntilDestroyed(),
@@ -63,6 +63,10 @@ export class LobbyComponent implements OnInit {
     }
   }
 
+  onImageLoad(playerKey: string) {
+    this.isLoadingAvatars[playerKey] = false;
+}
+
   joinGame() {
     const gameId = location.pathname.split('/')[2];
     const playerName = this.joinGameForm.value.playerName?.trim();
@@ -85,8 +89,9 @@ export class LobbyComponent implements OnInit {
     }
 
   inviteClicked() {
-    const url = window.location.href;
-    navigator.clipboard.writeText(`Play deathbox with me! ${url}`);
+    const gameId = location.pathname.split('/')[2];
+    const url = window.location.origin + `?join=${gameId}`;
+    navigator.clipboard.writeText(`Play Deathbox with me! ${url}`);
     this.showPopup = true;
     setTimeout(() => (this.showPopup = false), 1000);
   }
