@@ -1,65 +1,53 @@
 @if (game$ | async; as game) {
-<app-navbar [player]="game.currentTurn"
-  [correct]="game.players[sessionPlayer!].correctGuesses" [gameId]="game.id"
+<app-navbar [player]="game.currentTurn" [correct]="game.players[sessionPlayer!].correctGuesses" [gameId]="game.id"
   (backToBoard)="endCounting()"></app-navbar>
 
 @if (!game.counting) {
 <div class="game">
   <div class="board">
-  <!-- Board view -->
-  @if (!cardSelected) {
-      <div #deckEl class="deck">
-    <app-deck style="display: none;" [isFlipped]="!!choice && !!clickedData" [card]="newCard" (newCardEmitter)="compareCards($event)"></app-deck>
-  </div>
-  <div class="card-container">
-    <ng-container *ngFor="let stack of (game.stackGrid | keyvalue)">
-      <app-stack [id]="stack.key" [cards]="stack.value.cards" [currentPlayer]="game.currentTurn"
-        (clickedCardEmitter)="chooseCard($event, game.deck, game.stackGrid)" [selectedCard]="selectedCard" [lastAddedCardId]="lastAddedCardId"></app-stack>
-    </ng-container>
-  </div>
-  <div class="game-buttons">
-    <div class="arcade-choices" role="group" aria-label="Choose Higher or Lower">
-  <button
-    class="arcade-pick higher"
-    type="button"
-    [class.selected]="choice==='higher'"
-    [disabled]="!clickedData || choice==='lower'"
-    (click)="drawFromDeck('higher')"
-    aria-pressed="{{ choice==='higher' }}"
-  >
-    <span class="face">
-      <span class="icon">▲</span>
-      <span class="label">Higher</span>
-    </span>
-  </button>
+    <!-- Board view -->
+    @if (!cardSelected) {
+    <div #deckEl class="deck">
+      <app-deck style="display: none;" [isFlipped]="!!choice && !!clickedData" [card]="newCard"
+        (newCardEmitter)="compareCards($event)"></app-deck>
+    </div>
+    <div class="card-container">
+      <ng-container *ngFor="let stack of (game.stackGrid | keyvalue)">
+        <app-stack [id]="stack.key" [cards]="stack.value.cards" [currentPlayer]="game.currentTurn"
+          (clickedCardEmitter)="chooseCard($event, game.deck, game.stackGrid)" [selectedCard]="selectedCard"
+          [lastAddedCardId]="lastAddedCardId"></app-stack>
+      </ng-container>
+    </div>
+    <div class="game-buttons">
+      <div class="arcade-choices" role="group" aria-label="Choose Higher or Lower">
+        <button class="arcade-pick higher" type="button" [class.selected]="choice==='higher'"
+          [disabled]="!clickedData || choice==='lower'" (click)="drawFromDeck('higher')"
+          aria-pressed="{{ choice==='higher' }}">
+          <span class="face">
+            <span class="icon">▲</span>
+            <span class="label">Higher</span>
+          </span>
+        </button>
 
-  <button
-    class="arcade-pick lower"
-    type="button"
-    [class.selected]="choice==='lower'"
-    [disabled]="!clickedData || choice==='higher'"
-    (click)="drawFromDeck('lower')"
-    aria-pressed="{{ choice==='lower' }}"
-  >
-    <span class="face">
-      <span class="icon">▼</span>
-      <span class="label">Lower</span>
-    </span>
-  </button>
-</div>
+        <button class="arcade-pick lower" type="button" [class.selected]="choice==='lower'"
+          [disabled]="!clickedData || choice==='higher'" (click)="drawFromDeck('lower')"
+          aria-pressed="{{ choice==='lower' }}">
+          <span class="face">
+            <span class="icon">▼</span>
+            <span class="label">Lower</span>
+          </span>
+        </button>
+      </div>
+    </div>
 
-    <!-- <button [class.disabled]="!clickedData || choice === 'lower'" (click)="drawFromDeck('higher')">Higher</button> -->
-    <!-- <button [class.disabled]="!clickedData || choice === 'higher'" (click)="drawFromDeck('lower')">Lower</button> -->
+    <!-- Flying card overlay -->
+    @if (flyingCard) {
+    <div class="flying-card" [ngStyle]="flyingStyle">
+      <img [src]="'../..' + flyingCard.cardPath" />
+    </div>
+    }
+    }
   </div>
-
-  <!-- Flying card overlay -->
-  @if (flyingCard) {
-  <div class="flying-card" [ngStyle]="flyingStyle">
-    <img [src]="'../..' + flyingCard.cardPath" />
-  </div>
-  }
-  }
-</div>
   <!-- Messages -->
   <app-messages [gameId]="game.id">
   </app-messages>
@@ -69,15 +57,4 @@
 <app-count class="count" [game]="game" [sessionPlayer]="sessionPlayer"
   (nextCounter)="getNextCounter($event)"></app-count>
 }
-<!-- <div class="bottom-nav">
-  <span class="chat-icon" (click)="toggleMessages()">
-    <span class="material-symbols-outlined">chat_bubble</span>
-    <span *ngIf="unreadMessages" class="badge"></span>
-  </span>
-  <span class="score-icon">
-    <span class="material-symbols-outlined">
-      sports_score
-    </span>
-  </span>
-</div> -->
 }

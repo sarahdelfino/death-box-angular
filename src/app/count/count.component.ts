@@ -30,26 +30,33 @@ ngOnChanges(changes: SimpleChanges): void {
     id => id !== this.game.currentTurn
   );
 
-    if (this.previousSeconds !== null && this.previousSeconds !== this.game.seconds) {
-    this.flash = true;
-    setTimeout(() => this.flash = false, 180); // matches animation length
-  }
-  this.previousSeconds = this.game.seconds;
-  console.log('Counters:', this.counters);
-
   this.drinker = this.game.currentTurn;
+
   // Reset counter at the start of each drinking round
   const prevTurn = changes['game']?.previousValue?.currentTurn;
   const newTurn = changes['game']?.currentValue?.currentTurn;
 
   if (!this.game.counter || prevTurn !== newTurn) {
-    this.game.counter = this.counters[0];
+    // pick the first *non-drinker* counter
+    this.game.counter = this.counters.length > 0 ? this.counters[0] : null;
   }
+
+  // Flash animation trigger
+  if (this.previousSeconds !== null && this.previousSeconds !== this.game.seconds) {
+    this.flash = true;
+    setTimeout(() => this.flash = false, 180);
+  }
+  this.previousSeconds = this.game.seconds;
 }
 
-  get isActive(): boolean {
-    return sessionStorage.getItem("player") === this.game.counter && !!this.game?.counting;
-  }
+get isActive(): boolean {
+  const player = sessionStorage.getItem("player");
+  return (
+    player === this.game.counter &&
+    player !== this.drinker &&   // ensure drinker never counts
+    !!this.game?.counting
+  );
+}
 
   get isDrinking(): boolean {
     return sessionStorage.getItem("player") === this.drinker && !!this.game?.counting;
