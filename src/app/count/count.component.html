@@ -1,27 +1,19 @@
 <div class="count-container">
   <div class="text-container">
     @if (isDrinking) {
-      <h1 class="title-glitch">Bottoms up!</h1>
-      <p class="flavor">The spirits chose <span>{{ drinker }}</span>.</p>
-      <p class="ominous">Drink until fate says otherwise.</p>
+    <h1 class="title-glitch">Bottoms up, {{ drinker }}!</h1>
+    <p class="ominous">Have fun.</p>
     } @else {
-      <h1 class="title-glitch">Tap to Drain</h1>
-      <p class="flavor">Mercy is in your hands.</p>
-      <p class="ominous">Or let {{ drinker }} suffer second by second.</p>
+    <h1 class="title-glitch">Tap to speed it up</h1>
+    <p class="flavor"><span>{{ drinker }}</span> is drinking.</p>
+    <p class="flavor">Help end it… or make them sweat.</p>
+    <p class="ominous">{{ drinker }} can’t stop the clock.</p>
     }
   </div>
 
-  <div class="crt-counter"
-       [ngClass]="{ 'active': isActive && !isDrinking, 'drinker': isDrinking, 'disabled': !isActive && !isDrinking }"
-       (click)="isActive ? count() : null">
+  <div class="crt-counter" [class.active]="isActive" (click)="onTap()">
     <div class="fill-bar" [style.height]="liquidHeight"></div>
     <div class="skull-bg"></div>
     <div class="timer">{{ game.seconds }}</div>
-
-    <!-- pixel corner accents -->
-    <div class="corner tl"></div>
-    <div class="corner tr"></div>
-    <div class="corner bl"></div>
-    <div class="corner br"></div>
   </div>
 </div>

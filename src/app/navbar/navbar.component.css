@@ -14,10 +14,11 @@ h3, h4 {
     color: #7AFFB1;
     align-items: center;
     font-family: 'Open Sans', sans-serif;
+    padding: 10px;
 }
 
 .help {
-    margin: 5px 5px 5px auto;
+    margin: 15px 25px 5px auto;
 }
 
 .nav-flex {

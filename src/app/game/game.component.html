@@ -49,8 +49,40 @@
     }
   </div>
   <!-- Messages -->
-  <app-messages [gameId]="game.id">
+  <!-- <app-messages [gameId]="game.id">
   </app-messages>
+  <app-scoreboard [game]="game"></app-scoreboard> -->
+<div class="chat-panel">
+  <!-- Tabs -->
+  <div class="chat-tabs">
+    <button
+      class="tab"
+      [class.active]="isChatActive()"
+      (click)="setActiveTab('chat')"
+    >
+      Chat
+    </button>
+
+    <button
+      class="tab"
+      [class.active]="isScoreboardActive()"
+      (click)="setActiveTab('scoreboard')"
+    >
+      Scoreboard
+    </button>
+  </div>
+
+  <!-- Chat Messages -->
+    @if (isChatActive()) {
+    <app-messages [gameId]="game.id"></app-messages>
+    }
+
+  <!-- Scoreboard -->
+   @if (isScoreboardActive()) {
+    <app-scoreboard [game]="game"></app-scoreboard>
+  }
+</div>
+
 </div>
 } @else {
 <!-- Counter -->

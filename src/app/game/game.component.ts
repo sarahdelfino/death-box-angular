@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { StackComponent } from '../stack/stack.component';
 import { MessagesComponent } from '../messages/messages.component';
 import { DeckComponent } from '../deck/deck.component';
+import { ScoreboardComponent } from "../scoreboard/scoreboard.component";
 
 @Component({
   selector: 'app-game',
@@ -21,8 +22,9 @@ import { DeckComponent } from '../deck/deck.component';
     CountComponent,
     DeckComponent,
     StackComponent,
-    MessagesComponent
-  ],
+    MessagesComponent,
+    ScoreboardComponent
+],
   providers: [GameStore],
 })
 export class GameComponent {
@@ -58,6 +60,7 @@ cardTransform = 'translate(0,0)';
   selectedCard: Card | null = null;
   counting = false;
   unreadMessages = false;
+  activeTab: 'chat' | 'scoreboard' = 'chat';
 
   clickedData: {
     clickedCard: Card;
@@ -330,4 +333,17 @@ drawFromDeck(prediction: 'higher' | 'lower') {
     const gameId = this.route.snapshot.paramMap.get('id');
     if (gameId) this.store.endCounting(gameId);
   }
+
+  setActiveTab(tab: 'chat' | 'scoreboard') {
+    this.activeTab = tab;
+  }
+
+  isChatActive(): boolean {
+    return this.activeTab === 'chat';
+  }
+
+  isScoreboardActive(): boolean {
+    return this.activeTab === 'scoreboard';
+  }
+
 }

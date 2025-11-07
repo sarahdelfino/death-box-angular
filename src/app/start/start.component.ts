@@ -5,6 +5,7 @@ import { nanoid } from 'nanoid';
 import { GameStore } from '../game.store';
 import { MatDialog } from '@angular/material/dialog';
 import { HowToPlayComponent } from '../how-to-play/how-to-play.component';
+import { getAnalytics, logEvent } from '@angular/fire/analytics';
 
 @Component({
   selector: 'app-start',
@@ -19,6 +20,8 @@ export class StartComponent implements OnInit {
   private store = inject(GameStore);
   private dialog = inject(MatDialog);
   private route = inject(ActivatedRoute);
+
+  analytics = getAnalytics();
 
   joinGameForm: FormGroup = this.fb.group({
     id: ['', [Validators.required, Validators.maxLength(5)]],
@@ -83,6 +86,11 @@ export class StartComponent implements OnInit {
     sessionStorage.setItem('player', name);
     sessionStorage.setItem('host', 'false');
 
+    logEvent(this.analytics, 'game_joined', {
+      gameId: id,
+      player: name
+    });
+
     this.store.addPlayer({ gameId: id.toUpperCase(), playerName: name });
     this.router.navigateByUrl(`/lobby/${id.toUpperCase()}`)
   }
@@ -97,6 +105,11 @@ export class StartComponent implements OnInit {
 
     sessionStorage.setItem('player', name);
     sessionStorage.setItem('host', 'true');
+
+      logEvent(this.analytics, 'game_created', {
+      gameId: id,
+      player: name
+    });
 
     this.store.createGame({ gameId: id, playerName: name });
     this.router.navigateByUrl(`/lobby/${id}`)

@@ -1,60 +1,24 @@
-@if (!shortened) {
-  <h2>How to Play</h2>
-  <div>
-    <p>
-      You are given <strong>nine stacks</strong> of cards laid out face-up in a 3x3 grid.
-    </p>
-    <p>
-      On your turn, you must select a stack and predict whether the next card will register as <strong>higher</strong> or <strong>lower</strong> than the value currently displayed.
-    </p>
-    <p>
-      Survive <strong>three correct predictions</strong> and the program spares you.  
-      But a single failure triggers the anomaly.
-    </p>
-    <p>
-      The number of cards in your chosen stack becomes your sentence.  
-      A digital countdown begins, binding you in static until it reaches zero.
-    </p>
-    <p>
-      The clock drains only at the mercy of the others connected to the machine.  
-      They tap, each strike pushing the timer forward — perhaps rushing you to safety… or slowing the feed so you remain trapped in the signal.
-    </p>
-    <div class="prayer-line">
-      <p>Pray the deck does not corrupt your path.</p>
-      <p>Pray your friends do not corrupt your fate.</p>
-    </div>
-  </div>
-} @else {
-  <div class="shortened">
-    <h2>On Your Turn</h2>
-    <ul>
-      <li>Select one of the <strong>nine face-up stacks</strong>.</li>
-      <li>Predict if the next card will be <strong>higher</strong> or <strong>lower</strong> than the top value.</li>
-      <li>Three correct predictions = escape.</li>
-    </ul>
+<h2>How to Play</h2>
 
-    <h2>If You're Wrong</h2>
-    <ul>
-      <li>The stack’s size becomes your sentence.</li>
-      <li>A countdown locks you in until it expires.</li>
-    </ul>
+<h3>Your Turn</h3>
+<ul>
+  <li>Choose one of the <strong>nine face-up stacks</strong>.</li>
+  <li>Predict whether the next card will be <strong>higher</strong> or <strong>lower</strong> than the top card.</li>
+  <li>Get <strong>three predictions</strong> right to clear your turn.</li>
+</ul>
 
-    <h2>The Counters</h2>
-    <ul>
-      <li>Other players tap the feed, advancing the clock.</li>
-      <li>They may free you swiftly… or stall the signal, leaving you trapped.</li>
-    </ul>
+<h3>If You’re Wrong</h3>
+<ul>
+  <li>The number of cards in your chosen stack becomes your <strong>drinking time</strong>.</li>
+  <li>A countdown begins — you must drink until it ends.</li>
+</ul>
 
-    <p class="ominous">
-      Pray the deck runs clean.  
-      Pray your friends do too.
-    </p>
-  </div>
-}
+<h3>The Counters</h3>
+<ul>
+  <li>Other players can <strong>tap</strong> to speed up your timer.</li>
+<li>They might help you out… or drag it on.</li>
+</ul>
 
 <div mat-dialog-actions>
-  <button mat-button (click)="toggleVersion()">
-    {{ shortened ? 'Full Story' : 'View quick version' }}
-  </button>
   <button class="primary" mat-dialog-close>Got it</button>
 </div>

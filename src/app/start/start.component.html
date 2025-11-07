@@ -7,28 +7,20 @@
     <img class="logo" src="../../assets/deathbox-logo.png" alt="deathbox-logo" />
   </div>
 
-  <div class="content">
-<div class="button-container">
-  <button
-    class="arcade-btn primary"
-    [class.selected]="createClicked"
-    (click)="toggleCreate()"
-    type="button"
-    [attr.aria-pressed]="createClicked"
-  >
-    New Game
-  </button>
 
-  <button
-    class="arcade-btn secondary"
-    [class.selected]="joinClicked"
-    (click)="toggleJoin()"
-    type="button"
-    [attr.aria-pressed]="joinClicked"
-  >
-    Join Game
-  </button>
-</div>
+  <div class="content">
+        <h2 style="font-size: 1.25rem; margin-bottom: 24px;">The ultimate drinking game</h2>
+    <div class="button-container">
+      <button class="arcade-btn primary" [class.selected]="createClicked" (click)="toggleCreate()" type="button"
+        [attr.aria-pressed]="createClicked">
+        New Game
+      </button>
+
+      <button class="arcade-btn secondary" [class.selected]="joinClicked" (click)="toggleJoin()" type="button"
+        [attr.aria-pressed]="joinClicked">
+        Join Game
+      </button>
+    </div>
 
 
     <!-- CREATE GAME FORM -->
@@ -36,29 +28,12 @@
     <form [formGroup]="createGameForm" id="create" (ngSubmit)="createGame(createGameForm)">
       <div class="input-container">
         <label for="createName">Who goes there?</label>
-        <input
-          id="createName"
-          class="arcade-input"
-          formControlName="name"
-          required
-          autocomplete="off"
-          placeholder="Name"
-        />
-          <input
-    type="text"
-    name="dumb"
-    formControlName="dumb"
-    autocomplete="off"
-    tabindex="-1"
-    class="dumb"
-  />
+        <input id="createName" class="arcade-input" formControlName="name" required autocomplete="off"
+          placeholder="Name" />
+        <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
       </div>
-      <button
-        class="arcade-btn"
-        type="submit"
-        [disabled]="createGameForm.invalid"
-        [class.ghost]="createGameForm.invalid"
-      >
+      <button class="arcade-btn" type="submit" [disabled]="createGameForm.invalid"
+        [class.ghost]="createGameForm.invalid">
         Create
       </button>
     </form>
@@ -69,43 +44,20 @@
     <form [formGroup]="joinGameForm" id="join" (ngSubmit)="joinGame(joinGameForm)">
       <div class="input-container">
         <label for="joinName">Who goes there?</label>
-        <input
-          id="joinName"
-          class="arcade-input"
-          formControlName="name"
-          required
-          autocomplete="off"
-          placeholder="Name"
-        />
+        <input id="joinName" class="arcade-input" formControlName="name" required autocomplete="off"
+          placeholder="Name" />
       </div>
 
       <div class="input-container" style="margin-top: 10px;">
         <label for="joinId">What's the password?</label>
-        <input
-          id="joinId"
-          class="arcade-input"
-          formControlName="id"
-          required
-          autocomplete="off"
-          placeholder="Game ID"
-        />
+        <input id="joinId" class="arcade-input" formControlName="id" required autocomplete="off"
+          placeholder="Game ID" />
       </div>
 
-                <input
-    type="text"
-    name="dumb"
-    formControlName="dumb"
-    autocomplete="off"
-    tabindex="-1"
-    class="dumb"
-  />
+      <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
 
-      <button
-        class="arcade-btn secondary"
-        type="submit"
-        [disabled]="joinGameForm.invalid"
-        [class.ghost]="joinGameForm.invalid"
-      >
+      <button class="arcade-btn secondary" type="submit" [disabled]="joinGameForm.invalid"
+        [class.ghost]="joinGameForm.invalid">
         Join
       </button>
     </form>

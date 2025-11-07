@@ -1,30 +1,40 @@
 <div class="messages-container">
   <div class="chats">
     @for (msg of (messages$ | async); track msg.key) {
-    <div #messageList class="messages">
-      <div [id]="msg.key" class="message" [ngClass]="msg.player === user ? 'my-message' : 'other-message'">
-        <div class="message-flex">
-          <div class="message-avatar">
-            <img id="avatar" [src]="'https://robohash.org/' + gameId + msg.player + '?set=set5'" />
-          </div>
+      <div #messageList class="messages">
+        <div
+          [id]="msg.key"
+          class="message"
+          [ngClass]="msg.player === user ? 'my-message' : 'other-message'"
+        >
           <div class="body-flex">
-            @if (msg.player !== user) {
-            <div class="username">{{ msg.player }}</div>
-            }
+              <div class="username">{{ msg.player }}</div>
             <div class="message-body">
               {{ msg.message }}
             </div>
           </div>
+          <div class="meta-line">
+            <!-- <span class="timestamp">{{ msg.time }}</span> -->
+          </div>
         </div>
       </div>
-    </div>
     }
   </div>
 
-<div class="submit-form">
-  <input #message id="message" class="arcade-input chat-input" autocomplete="off" />
-  <button class="arcade-btn tertiary chat-btn"
-          (click)="sendMessage(message.value)" type="submit">
-    Send
-  </button>
+  <div class="submit-form">
+    <input
+      #message
+      id="message"
+      class="chat-input"
+      placeholder="Type a message..."
+      autocomplete="off"
+    />
+    <button
+      class="chat-btn"
+      (click)="sendMessage(message.value)"
+      type="submit"
+    >
+      Send
+    </button>
+  </div>
 </div>

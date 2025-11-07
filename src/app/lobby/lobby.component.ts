@@ -80,6 +80,10 @@ export class LobbyComponent implements OnInit {
   }
 
     toggleInfo(): void {
+    //       logEvent(this.analytics, 'lobby_info', {
+    //   gameId: id,
+    //   player: name
+    // });
       this.infoClicked = true;
       this.dialog.open(HowToPlayComponent, {
         width: '400px',

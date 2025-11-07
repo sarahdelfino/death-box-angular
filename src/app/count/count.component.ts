@@ -1,8 +1,10 @@
-import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, OnDestroy } from '@angular/core';
 import { GameState } from '../models/game-state.model';
 import { GameStore } from '../game.store';
 import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { TapService } from '../tap.service';
+import { CountdownAuthorityService } from '../countdown-authority.service';
 
 @Component({
   selector: 'app-count',
@@ -11,9 +13,11 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
 })
-export class CountComponent implements OnChanges {
+export class CountComponent implements OnChanges, OnDestroy {
 
   private store = inject(GameStore);
+  private tapService = inject(TapService);
+  private countdownAuthority = inject(CountdownAuthorityService);
 
   @Input() game!: GameState;
   @Input() sessionPlayer!: string | null;
@@ -25,101 +29,118 @@ export class CountComponent implements OnChanges {
   previousSeconds: number | null = null;
   flash = false;
 
-ngOnChanges(changes: SimpleChanges): void {
-  this.counters = Object.keys(this.game.players).filter(
-    id => id !== this.game.currentTurn
-  );
+  // --- internal state guards ---
+  private authorityRunning = false;
+  private tappingRunning = false;
 
-  this.drinker = this.game.currentTurn;
+  ngOnChanges(changes: SimpleChanges): void {
+    this.counters = Object.keys(this.game.players).filter(
+      id => id !== this.game.currentTurn
+    );
 
-  // Reset counter at the start of each drinking round
-  const prevTurn = changes['game']?.previousValue?.currentTurn;
-  const newTurn = changes['game']?.currentValue?.currentTurn;
+    this.drinker = this.game.currentTurn;
 
-  if (!this.game.counter || prevTurn !== newTurn) {
-    // pick the first *non-drinker* counter
-    this.game.counter = this.counters.length > 0 ? this.counters[0] : null;
+    // Reset counter at the start of each drinking round
+    const prevTurn = changes['game']?.previousValue?.currentTurn;
+    const newTurn = changes['game']?.currentValue?.currentTurn;
+
+    if (!this.game.counter || prevTurn !== newTurn) {
+      this.game.counter = this.counters.length > 0 ? this.counters[0] : null;
+    }
+
+    // Flash animation trigger
+    if (this.previousSeconds !== null && this.previousSeconds !== this.game.seconds) {
+      this.flash = true;
+      setTimeout(() => (this.flash = false), 180);
+    }
+    this.previousSeconds = this.game.seconds;
+
+    const me = this.sessionPlayer;
+    const isDrinker = me === this.drinker;
+
+    // --- Authority logic (drinker side) ---
+    if (this.game.counting && isDrinker && !this.authorityRunning) {
+      this.countdownAuthority.start(
+        this.game.id,
+        Object.keys(this.game.players).length - 1,
+        this.game.seconds! * 1000,
+        this.drinker!
+      );
+      this.authorityRunning = true;
+    }
+
+    if ((!this.game.counting || !isDrinker) && this.authorityRunning) {
+      this.countdownAuthority.stop();
+      this.authorityRunning = false;
+    }
+
+    // --- Tap logic (counter side) ---
+    if (this.game.counting && !isDrinker && me && !this.tappingRunning) {
+      this.tapService.start(this.game.id, me);
+      this.tappingRunning = true;
+    }
+
+    if ((!this.game.counting || isDrinker) && this.tappingRunning) {
+      this.tapService.stop();
+      this.tappingRunning = false;
+    }
   }
 
-  // Flash animation trigger
-  if (this.previousSeconds !== null && this.previousSeconds !== this.game.seconds) {
-    this.flash = true;
-    setTimeout(() => this.flash = false, 180);
+  ngOnDestroy(): void {
+    // Clean up in case component unmounts mid-round
+    this.countdownAuthority.stop();
+    this.tapService.stop();
+    this.authorityRunning = false;
+    this.tappingRunning = false;
   }
-  this.previousSeconds = this.game.seconds;
-}
 
-get isActive(): boolean {
-  const player = sessionStorage.getItem("player");
-  return (
-    player === this.game.counter &&
-    player !== this.drinker &&   // ensure drinker never counts
-    !!this.game?.counting
-  );
-}
+  get isActive(): boolean {
+    const player = sessionStorage.getItem('player');
+    return (
+      player === this.game.counter &&
+      player !== this.drinker &&
+      !!this.game?.counting
+    );
+  }
 
   get isDrinking(): boolean {
-    return sessionStorage.getItem("player") === this.drinker && !!this.game?.counting;
+    return sessionStorage.getItem('player') === this.drinker && !!this.game?.counting;
   }
-get liquidHeight(): string {
-  if (!this.game?.initialSeconds) return '0%';
-  const ratio = this.game.seconds! / this.game.initialSeconds;
 
-  // Cap at 85% so the waves are always visible
-  const capped = Math.min(ratio * 100);
+  get liquidHeight(): string {
+    if (!this.game?.initialSeconds) return '0%';
+    const ratio = this.game.seconds! / this.game.initialSeconds;
+    const capped = Math.min(ratio * 100);
+    return `${Math.max(0, capped)}%`;
+  }
 
-  return `${Math.max(0, capped)}%`;
-}
+  getSkullPosition(): string {
+    if (!this.game?.initialSeconds) return '20%';
+    const ratio = this.game.seconds! / this.game.initialSeconds;
+    const surface = ratio * 100;
+    const offset = surface - 10;
+    const clamped = Math.max(offset, 15);
+    return `${clamped}%`;
+  }
 
-getSkullPosition(): string {
-  if (!this.game?.initialSeconds) return '20%';
-
-  const ratio = this.game.seconds! / this.game.initialSeconds;
-
-  // liquid surface in %
-  const surface = ratio * 100;
-
-  // offset downward so skull looks half-submerged
-  const offset = surface - 10;
-
-  // clamp so skull never falls below ~15% from bottom
-  const clamped = Math.max(offset, 15);
-
-  return `${clamped}%`;
-}
-
+  onTap() {
+    if (this.isActive) {
+      console.log("TAPPED");
+      this.tapService.tap();
+    }
+  }
 
   get text(): string {
     return this.game?.seconds === 1 ? 'second' : 'seconds';
   }
 
-count() {
-  if (this.game.seconds! > 1) {
-    this.store.decrementSeconds(of(this.game.id));
-
-    // Only rotate counters if there are multiple
-    if (this.counters.length > 1) {
-      // this.nextCounter.emit(this.getNextCounter() || this.counters[0]);
-      this.store.setCounter({ gameId: this.game.id, name: this.getNextCounter() || this.counters[0]})
+  getNextCounter(): string | null {
+    if (!this.counters.length) return null;
+    const currentIndex = this.counters.indexOf(this.game.counter!);
+    let nextIndex = (currentIndex + 1) % this.counters.length;
+    if (this.counters[nextIndex] === this.drinker) {
+      nextIndex = (nextIndex + 1) % this.counters.length;
     }
-  } else {
-    this.store.endCounting(this.game.id);
+    return this.counters[nextIndex];
   }
-}
-
-getNextCounter(): string | null {
-  if (!this.counters.length) return null;
-
-  const currentIndex = this.counters.indexOf(this.game.counter!);
-  let nextIndex = (currentIndex + 1) % this.counters.length;
-
-  // Skip if next is the drinker
-  if (this.counters[nextIndex] === this.drinker) {
-    nextIndex = (nextIndex + 1) % this.counters.length;
-  }
-
-  return this.counters[nextIndex];
-}
-
-
 }

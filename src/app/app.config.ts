@@ -5,7 +5,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth, signInAnonymously } from '@angular/fire/auth';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideAnalytics, getAnalytics, logEvent } from '@angular/fire/analytics';
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
@@ -25,6 +25,7 @@ export const appConfig: ApplicationConfig = {
       });
       return auth;
     }),
+    provideAnalytics(() => getAnalytics()),
     provideDatabase(() => getDatabase()),
     // provideFirestore(() => getFirestore()),
   ],

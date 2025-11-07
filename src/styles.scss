@@ -8,11 +8,30 @@ html, body, button, input, select, textarea {
 body {
   margin: 0;
   color: db.$glitch-purple;
-  background-color: db.$void-black;
-  border-radius: 6px;
-    box-shadow: 0 0 12px rgba(db.$glitch-purple, 0.6);
     height: 100vh;
-    animation: idle-pulse-purple 3s infinite alternate;
+}
+
+/* CRT scanline effect */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+.crt-scanline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(transparent, rgba(var(--color-primary), 0.3));
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+  z-index: 50;
 }
 
 h2 {
@@ -21,7 +40,6 @@ h2 {
   color: db.$neon-skull-green;
   text-shadow: 0 0 6px rgba(db.$neon-skull-green, 0.8);
   margin: 1rem 0 0.5rem;
-  border-bottom: 1px solid db.$dead-pixel-gray;
   padding-bottom: 0.25rem;
 }
 

@@ -1,0 +1,19 @@
+<div class="scoreboard">
+    <h2>Scoreboard</h2>
+    <table>
+        <tr>
+            <th>Player</th>
+            <th>Assigned (s)</th>
+            <th>Actual (s)</th>
+            <th>+/-</th>
+        </tr>
+        <tr *ngFor="let p of playerIds">
+            <td>{{ game.players[p].name }}</td>
+            <td>{{ game.stats?.[p]?.assigned || '-' }}</td>
+            <td>{{ game.stats?.[p]?.actual || '-' }}</td>
+            <td [class.over]="diff(p) > 0" [class.under]="diff(p) < 0">
+                {{ diff(p) > 0 ? '+' : '' }}{{ diff(p) }}
+            </td>
+        </tr>
+    </table>
+</div>

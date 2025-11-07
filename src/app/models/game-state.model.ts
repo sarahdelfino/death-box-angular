@@ -30,6 +30,13 @@ export interface Player {
   isHost?: boolean;
 }
 
+export interface GameStats {
+  [playerId: string]: {
+    assigned: number;
+    actual: number;
+  };
+}
+
 // GAME STATE (DB Root Object)
 
 export interface GameState {
@@ -47,5 +54,6 @@ export interface GameState {
   players: {
     [name: string]: Player
   }
+  stats?: GameStats;
   dumb?: string | null;
 }
