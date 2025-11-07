@@ -124,10 +124,6 @@
     cursor: pointer;
     font-family: 'Courier New', monospace;
     transition: all 0.2s ease;
-
-    &:hover {
-      background: lighten(db.$neon-skull-green, 10%);
-    }
   }
 }
 

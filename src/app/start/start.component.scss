@@ -8,9 +8,10 @@
 }
 
 .help {
-  display: flex;
-  justify-content: flex-end;
-  margin: 5px;
+  color: db.$toxic-mint;
+  position: absolute;
+  top: 30px;
+  right: 30px;
 }
 
 .input-container {
