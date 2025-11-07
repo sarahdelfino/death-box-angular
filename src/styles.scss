@@ -217,3 +217,38 @@ p, li {
   50%  { opacity: 0.22; transform: translateY(0%); }
   100% { opacity: 0.12; transform: translateY(8%); }
 }
+
+/* === CRT Grid Background === */
+.crt-grid {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: 0.10;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.crt-lines {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    oklch(0.65 0.25 145) 2px,
+    oklch(0.65 0.25 145) 4px
+  );
+}
+
+/* Mobile: thinner scanlines for high DPI screens */
+@media (max-width: 768px) {
+  .crt-lines {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(57, 255, 20, 0.15) 1px,
+      rgba(57, 255, 20, 0.15) 2px
+    );
+  }
+}
