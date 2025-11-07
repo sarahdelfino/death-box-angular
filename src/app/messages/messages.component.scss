@@ -4,7 +4,7 @@
 .messages-container {
   display: flex;
   flex-direction: column;
-  height: -webkit-fill-available;
+  height: 100%;
   background: rgba(db.$void-black, 0.7);
 }
 
