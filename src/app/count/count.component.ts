@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { GameState } from '../models/game-state.model';
 import { GameStore } from '../game.store';
-import { CommonModule } from '@angular/common';
+
 import { TapService } from '../tap.service';
 import { CountdownAuthorityService } from '../countdown-authority.service';
 
@@ -19,7 +19,7 @@ import { CountdownAuthorityService } from '../countdown-authority.service';
   templateUrl: './count.component.html',
   styleUrls: ['./count.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
 })
 export class CountComponent implements OnChanges, OnDestroy {
   private store = inject(GameStore);

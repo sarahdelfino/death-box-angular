@@ -1,125 +1,124 @@
 @if (game$ | async; as game) {
-<section class="lobby-panel">
-  <!-- Left: logo, game code, buttons, how-to -->
-  <header class="lobby-header">
-    <div class="logo-group">
-      <img class="logo" src="../../assets/deathbox-logo.png" alt="deathbox-logo" />
-      <div class="game-meta">
-        <p class="label">Lobby code</p>
-        <p class="gameId">{{ game.id }}</p>
-        <div style="display: flex; flex-direction: row-reverse;">
-          @if (isHost) {
-          <a class="status-pill status-host" (click)="startGame()">Start Game</a>
-          } @else {
-          <p class="status-pill status-waiting">
-            Waiting on host to start…
-          </p>
-          }
-          <a class="status-pill" (click)="inviteClicked()">Invite a friend</a>
+  <section class="lobby-panel">
+    <!-- Left: logo, game code, buttons, how-to -->
+    <header class="lobby-header">
+      <div class="logo-group">
+        <img class="logo" src="../../assets/deathbox-logo.png" alt="deathbox-logo" />
+        <div class="game-meta">
+          <p class="label">Lobby code</p>
+          <p class="gameId">{{ game.id }}</p>
+          <div style="display: flex; flex-direction: row-reverse;">
+            @if (isHost) {
+              <a class="status-pill status-host" (click)="startGame()">Start Game</a>
+            } @else {
+              <p class="status-pill status-waiting">
+                Waiting on host to start…
+              </p>
+            }
+            <a class="status-pill" (click)="inviteClicked()">Invite a friend</a>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="controls">
-      <!-- other controls can stay here if you add them later -->
-    </div>
+      <div class="controls">
+        <!-- other controls can stay here if you add them later -->
+      </div>
 
-    <section class="how-to-panel" id="how-to-panel">
-      <button
-        class="how-to-inline how-to-toggle"
-        type="button"
-        (click)="toggleInfo()"
-        [class.active]="infoClicked"
-        [attr.aria-expanded]="infoClicked"
-        aria-controls="how-to-body"
-      >
-        <div class="how-to-toggle-left">
-          <span class="material-symbols-outlined how-to-icon">
-            menu_book
+      <section class="how-to-panel" id="how-to-panel">
+        <button
+          class="how-to-inline how-to-toggle"
+          type="button"
+          (click)="toggleInfo()"
+          [class.active]="infoClicked"
+          [attr.aria-expanded]="infoClicked"
+          aria-controls="how-to-body"
+          >
+          <div class="how-to-toggle-left">
+            <span class="material-symbols-outlined how-to-icon">
+              menu_book
+            </span>
+            <span>How to play</span>
+          </div>
+          <span class="how-to-chevron" aria-hidden="true">
+            {{ infoClicked ? '–' : '+' }}
           </span>
-          <span>How to play</span>
-        </div>
-        <span class="how-to-chevron" aria-hidden="true">
-          {{ infoClicked ? '–' : '+' }}
-        </span>
-      </button>
+        </button>
 
-      <div
-        class="how-to-body"
-        id="how-to-body"
-        [class.collapsed]="!infoClicked"
-      >
-        <app-rules></app-rules>
+        <div
+          class="how-to-body"
+          id="how-to-body"
+          [class.collapsed]="!infoClicked"
+          >
+          <app-rules></app-rules>
+        </div>
+      </section>
+    </header>
+
+    <!-- Right: players -->
+    <section class="lobby-players">
+      <h2 class="players-title">
+        Players
+      </h2>
+
+      <div class="players" [class.scroll]="isHost">
+        @for (player of game.players | keyvalue; track player.key) {
+          <div class="list-flex">
+            <div
+              class="avatar-wrapper"
+              [class.loading]="isLoadingAvatars[player.key] !== false"
+              >
+              <img
+                class="avatar"
+                [src]="'https://robohash.org/' + game.id + player.key + '?set=set5'"
+                (load)="onImageLoad(player.key)"
+                />
+            </div>
+            <p>{{ player.key }}</p>
+          </div>
+        }
       </div>
     </section>
-  </header>
 
-  <!-- Right: players -->
-  <section class="lobby-players">
-    <h2 class="players-title">
-      Players
-    </h2>
-
-    <div class="players" [class.scroll]="isHost">
-      @for (player of game.players | keyvalue; track player.key) {
-      <div class="list-flex">
-        <div
-          class="avatar-wrapper"
-          [class.loading]="isLoadingAvatars[player.key] !== false"
-        >
-          <img
-            class="avatar"
-            [src]="'https://robohash.org/' + game.id + player.key + '?set=set5'"
-            (load)="onImageLoad(player.key)"
-          />
-        </div>
-        <p>{{ player.key }}</p>
+    @if (showInviteToast) {
+      <div class="invite-toast">
+        {{ inviteToastMessage }}
       </div>
-      }
-    </div>
+    }
   </section>
-
-  @if (showInviteToast) {
-  <div class="invite-toast">
-    {{ inviteToastMessage }}
-  </div>
-  }
-</section>
 }
 
 <!-- Join dialog for people who hit the lobby without a session player -->
-<dialog id="dialog" *ngIf="showJoinForm">
-  <form [formGroup]="joinGameForm" (ngSubmit)="joinGame()">
-    <h2>Join this lobby</h2>
-
-    <label for="playerName">Name</label>
-    <input
-      id="playerName"
-      type="text"
-      class="arcade-input"
-      formControlName="playerName"
-      autocomplete="off"
-      placeholder="Who goes there?"
-    />
-
-    <!-- Honeypot: hidden from humans, bots love it -->
-    <input
-      type="text"
-      name="dumb"
-      formControlName="dumb"
-      autocomplete="off"
-      tabindex="-1"
-      class="dumb"
-    />
-
-    <div class="dialog-actions">
-      <button
-        type="submit"
-        class="arcade-btn primary"
-        [disabled]="joinGameForm.invalid"
-      >
-        Join
-      </button>
-    </div>
-  </form>
-</dialog>
+@if (showJoinForm) {
+  <dialog id="dialog">
+    <form [formGroup]="joinGameForm" (ngSubmit)="joinGame()">
+      <h2>Join this lobby</h2>
+      <label for="playerName">Name</label>
+      <input
+        id="playerName"
+        type="text"
+        class="arcade-input"
+        formControlName="playerName"
+        autocomplete="off"
+        placeholder="Who goes there?"
+        />
+      <!-- Honeypot: hidden from humans, bots love it -->
+      <input
+        type="text"
+        name="dumb"
+        formControlName="dumb"
+        autocomplete="off"
+        tabindex="-1"
+        class="dumb"
+        />
+      <div class="dialog-actions">
+        <button
+          type="submit"
+          class="arcade-btn primary"
+          [disabled]="joinGameForm.invalid"
+          >
+          Join
+        </button>
+      </div>
+    </form>
+  </dialog>
+}

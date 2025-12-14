@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Analytics, logEvent } from '@angular/fire/analytics';
 import { FeedbackService, FeedbackInput } from '../feedback.service';
@@ -8,7 +8,7 @@ import { FeedbackService, FeedbackInput } from '../feedback.service';
   selector: 'app-feedback',
   templateUrl: './feedback.component.html',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   styleUrls: ['./feedback.component.scss'],
 })
 export class FeedbackComponent {

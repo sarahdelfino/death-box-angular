@@ -45,7 +45,7 @@
 
               <!-- Card grid -->
               <div class="card-container">
-                <ng-container *ngFor="let stack of (game.stackGrid | keyvalue)">
+                @for (stack of (game.stackGrid | keyvalue); track stack) {
                   <app-stack
                     [id]="stack.key"
                     [cards]="stack.value.cards"
@@ -55,7 +55,7 @@
                     [lastAddedCardId]="lastAddedCardId"
                     [wrongCardId]="wrongCardId"
                   ></app-stack>
-                </ng-container>
+                }
               </div>
 
               <!-- Higher / Lower controls -->
@@ -68,7 +68,7 @@
                     [disabled]="!clickedData || choice === 'lower'"
                     (click)="drawFromDeck('higher')"
                     aria-pressed="{{ choice === 'higher' }}"
-                  >
+                    >
                     <span class="face">
                       <span class="icon">▲</span>
                       <span class="label">Higher</span>
@@ -82,7 +82,7 @@
                     [disabled]="!clickedData || choice === 'higher'"
                     (click)="drawFromDeck('lower')"
                     aria-pressed="{{ choice === 'lower' }}"
-                  >
+                    >
                     <span class="face">
                       <span class="icon">▼</span>
                       <span class="label">Lower</span>

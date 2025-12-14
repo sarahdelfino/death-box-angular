@@ -15,32 +15,31 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let p of playerIds">
-        <td class="player-cell">
-          {{ game.players[p].name }}
-        </td>
-
-        <td class="time-cell">
-          {{ game.stats?.[p]?.assigned || '-' }}
-        </td>
-
-        <td class="time-cell">
-          {{ game.stats?.[p]?.actual || '-' }}
-        </td>
-
-        <td
-          class="diff-cell"
-          [class.over]="diff(p) > 0"
-          [class.under]="diff(p) < 0"
-        >
-          <span class="diff-sign">
-            {{ diff(p) > 0 ? '▲' : diff(p) < 0 ? '▼' : '·' }}
-          </span>
-          <span class="diff-value">
-            {{ diff(p) > 0 ? '+' : '' }}{{ diff(p) }}
-          </span>
-        </td>
-      </tr>
+      @for (p of playerIds; track p) {
+        <tr>
+          <td class="player-cell">
+            {{ game.players[p].name }}
+          </td>
+          <td class="time-cell">
+            {{ game.stats?.[p]?.assigned || '-' }}
+          </td>
+          <td class="time-cell">
+            {{ game.stats?.[p]?.actual || '-' }}
+          </td>
+          <td
+            class="diff-cell"
+            [class.over]="diff(p) > 0"
+            [class.under]="diff(p) < 0"
+            >
+            <span class="diff-sign">
+              {{ diff(p) > 0 ? '▲' : diff(p) < 0 ? '▼' : '·' }}
+            </span>
+            <span class="diff-value">
+              {{ diff(p) > 0 ? '+' : '' }}{{ diff(p) }}
+            </span>
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
 </div>

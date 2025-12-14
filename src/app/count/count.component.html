@@ -7,12 +7,13 @@
     <p class="flavor-main">
       It’s your turn to drink, <span class="name">{{ drinker }}</span>.
     </p>
-    <p class="flavor-secondary" *ngIf="assignedSeconds !== null">
-
-      You’re drinking for
-      <strong>{{ assignedSeconds }}</strong>
-      {{ assignedSeconds === 1 ? 'second' : 'seconds' }}.
-    </p>
+    @if (assignedSeconds !== null) {
+      <p class="flavor-secondary">
+        You’re drinking for
+        <strong>{{ assignedSeconds }}</strong>
+        {{ assignedSeconds === 1 ? 'second' : 'seconds' }}.
+      </p>
+    }
   </div>
 
   <div class="crt-counter" [class.active]="stage === 'counting'" [class.prep]="stage === 'prep'"
