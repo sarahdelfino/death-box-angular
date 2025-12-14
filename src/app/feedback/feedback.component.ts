@@ -20,7 +20,7 @@ export class FeedbackComponent {
   feedbackSubmitting = false;
   feedbackSent = false;
 
-  private readonly FEEDBACK_THROTTLE_MS = 30_000; // 30s between submits per browser
+  private readonly FEEDBACK_THROTTLE_MS = 30_000; 
 
   constructor(
     private fb: FormBuilder,
@@ -34,16 +34,16 @@ export class FeedbackComponent {
         [
           Validators.required,
           Validators.minLength(5),
-          Validators.maxLength(1000), // cap message size
+          Validators.maxLength(1000), 
         ],
       ],
       canContact: [false],
-      dumb: [''], // honeypot
+      dumb: [''], 
       email: [
         { value: '', disabled: true },
         [
           Validators.email,
-          Validators.maxLength(254), // reasonable email length cap
+          Validators.maxLength(254), 
         ],
       ],
     });
@@ -82,7 +82,7 @@ export class FeedbackComponent {
       dumb: string;
     };
 
-    // 🔒 Honeypot: if filled, treat as spam and bail
+    
     if (formValue.dumb && formValue.dumb.trim().length > 0) {
       logEvent(this.analytics, 'feedback_spam_honeypot', {
         screen: this.screen,
@@ -90,11 +90,11 @@ export class FeedbackComponent {
       return;
     }
 
-    // ⏱ Basic client-side throttle to reduce spam / rage-clicking
+    
     const lastTs = Number(localStorage.getItem('dbx_last_feedback_ts') || 0);
     const now = Date.now();
     if (now - lastTs < this.FEEDBACK_THROTTLE_MS) {
-      // Too soon; silently ignore
+      
       return;
     }
     localStorage.setItem('dbx_last_feedback_ts', String(now));
@@ -123,7 +123,7 @@ export class FeedbackComponent {
           message: '',
           canContact: false,
           email: '',
-          dumb: '', // reset honeypot too
+          dumb: '', 
         });
 
         logEvent(this.analytics, 'feedback_submitted', {

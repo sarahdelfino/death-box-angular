@@ -28,7 +28,7 @@ export class LobbyComponent implements OnInit {
 
   analytics = getAnalytics();
 
-  // Matches StartComponent constraints
+  
   private readonly PLAYER_NAME_REGEX = /^[A-Za-z0-9 _-]+$/;
   private readonly GAME_ID_REGEX = /^[A-Za-z0-9]{3,5}$/;
   private readonly ACTION_THROTTLE_MS = 2500;
@@ -55,7 +55,7 @@ export class LobbyComponent implements OnInit {
           Validators.pattern(this.PLAYER_NAME_REGEX),
         ],
       ],
-      dumb: [''], // honeypot
+      dumb: [''], 
     });
 
     this.game$
@@ -69,10 +69,10 @@ export class LobbyComponent implements OnInit {
   }
 
   ngOnInit() {
-    // sanitize + validate gameId from URL
+    
     const cleanId = this.sanitize(this.gameId);
     if (!this.GAME_ID_REGEX.test(cleanId)) {
-      return; // bad URL, do nothing
+      return; 
     }
     this.gameId = cleanId;
 
@@ -87,7 +87,7 @@ export class LobbyComponent implements OnInit {
     }
   }
 
-  // --- helpers ---
+  
 
   private tooSoon(): boolean {
     const now = Date.now();
@@ -118,7 +118,7 @@ export class LobbyComponent implements OnInit {
     this.isLoadingAvatars[playerKey] = false;
   }
 
-  // --- join from lobby dialog ---
+  
 
   joinGame() {
     if (this.tooSoon()) return;
@@ -128,7 +128,7 @@ export class LobbyComponent implements OnInit {
       dumb?: string;
     };
 
-    // honeypot: bots filling this get dropped
+    
     if (dumb && dumb.trim().length > 0) {
       logEvent(this.analytics, 'honeypot_triggered_join_lobby', {
         game_id: this.gameId,
@@ -150,7 +150,7 @@ export class LobbyComponent implements OnInit {
     this.showJoinForm = false;
   }
 
-  // --- how to ---
+  
 
   toggleInfo(): void {
     logEvent(this.analytics, 'click_instructions', {
@@ -168,7 +168,7 @@ export class LobbyComponent implements OnInit {
     }
   }
 
-  // --- invite link ---
+  
 
   inviteClicked() {
     const cleanGameId = this.gameId;
@@ -212,7 +212,7 @@ export class LobbyComponent implements OnInit {
     }
   }
 
-  // --- host start game ---
+  
 
   startGame() {
     const cleanGameId = this.gameId;

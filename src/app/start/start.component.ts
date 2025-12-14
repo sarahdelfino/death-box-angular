@@ -26,9 +26,9 @@ export class StartComponent implements OnInit {
 
   analytics = getAnalytics();
 
-  private readonly PLAYER_NAME_REGEX = /^[A-Za-z0-9 _-]+$/;    // sanitize names
-  private readonly GAME_ID_REGEX = /^[A-Za-z0-9]{3,5}$/;       // allow only A–Z, 0–9
-  private readonly ACTION_THROTTLE_MS = 2500;                  // 2.5s per join/create
+  private readonly PLAYER_NAME_REGEX = /^[A-Za-z0-9 _-]+$/;    
+  private readonly GAME_ID_REGEX = /^[A-Za-z0-9]{3,5}$/;       
+  private readonly ACTION_THROTTLE_MS = 2500;                  
 
   joinGameForm: FormGroup = this.fb.group({
     id: [
@@ -84,7 +84,7 @@ export class StartComponent implements OnInit {
       this.showCookieBanner = true;
     }
 
-    // Handle ?join=XXXX auto-join
+    
     this.route.queryParamMap.subscribe(params => {
       const joinId = params.get('join');
       if (joinId) {
@@ -100,7 +100,7 @@ export class StartComponent implements OnInit {
     });
   }
 
-  // --- Analytics Consent ---
+  
   acceptAnalytics(): void {
     localStorage.setItem('dbx_analytics_consent', 'granted');
     this.enableAnalytics();
@@ -134,7 +134,7 @@ export class StartComponent implements OnInit {
     });
   }
 
-  // --- UI Toggles ---
+  
   toggleJoin(): void {
     if (!this.joinClicked) {
       logEvent(this.analytics, 'click_join_game');
@@ -168,7 +168,7 @@ export class StartComponent implements OnInit {
     window.scrollTo({ top: absoluteY - 80, behavior: 'smooth' });
   }
 
-  // --- Common Security Helpers ---
+  
   private tooSoon(): boolean {
     const now = Date.now();
     if (now - this.lastActionTs < this.ACTION_THROTTLE_MS) {
@@ -183,7 +183,7 @@ export class StartComponent implements OnInit {
     return str.trim().replace(/\s+/g, ' ');
   }
 
-  // --- Join Game ---
+  
   joinGame(form: FormGroup): void {
     if (this.tooSoon()) return;
 
@@ -217,7 +217,7 @@ export class StartComponent implements OnInit {
     this.router.navigateByUrl(`/lobby/${cleanId}`);
   }
 
-  // --- Create Game ---
+  
   createGame(form: FormGroup): void {
     if (this.tooSoon()) return;
 
