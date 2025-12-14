@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { nanoid } from 'nanoid';
@@ -7,15 +7,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { getAnalytics, logEvent } from '@angular/fire/analytics';
 import { RulesComponent } from '../rules/rules.component';
 import { FeedbackComponent } from '../feedback/feedback.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-start',
   templateUrl: './start.component.html',
   styleUrls: ['./start.component.scss'],
-  imports: [ReactiveFormsModule, RulesComponent, FeedbackComponent]
+  imports: [ReactiveFormsModule, RulesComponent, FeedbackComponent],
 })
-export class StartComponent implements OnInit {
-
+export class StartComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private store = inject(GameStore);
@@ -26,18 +26,16 @@ export class StartComponent implements OnInit {
 
   analytics = getAnalytics();
 
-  private readonly PLAYER_NAME_REGEX = /^[A-Za-z0-9 _-]+$/;    
-  private readonly GAME_ID_REGEX = /^[A-Za-z0-9]{3,5}$/;       
-  private readonly ACTION_THROTTLE_MS = 2500;                  
+  private readonly PLAYER_NAME_REGEX = /^[A-Za-z0-9 _-]+$/; // keep your rule
+  private readonly GAME_ID_REGEX = /^[A-Za-z0-9]{3,5}$/;
+  private readonly ACTION_THROTTLE_MS = 2500;
+
+  private subs = new Subscription();
 
   joinGameForm: FormGroup = this.fb.group({
     id: [
       '',
-      [
-        Validators.required,
-        Validators.maxLength(5),
-        Validators.pattern(this.GAME_ID_REGEX)
-      ]
+      [Validators.required, Validators.maxLength(5), Validators.pattern(this.GAME_ID_REGEX)],
     ],
     name: [
       '',
@@ -45,10 +43,10 @@ export class StartComponent implements OnInit {
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(20),
-        Validators.pattern(this.PLAYER_NAME_REGEX)
-      ]
+        Validators.pattern(this.PLAYER_NAME_REGEX),
+      ],
     ],
-    dumb: ['']
+    dumb: [''],
   });
 
   createGameForm: FormGroup = this.fb.group({
@@ -58,10 +56,10 @@ export class StartComponent implements OnInit {
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(20),
-        Validators.pattern(this.PLAYER_NAME_REGEX)
-      ]
+        Validators.pattern(this.PLAYER_NAME_REGEX),
+      ],
     ],
-    dumb: ['']
+    dumb: [''],
   });
 
   joinClicked = false;
@@ -75,6 +73,28 @@ export class StartComponent implements OnInit {
   private readonly GA_ID = 'G-CRCM73VNGM';
 
   ngOnInit() {
+    // ✅ normalize inputs as user types so validators match what they see
+    this.subs.add(
+      this.joinGameForm.get('name')!.valueChanges.subscribe((v) => {
+        const next = this.sanitizeNameInput(v);
+        if (next !== v) this.joinGameForm.get('name')!.setValue(next, { emitEvent: false });
+      })
+    );
+
+    this.subs.add(
+      this.joinGameForm.get('id')!.valueChanges.subscribe((v) => {
+        const next = this.sanitizeGameIdInput(v);
+        if (next !== v) this.joinGameForm.get('id')!.setValue(next, { emitEvent: false });
+      })
+    );
+
+    this.subs.add(
+      this.createGameForm.get('name')!.valueChanges.subscribe((v) => {
+        const next = this.sanitizeNameInput(v);
+        if (next !== v) this.createGameForm.get('name')!.setValue(next, { emitEvent: false });
+      })
+    );
+
     const stored = localStorage.getItem('dbx_analytics_consent');
     if (stored === 'granted') {
       this.enableAnalytics();
@@ -84,23 +104,30 @@ export class StartComponent implements OnInit {
       this.showCookieBanner = true;
     }
 
-    
-    this.route.queryParamMap.subscribe(params => {
-      const joinId = params.get('join');
-      if (joinId) {
-        this.joinClicked = true;
-        this.createClicked = false;
-        this.joinGameForm.patchValue({ id: joinId.toUpperCase() });
+    // ✅ sanitize join param too (spaces / punctuation won’t break validity)
+    this.subs.add(
+      this.route.queryParamMap.subscribe((params) => {
+        const joinId = params.get('join');
+        if (joinId) {
+          this.joinClicked = true;
+          this.createClicked = false;
 
-        setTimeout(() => {
-          const nameInput = document.getElementById('joinName') as HTMLInputElement;
-          if (nameInput) nameInput.focus();
-        }, 200);
-      }
-    });
+          const cleaned = this.sanitizeGameIdInput(joinId);
+          this.joinGameForm.patchValue({ id: cleaned });
+
+          setTimeout(() => {
+            const nameInput = document.getElementById('joinName') as HTMLInputElement;
+            if (nameInput) nameInput.focus();
+          }, 200);
+        }
+      })
+    );
   }
 
-  
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
   acceptAnalytics(): void {
     localStorage.setItem('dbx_analytics_consent', 'granted');
     this.enableAnalytics();
@@ -114,7 +141,7 @@ export class StartComponent implements OnInit {
     if (typeof w.gtag === 'function') {
       w.gtag('consent', 'update', {
         analytics_storage: 'denied',
-        ad_storage: 'denied'
+        ad_storage: 'denied',
       });
     }
     this.showCookieBanner = false;
@@ -126,39 +153,30 @@ export class StartComponent implements OnInit {
 
     w.gtag('consent', 'update', {
       analytics_storage: 'granted',
-      ad_storage: 'denied'
+      ad_storage: 'denied',
     });
 
     w.gtag('config', this.GA_ID, {
-      anonymize_ip: true
+      anonymize_ip: true,
     });
   }
 
-  
   toggleJoin(): void {
-    if (!this.joinClicked) {
-      logEvent(this.analytics, 'click_join_game');
-    }
+    if (!this.joinClicked) logEvent(this.analytics, 'click_join_game');
     this.joinClicked = !this.joinClicked;
     if (this.joinClicked) this.createClicked = false;
   }
 
   toggleCreate(): void {
-    if (!this.createClicked) {
-      logEvent(this.analytics, 'click_new_game');
-    }
+    if (!this.createClicked) logEvent(this.analytics, 'click_new_game');
     this.createClicked = !this.createClicked;
     if (this.createClicked) this.joinClicked = false;
   }
 
   toggleInfo(): void {
-    if (!this.showInfo) {
-      logEvent(this.analytics, 'click_instructions', { screen: 'home' });
-    }
+    if (!this.showInfo) logEvent(this.analytics, 'click_instructions', { screen: 'home' });
     this.showInfo = !this.showInfo;
-    if (this.showInfo) {
-      setTimeout(() => this.scrollToHowTo(), 50);
-    }
+    if (this.showInfo) setTimeout(() => this.scrollToHowTo(), 50);
   }
 
   private scrollToHowTo(): void {
@@ -168,7 +186,6 @@ export class StartComponent implements OnInit {
     window.scrollTo({ top: absoluteY - 80, behavior: 'smooth' });
   }
 
-  
   private tooSoon(): boolean {
     const now = Date.now();
     if (now - this.lastActionTs < this.ACTION_THROTTLE_MS) {
@@ -183,53 +200,68 @@ export class StartComponent implements OnInit {
     return str.trim().replace(/\s+/g, ' ');
   }
 
-  
+  private sanitizeNameInput(v: unknown): string {
+    // keep spaces, collapse whitespace
+    return this.sanitize(String(v ?? ''));
+  }
+
+  private sanitizeGameIdInput(v: unknown): string {
+    // upper + remove non-alnum + clamp to 5
+    return this.sanitize(String(v ?? ''))
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '')
+      .slice(0, 5);
+  }
+
   joinGame(form: FormGroup): void {
     if (this.tooSoon()) return;
 
-    const { name, id, dumb } = form.value;
+    const raw = form.getRawValue() as { name: string; id: string; dumb: string };
 
-    if (dumb && dumb.trim().length > 0) {
+    // honeypot
+    if (raw.dumb && raw.dumb.trim().length > 0) {
       logEvent(this.analytics, 'honeypot_triggered_join');
       return;
     }
 
-    if (!form.valid) return;
+    // IMPORTANT: re-sanitize right before submit so it can’t be bypassed
+    const cleanName = this.sanitizeNameInput(raw.name);
+    const cleanId = this.sanitizeGameIdInput(raw.id);
 
-    const cleanName = this.sanitize(name);
-    const cleanId = this.sanitize(id).toUpperCase();
+    // sync sanitized values back into the form (so invalid state reflects reality)
+    this.joinGameForm.patchValue({ name: cleanName, id: cleanId }, { emitEvent: false });
 
+    if (!this.joinGameForm.valid) return;
     if (!this.GAME_ID_REGEX.test(cleanId)) return;
     if (!this.PLAYER_NAME_REGEX.test(cleanName)) return;
 
+    // warm the avatar cache
     const img = new Image();
     img.src = `https://robohash.org/${cleanId}${cleanName}?set=set5`;
 
     sessionStorage.setItem('player', cleanName);
     sessionStorage.setItem('host', 'false');
 
-    logEvent(this.analytics, 'game_joined', {
-      game_id: cleanId,
-      player: cleanName,
-    });
+    logEvent(this.analytics, 'game_joined', { game_id: cleanId, player: cleanName });
 
     this.store.addPlayer({ gameId: cleanId, playerName: cleanName });
     this.router.navigateByUrl(`/lobby/${cleanId}`);
   }
 
-  
   createGame(form: FormGroup): void {
     if (this.tooSoon()) return;
 
-    const { name, dumb } = form.value;
-    if (dumb && dumb.trim().length > 0) {
+    const raw = form.getRawValue() as { name: string; dumb: string };
+
+    if (raw.dumb && raw.dumb.trim().length > 0) {
       logEvent(this.analytics, 'honeypot_triggered_create');
       return;
     }
 
-    if (!form.valid) return;
+    const cleanName = this.sanitizeNameInput(raw.name);
+    this.createGameForm.patchValue({ name: cleanName }, { emitEvent: false });
 
-    const cleanName = this.sanitize(name);
+    if (!this.createGameForm.valid) return;
     if (!this.PLAYER_NAME_REGEX.test(cleanName)) return;
 
     const id = nanoid(5).toUpperCase();
@@ -240,10 +272,7 @@ export class StartComponent implements OnInit {
     sessionStorage.setItem('player', cleanName);
     sessionStorage.setItem('host', 'true');
 
-    logEvent(this.analytics, 'game_created', {
-      game_id: id,
-      player: cleanName,
-    });
+    logEvent(this.analytics, 'game_created', { game_id: id, player: cleanName });
 
     this.store.createGame({ gameId: id, playerName: cleanName });
     this.router.navigateByUrl(`/lobby/${id}`);

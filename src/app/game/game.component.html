@@ -65,7 +65,7 @@
                     class="arcade-pick higher"
                     type="button"
                     [class.selected]="choice === 'higher'"
-                    [disabled]="!clickedData || choice === 'lower'"
+                    [disabled]="!clickedData"
                     (click)="drawFromDeck('higher')"
                     aria-pressed="{{ choice === 'higher' }}"
                     >
@@ -79,7 +79,7 @@
                     class="arcade-pick lower"
                     type="button"
                     [class.selected]="choice === 'lower'"
-                    [disabled]="!clickedData || choice === 'higher'"
+                    [disabled]="!clickedData"
                     (click)="drawFromDeck('lower')"
                     aria-pressed="{{ choice === 'lower' }}"
                     >

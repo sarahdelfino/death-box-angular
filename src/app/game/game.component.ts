@@ -46,10 +46,10 @@ export class GameComponent implements OnDestroy {
   @ViewChild('deckEl', { read: ElementRef }) deckEl!: ElementRef;
   @ViewChildren(StackComponent) stacks!: QueryList<StackComponent>;
 
-  
+
   showCount = false;
 
-  
+
   private wasCounting = false;
 
   flyingStyle: { top: string; left: string; transform: string } = {
@@ -58,17 +58,18 @@ export class GameComponent implements OnDestroy {
     transform: 'translate(0,0)',
   };
 
-  
+
   game$ = this.store.game$;
   loading$ = this.store.loading$;
   error$ = this.store.error$;
 
-  
+
   sessionPlayer = sessionStorage.getItem('player');
   isHost = sessionStorage.getItem('host') === 'true';
   isMobile = window.innerWidth < 500;
+  isResolving = false;
 
-  
+
   gameId = this.route.snapshot.paramMap.get('id');
   cardSelected = false;
   messagesClicked = false;
@@ -102,16 +103,16 @@ export class GameComponent implements OnDestroy {
         this.deck = game.deck;
         this.counting = game.counting;
 
-        
+
         if (game.counting) {
           this.showCount = true;
         }
 
-        
+
         if (game.counting && !this.wasCounting) {
           this.moveTopJokerToBottom(game);
-          
-          
+
+
         }
         this.wasCounting = game.counting;
 
@@ -145,7 +146,7 @@ export class GameComponent implements OnDestroy {
     });
   }
 
-  
+
   toggleMessages() {
     this.messagesClicked = !this.messagesClicked;
     if (this.messagesClicked) this.unreadMessages = false;
@@ -178,6 +179,11 @@ export class GameComponent implements OnDestroy {
   }
 
   drawFromDeck(prediction: 'higher' | 'lower') {
+    if (this.isResolving) return;
+    if (this.deck.length === 0 || !this.clickedData) return;
+
+    this.isResolving = true;
+    this.choice = prediction;
     const gameId = this.route.snapshot.paramMap.get('id')!;
     if (this.deck.length === 0 || !this.clickedData) return;
 
@@ -222,7 +228,7 @@ export class GameComponent implements OnDestroy {
       this.store.game$.pipe(take(1)).subscribe((current) => {
         if (!current) return;
 
-        
+
         const newGrid: StackGrid = { ...current.stackGrid };
         newGrid[stackKey] = { cards: [drawCard, ...newGrid[stackKey].cards] };
 
@@ -249,7 +255,7 @@ export class GameComponent implements OnDestroy {
     return drawn.value < clicked.value;
   }
 
-  
+
   private moveTopJokerToBottom(game: any) {
     const grid: StackGrid = { ...game.stackGrid };
 
@@ -259,8 +265,8 @@ export class GameComponent implements OnDestroy {
 
       const top = cards[0];
       if (top?.suit === 'JOKER') {
-        cards.shift();     
-        cards.push(top);   
+        cards.shift();
+        cards.push(top);
         grid[stackKey] = { cards };
       }
     });
@@ -315,6 +321,7 @@ export class GameComponent implements OnDestroy {
             this.choice = null;
             this.selectedCard = null;
             this.wrongCardId = null;
+            this.isResolving = false;
           }, 600);
         }, 900);
       } else {
@@ -346,6 +353,10 @@ export class GameComponent implements OnDestroy {
           this.clickedData = null;
           this.choice = null;
           this.selectedCard = null;
+          this.isResolving = false;
+        } else {
+          this.choice = null;
+          this.isResolving = false;
         }
       }
     });
