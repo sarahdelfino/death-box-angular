@@ -1,0 +1,8 @@
+@use '../deathbox-theme.scss' as db;
+
+.how-to-note {
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+  color: db.$ui-gray;
+  opacity: 0.9;
+}

@@ -7,14 +7,14 @@ import { filter } from 'rxjs';
 import { GameStore } from '../game.store';
 import { MatDialog } from '@angular/material/dialog';
 import { getAnalytics, logEvent } from '@angular/fire/analytics';
-import { HowToPlayComponent } from "../how-to-play/how-to-play.component";
+import { RulesComponent } from "../rules/rules.component";
 
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RulesComponent],
 })
 export class LobbyComponent implements OnInit {
   private router = inject(Router);
@@ -22,141 +22,208 @@ export class LobbyComponent implements OnInit {
   private dialog = inject(MatDialog);
   readonly store = inject(GameStore);
 
-  // === Store bindings ===
   game$ = this.store.game$;
   loading$ = this.store.loading$;
   error$ = this.store.error$;
 
-  // === Local state ===
+  analytics = getAnalytics();
+
+  // Matches StartComponent constraints
+  private readonly PLAYER_NAME_REGEX = /^[A-Za-z0-9 _-]+$/;
+  private readonly GAME_ID_REGEX = /^[A-Za-z0-9]{3,5}$/;
+  private readonly ACTION_THROTTLE_MS = 2500;
+  private lastActionTs = 0;
+
   joinGameForm: FormGroup;
   showJoinForm = false;
   showPopup = false;
   isHost = sessionStorage.getItem('host') === 'true';
   infoClicked = true;
   isLoadingAvatars: Record<string, boolean> = {};
-  analytics = getAnalytics();
-  gameId = location.pathname.split('/')[2];
+  gameId = (location.pathname.split('/')[2] || '').toUpperCase();
   showInviteToast = false;
-inviteToastMessage = '';
-
+  inviteToastMessage = '';
 
   constructor() {
     this.joinGameForm = this.fb.group({
-      playerName: ['', Validators.required],
+      playerName: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(20),
+          Validators.pattern(this.PLAYER_NAME_REGEX),
+        ],
+      ],
+      dumb: [''], // honeypot
     });
 
     this.game$
       .pipe(
         takeUntilDestroyed(),
-        filter((game): game is NonNullable<typeof game> => !!game && game.status === 'active')
+        filter((game): game is NonNullable<typeof game> => !!game && game.status === 'active'),
       )
-      .subscribe(game => {
+      .subscribe((game) => {
         this.router.navigateByUrl(`/play/${game.id}`);
       });
   }
 
   ngOnInit() {
+    // sanitize + validate gameId from URL
+    const cleanId = this.sanitize(this.gameId);
+    if (!this.GAME_ID_REGEX.test(cleanId)) {
+      return; // bad URL, do nothing
+    }
+    this.gameId = cleanId;
+
     if (this.gameId) {
       this.store.loadGame(this.gameId);
     }
 
     if (!sessionStorage.getItem('player')) {
       this.showJoinForm = true;
-      const dialog = document.getElementById('dialog') as HTMLDialogElement;
-      dialog?.showModal();
+      const dialogEl = document.getElementById('dialog') as HTMLDialogElement | null;
+      dialogEl?.showModal();
     }
   }
 
-  private showInviteFeedback(message: string) {
-  this.inviteToastMessage = message;
-  this.showInviteToast = true;
+  // --- helpers ---
 
-  // clear any existing timer if you store it, but simple is fine for now
-  setTimeout(() => {
-    this.showInviteToast = false;
-  }, 1800);
-}
+  private tooSoon(): boolean {
+    const now = Date.now();
+    if (now - this.lastActionTs < this.ACTION_THROTTLE_MS) {
+      logEvent(this.analytics, 'rate_limited_action', {
+        screen: 'lobby',
+        game_id: this.gameId,
+      });
+      return true;
+    }
+    this.lastActionTs = now;
+    return false;
+  }
+
+  private sanitize(str: string | null | undefined): string {
+    return (str ?? '').trim().replace(/\s+/g, ' ');
+  }
+
+  private showInviteFeedback(message: string) {
+    this.inviteToastMessage = message;
+    this.showInviteToast = true;
+    setTimeout(() => {
+      this.showInviteToast = false;
+    }, 1800);
+  }
 
   onImageLoad(playerKey: string) {
     this.isLoadingAvatars[playerKey] = false;
   }
 
+  // --- join from lobby dialog ---
+
   joinGame() {
-    const playerName = this.joinGameForm.value.playerName?.trim();
+    if (this.tooSoon()) return;
 
-    if (!this.gameId || !playerName) return;
+    const { playerName, dumb } = this.joinGameForm.value as {
+      playerName: string;
+      dumb?: string;
+    };
 
-    this.store.addPlayer({ gameId: this.gameId, playerName });
-    sessionStorage.setItem('player', playerName);
+    // honeypot: bots filling this get dropped
+    if (dumb && dumb.trim().length > 0) {
+      logEvent(this.analytics, 'honeypot_triggered_join_lobby', {
+        game_id: this.gameId,
+      });
+      return;
+    }
+
+    if (!this.gameId || !this.joinGameForm.valid) return;
+
+    const cleanName = this.sanitize(playerName);
+    if (!cleanName) return;
+    if (!this.PLAYER_NAME_REGEX.test(cleanName)) return;
+
+    const cleanGameId = this.gameId;
+
+    this.store.addPlayer({ gameId: cleanGameId, playerName: cleanName });
+    sessionStorage.setItem('player', cleanName);
     sessionStorage.setItem('host', 'false');
     this.showJoinForm = false;
   }
 
+  // --- how to ---
+
   toggleInfo(): void {
     logEvent(this.analytics, 'click_instructions', {
       game_id: this.gameId,
-      player: sessionStorage.getItem('player')
+      player: sessionStorage.getItem('player'),
     });
+
     this.infoClicked = !this.infoClicked;
-      if (this.infoClicked) {
-    setTimeout(() => {
-      document
-        .getElementById('how-to-panel')
-        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 0);
-  }
-  }
-
-inviteClicked() {
-  logEvent(this.analytics, 'click_invite', {
-    game_id: this.gameId,
-    player: sessionStorage.getItem('player')
-  });
-
-  const url = window.location.origin + `?join=${this.gameId}`;
-  const shareText = 'Play Deathbox with me!';
-
-  // 1) Prefer native share on mobile
-  const navAny = navigator as any;
-  if (navAny.share) {
-    navAny
-      .share({
-        title: `Deathbox Lobby - ${this.gameId}`,
-        text: shareText,
-        url
-      })
-      .catch((err: unknown) => {
-        // user cancelled or share failed – silently ignore
-        console.warn('Share dismissed or failed', err);
-      });
-    return;
+    if (this.infoClicked) {
+      setTimeout(() => {
+        document
+          .getElementById('how-to-panel')
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 0);
+    }
   }
 
-  // 2) Fallback: copy to clipboard
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard
-      .writeText(`${shareText} ${url}`)
-      .then(() => {
-        this.showInviteFeedback('Link copied! Paste it to your friends.');
-      })
-      .catch(err => {
-        console.error('Clipboard error', err);
-        this.showInviteFeedback('Copy failed. Try long-press or right-click to copy the address bar.');
-      });
-  } else {
-    // 3) Last-resort fallback: prompt
-    this.showInviteFeedback('Copy the link from the address bar and share it.');
-  }
-}
+  // --- invite link ---
 
+  inviteClicked() {
+    const cleanGameId = this.gameId;
+
+    logEvent(this.analytics, 'click_invite', {
+      game_id: cleanGameId,
+      player: sessionStorage.getItem('player'),
+    });
+
+    const url = window.location.origin + `?join=${cleanGameId}`;
+    const shareText = 'Play Deathbox with me!';
+
+    const navAny = navigator as any;
+    if (navAny.share) {
+      navAny
+        .share({
+          title: `Deathbox Lobby - ${cleanGameId}`,
+          text: shareText,
+          url,
+        })
+        .catch((err: unknown) => {
+          console.warn('Share dismissed or failed', err);
+        });
+      return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(`${shareText} ${url}`)
+        .then(() => {
+          this.showInviteFeedback('Link copied! Paste it to your friends.');
+        })
+        .catch((err) => {
+          console.error('Clipboard error', err);
+          this.showInviteFeedback(
+            'Copy failed. Try long-press or right-click to copy the address bar.',
+          );
+        });
+    } else {
+      this.showInviteFeedback('Copy the link from the address bar and share it.');
+    }
+  }
+
+  // --- host start game ---
 
   startGame() {
+    const cleanGameId = this.gameId;
+
     logEvent(this.analytics, 'click_start', {
-      game_id: this.gameId,
+      game_id: cleanGameId,
       screen: 'lobby',
     });
-    if (this.gameId) {
-      this.store.startGame(this.gameId);
+
+    if (cleanGameId) {
+      this.store.startGame(cleanGameId);
     }
   }
 }

@@ -1,48 +1,396 @@
 @use '../deathbox-theme.scss' as db;
 
 .container {
-  max-width: 850px;
+  max-width: 100vw;
+  min-height: 100vh;
+  max-height: 100vh;
   margin: 0 auto;
-  text-align: center;
+  padding: 1.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
   animation: logo 0.5s;
-  padding-bottom: 6rem;
+  background:
+    radial-gradient(circle at top, rgba(db.$glitch-purple, 0.25), transparent 55%),
+    radial-gradient(circle at bottom, rgba(db.$neon-skull-green, 0.2), transparent 55%);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-.help {
-  color: db.$toxic-mint;
-  position: absolute;
-  top: 30px;
-  right: 30px;
-}
-
-.input-container {
-  max-width: 250px;
+/* Main home card */
+.home-panel {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 16px;
+  background: radial-gradient(circle at top left, #1c2032, #050509 70%);
+  box-shadow:
+    0 0 0 1px rgba(db.$glitch-purple, 0.3),
+    0 18px 40px rgba(0, 0, 0, 0.9);
+  padding: 1.5rem 1.25rem 1.75rem;
   display: flex;
   flex-direction: column;
-  margin: 10px auto;
+  gap: 1.5rem;
 }
 
-label {
-  color: db.$neon-skull-green;
-  font-size: 1.25rem;
-  text-align: left;
-  margin-bottom: 5px;
+/* Header: logo + hero + actions */
+.home-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr);
+  gap: 1.5rem;
+  align-items: flex-start;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
-.button-container {
+.logo-group {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
+  align-items: center;
+  gap: 1rem;
 
-.logo-container {
-  height: 350px;
+  @media (max-width: 600px) {
+    align-items: flex-start;
+  }
 }
 
 .logo {
-  margin: 0 auto;
-  display: inline-block;
-  max-width: 300px;
+  width: 120px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.home-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.home-meta .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: db.$ui-gray;
+  margin: 0;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 1.25rem;
+  color: db.$neon-skull-green;
+  text-shadow: 0 0 6px db.$neon-skull-green, 0 0 12px db.$glitch-purple;
+}
+
+.sub {
+  margin: 0;
+  font-size: 0.8rem;
+  color: db.$ui-gray;
+  max-width: 28rem;
+}
+
+/* Actions + how-to on the right */
+.home-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.primary-actions {
+  display: flex;
+  gap: 0.75rem;
+
+  .arcade-btn {
+    width: 100%;
+  }
+
+  @media (max-width: 600px) {
+    .arcade-btn {
+      width: 45%;
+      justify-content: center;
+    }
+  }
+}
+
+/* === HOW TO PANEL (same pattern as lobby) === */
+.how-to-panel {
+  border-radius: 12px;
+  border: 1px solid db.$ui-gray-soft;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(db.$glitch-purple, 0.35),
+      rgba(db.$neon-skull-green, 0.16)
+    );
+  position: relative;
+}
+
+.how-to-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.12) 0px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.how-to-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.how-to-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  font-size: 0.8rem;
+  padding-inline: 0.75rem;
+  padding-block: 0.5rem;
+  border-radius: 10px;
+  border-style: dashed;
+  border-width: 1px;
+  border-color: rgba(db.$toxic-mint, 0.9);
+  background: rgba(0, 0, 0, 0.25);
+  color: db.$toxic-mint;
+  box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.9;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+
+  .how-to-icon {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    opacity: 1;
+    border-color: db.$neon-skull-green;
+    background: rgba(db.$neon-skull-green, 0.08);
+    box-shadow: 0 0 8px rgba(db.$neon-skull-green, 0.45);
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    border-style: solid;
+    border-color: db.$neon-skull-green;
+    background: radial-gradient(
+      circle at top left,
+      rgba(db.$neon-skull-green, 0.22),
+      transparent 70%
+    );
+    box-shadow: 0 0 10px rgba(db.$neon-skull-green, 0.6);
+  }
+}
+
+.how-to-toggle-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.how-to-chevron {
+  font-size: 1rem;
+  line-height: 1;
+  color: db.$ui-gray;
+}
+
+.how-to-body {
+  margin-top: 0.6rem;
+  max-height: 900px;
+  padding: 5px;
+  overflow: hidden;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    max-height 0.25s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.how-to-body.collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  padding: 0px;
+}
+
+.how-to-body h3 {
+  margin: 0.4rem 0 0.2rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: db.$ui-gray;
+}
+
+.how-to-body ul {
+  margin: 0 0 0.25rem 1.1rem;
+  padding-left: 0.4rem;
+  font-size: 0.8rem;
+  color: db.$ui-gray;
+}
+
+.how-to-body li + li {
+  margin-top: 0.15rem;
+}
+
+.how-to-body strong {
+  color: db.$toxic-mint;
+}
+
+/* === FORMS AREA === */
+
+.home-forms {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-top: 1px solid rgba(db.$ui-gray-soft, 0.4);
+  padding-top: 0.75rem;
+}
+
+/* Each form becomes a mini neon card */
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  max-width: 340px;
+
+  border-radius: 12px;
+  border: 1px solid db.$ui-gray-soft;
+  background:
+    radial-gradient(circle at top, rgba(db.$glitch-purple, 0.16), transparent 70%);
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 600px) {
+    max-width: 100%;
+  }
+}
+
+.form-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background-image: linear-gradient(
+    135deg,
+    rgba(db.$glitch-purple, 0.28),
+    transparent,
+    rgba(db.$neon-skull-green, 0.22)
+  );
+  opacity: 0.25;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.form-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Inputs + labels */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0.25rem 0;
+}
+
+label {
+  color: db.$toxic-mint;
+  font-size: 0.8rem;
+  text-align: left;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Arcade input styling aligned with game vibe */
+.arcade-input {
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid db.$ui-gray_soft;
+  background: #050509;
+  color: #f7f7ff;
+  font-size: 0.85rem;
+  outline: none;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.8);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+
+  &::placeholder {
+    color: rgba(db.$ui-gray, 0.7);
+  }
+
+  &:focus {
+    border-color: db.$neon-skull-green;
+    box-shadow:
+      0 0 8px rgba(db.$neon-skull-green, 0.7),
+      inset 0 0 6px rgba(db.$glitch-purple, 0.6);
+    background: #060713;
+  }
+}
+
+/* Form buttons */
+.form-card .arcade-btn {
+  margin-top: 0.5rem;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.cookie-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  z-index: 9999;
+  max-width: 380px;
+  width: calc(100% - 2rem);
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.cookie-text {
+  margin: 0;
+}
+
+.cookie-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Optional: tweak existing arcade button for small variant */
+.arcade-btn.small {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.75rem;
 }
 
 .dumb {
@@ -54,105 +402,8 @@ label {
   pointer-events: none;
 }
 
-.button-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  justify-content: center;
-}
-
-/* Visually distinct from primary/secondary */
-.arcade-btn.tertiary.how-to-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding-inline: 1rem;
-  border: 2px dashed rgba(255, 255, 255, 0.6);
-  background: rgba(0, 0, 0, 0.4);
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  opacity: 0.9;
-
-  .how-to-icon {
-    font-size: 1.1rem;
-  }
-
-  &:hover {
-    opacity: 1;
-    border-style: solid;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-  }
-}
-
-/* Inline instructions panel */
-.how-to-panel {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  padding: 1rem 1.25rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: radial-gradient(circle at top left, #2a1435 0, #05030a 55%);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-  max-width: 520px;
-  width: 100%;
-  margin-inline: auto;
-  text-align: left;
-  font-size: 0.9rem;
-  line-height: 1.5;
-
-  h3 {
-    margin-top: 0;
-    margin-bottom: 0.75rem;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  ol {
-    padding-left: 1.25rem;
-    margin: 0 0 0.75rem;
-  }
-
-  li + li {
-    margin-top: 0.3rem;
-  }
-
-  .how-to-note {
-    margin: 0.25rem 0 0;
-    font-size: 0.8rem;
-    opacity: 0.8;
-  }
-}
-
-/* Mobile: stack buttons nicely */
-@media (max-width: 600px) {
-  .button-container {
-    flex-direction: column;
-    align-items: stretch;
-
-    .arcade-btn {
-      width: 100%;
-      justify-content: center;
-    }
-  }
-
-  .arcade-btn.tertiary.how-to-btn {
-    margin-top: 0.25rem;
-  }
-}
-
-
+/* Animations */
 @keyframes logo {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-@media (max-width: 400px) {
-  .container { height: 90vh; }
-  .logo { max-width: 300px; }
-  #join {
-    width: 360px;
-    margin: 0 auto;
-  }
 }

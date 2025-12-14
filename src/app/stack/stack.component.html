@@ -1,14 +1,15 @@
 <div class="stack">
   @for(card of cards; track $index) {
-  <img
-    class="playing-card"
-    [src]="'../..' + card.cardPath"
-    (click)="onCardClick(cards[0])"
-    [class.selected]="selectedCard?.cardName === card?.cardName"
+    <img
+      class="playing-card"
+      [src]="'../..' + card.cardPath"
+      (click)="onCardClick(cards[0])"
+      [class.selected]="selectedCard?.cardName === card?.cardName"
+      [class.top-card]="$index === 0"
+      [class.wrong]="$index === 0 && isWrong(card)"
       [style.zIndex]="visibleCards.length - $index"
       [style.transform]="getTilt(card)"
-      [class.top-card]="$index === 0"
       [alt]="altName(card)"
-  />
+    />
   }
 </div>

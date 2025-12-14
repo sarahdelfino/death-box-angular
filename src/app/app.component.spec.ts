@@ -19,8 +19,8 @@ describe('AppComponent', () => {
 
   it(`should have as title 'death-box-angular'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
-    // const app = fixture.componentInstance;
-    // expect(app.title).toEqual('death-box-angular');
+    
+    
   });
 
   it('should render title', () => {

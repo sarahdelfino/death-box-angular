@@ -1,7 +1,34 @@
 {
-  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   "rules": {
-    ".read": false,
-    ".write": false
+    "games": {
+      "$gameId": {
+        ".read": "auth != null",
+        ".write": "auth != null && !newData.child('dumb').exists()",
+
+        "players": {
+          "$playerId": {
+            ".write": "auth != null && auth.uid == $playerId",
+            ".read": "auth != null"
+          }
+        }
+      }
+    },
+
+    "messages": {
+      "$gameId": {
+        ".read": "auth != null",
+        "$msgId": {
+          ".write": "auth != null",
+          ".validate": "newData.hasChildren(['player','message']) && newData.child('player').isString() && newData.child('player').val().matches(/^[A-Za-z0-9 _-]{1,20}$/) && newData.child('message').isString() && newData.child('message').val().length > 0 && newData.child('message').val().length <= 240 && !newData.child('dumb').exists()"
+        }
+      }
+    },
+
+    "feedback": {
+      "$feedbackId": {
+        ".write": "auth != null",
+        ".validate": "newData.hasChildren(['type','message','screen']) && newData.child('type').isString() && newData.child('type').val().matches(/^(bug|idea|other)$/) && newData.child('message').isString() && newData.child('message').val().length >= 5 && newData.child('message').val().length <= 1000 && newData.child('screen').isString() && newData.child('screen').val().length <= 20 && (!newData.child('email').exists() || (newData.child('email').isString() && newData.child('email').val().length <= 120)) && (!newData.child('sessionPlayer').exists() || (newData.child('sessionPlayer').isString() && newData.child('sessionPlayer').val().length <= 20 && newData.child('sessionPlayer').val().matches(/^[A-Za-z0-9 _-]*$/))) && !newData.child('dumb').exists()"
+      }
+    }
   }
 }

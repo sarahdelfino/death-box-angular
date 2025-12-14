@@ -23,11 +23,15 @@ export class MessagesComponent implements AfterViewInit {
   private destroyRef = inject(DestroyRef);
 
   @ViewChild('message') message!: ElementRef<HTMLInputElement>;
-
   @Input() gameId!: string;
 
   user = sessionStorage.getItem('player') ?? '';
   messages$ = this.store.messages$;
+
+  // basic anti-spam controls
+  private readonly MAX_MESSAGE_LENGTH = 240;
+  private readonly MIN_INTERVAL_MS = 800;
+  private lastSentAt = 0;
 
   ngAfterViewInit() {
     this.messages$
@@ -37,13 +41,42 @@ export class MessagesComponent implements AfterViewInit {
       });
   }
 
+  private sanitize(input: string | null | undefined): string {
+    // trim + collapse internal whitespace
+    return (input ?? '')
+      .trim()
+      .replace(/\s+/g, ' ');
+  }
+
   sendMessage(msg: string) {
-    const text = msg.trim();
-    if (!text) return;
+    // require a known player name
+    if (!this.user) {
+      return;
+    }
 
-    this.message.nativeElement.value = '';
+    // simple rate limiting
+    const now = Date.now();
+    if (now - this.lastSentAt < this.MIN_INTERVAL_MS) {
+      return;
+    }
 
-    const timestamp = new Date().toISOString().replace(/[\.][0-9]*\w/g, '');
+    let text = this.sanitize(msg);
+    if (!text) {
+      // ignore empty / whitespace-only messages
+      this.clearInput();
+      return;
+    }
+
+    // enforce max length
+    if (text.length > this.MAX_MESSAGE_LENGTH) {
+      text = text.slice(0, this.MAX_MESSAGE_LENGTH);
+    }
+
+    this.lastSentAt = now;
+
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[\.][0-9]*\w/g, '');
 
     this.store.sendMessage({
       gameId: this.gameId,
@@ -51,6 +84,14 @@ export class MessagesComponent implements AfterViewInit {
       message: text,
       timestamp,
     });
+
+    this.clearInput();
+  }
+
+  private clearInput() {
+    if (this.message?.nativeElement) {
+      this.message.nativeElement.value = '';
+    }
   }
 
   private scrollToBottom() {

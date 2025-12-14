@@ -22,7 +22,7 @@ export class GameBackendService {
     this.db = inject(Database);
   }
 
-  // === CORE GAME DATA ===
+  
 
   getGame(gameId: string) {
     const gameRef = ref(this.db, `games/${gameId}`);
@@ -82,7 +82,7 @@ createGameWithHost(gameId: string, hostName: string, dumb?: string) {
     return from(set(gameRef, null));
   }
 
-  // === DECK ===
+  
 
   setDeck(gameId: string, deck: Card[]) {
     const deckRef = ref(this.db, `games/${gameId}/deck`);
@@ -99,7 +99,7 @@ createGameWithHost(gameId: string, hostName: string, dumb?: string) {
     return from(set(deckRef, deck));
   }
 
-  // === STACK GRID ===
+  
 
   setStacks(gameId: string, stacks: StackGrid) {
     const stacksRef = ref(this.db, `games/${gameId}/stacks`);
@@ -121,7 +121,7 @@ createGameWithHost(gameId: string, hostName: string, dumb?: string) {
     return from(set(stacksRef, stacks));
   }
 
-  // === PLAYERS ===
+  
 
 addPlayer(gameId: string, playerName: string, dumb?: string) {
   if (dumb) {
@@ -169,7 +169,7 @@ resetGuesses(gameId: string, playerId: string) {
     return objectVal<string>(currentRef);
   }
 
-  // === GAME STATUS FLAGS ===
+  
 
   updateGameStatus(gameId: string, status: GameState['status']) {
     const statusRef = ref(this.db, `games/${gameId}/status`);
@@ -183,7 +183,7 @@ return from(get(gameRef)).pipe(
     const game = snapshot.val() as GameState | null;
     if (!game) throw new Error('Game not found');
 
-    // const { deck: newDeck, stackGrid: newGrid } = dealInitialStacks(game.deck, game.stackGrid);
+    
 
     return {
       ...game,
@@ -200,7 +200,7 @@ return from(get(gameRef)).pipe(
 );
 }
 
-  // === COUNTER ===
+  
 
   updateCounting(gameId: string, counting: boolean) {
     const refPath = ref(this.db, `games/${gameId}/counting`);
@@ -227,7 +227,7 @@ return from(get(gameRef)).pipe(
     return from(set(counterRef, name));
   }
 
-  // === MESSAGES ===
+  
 
   sendMessage(gameId: string, message: string, player: string, timestamp: string) {
     const msgRef = ref(this.db, `messages/${gameId}/${timestamp}`);
@@ -239,7 +239,7 @@ return from(get(gameRef)).pipe(
     return objectVal<Record<string, { message: string; player: string }>>(refPath);
   }
 
-  // === SECONDS ===
+  
 
   decrementSeconds(gameId: string) {
     const gameRef = ref(this.db, `games/${gameId}`);

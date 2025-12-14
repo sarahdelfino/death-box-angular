@@ -1,0 +1,213 @@
+@use '../deathbox-theme.scss' as db;
+
+.feedback-shell {
+  margin-top: 0.9rem;
+}
+
+/* Header toggle – mirrors .how-to-inline vibe */
+.feedback-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  font-size: 0.8rem;
+  padding-inline: 0.8rem;
+  padding-block: 0.5rem;
+  border-radius: 10px;
+  border-style: dashed;
+  border-width: 1px;
+  border-color: rgba(db.$ui-gray-soft, 0.9);
+  background: rgba(0, 0, 0, 0.35);
+  color: db.$ui-gray;
+  box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+
+  &:hover {
+    opacity: 1;
+    border-color: db.$neon-skull-green;
+    background: rgba(db.$neon-skull-green, 0.06);
+    box-shadow: 0 0 8px rgba(db.$neon-skull-green, 0.35);
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    border-style: solid;
+    border-color: db.$neon-skull-green;
+    color: db.$toxic-mint;
+    background: radial-gradient(
+      circle at top left,
+      rgba(db.$neon-skull-green, 0.18),
+      transparent 70%
+    );
+    box-shadow: 0 0 10px rgba(db.$neon-skull-green, 0.5);
+  }
+}
+
+.feedback-toggle-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.feedback-icon {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.feedback-label {
+  font-size: 0.75rem;
+}
+
+.feedback-chevron {
+  font-size: 1rem;
+  line-height: 1;
+  color: db.$ui-gray;
+}
+
+/* Collapsible body – matches how-to-body + form-card hybrid */
+
+.feedback-body {
+  margin-top: 0.6rem;
+  max-height: 900px;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid db.$ui-gray-soft;
+  background:
+    radial-gradient(circle at top, rgba(db.$glitch-purple, 0.16), transparent 70%),
+    #050509;
+  overflow: hidden;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    max-height 0.25s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    padding 0.2s ease;
+}
+
+.feedback-body.collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  padding-block: 0;
+  padding-inline: 0.8rem;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+/* Form layout */
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: db.$toxic-mint;
+  }
+
+  .textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+}
+
+/* Checkbox + email layout */
+
+.optional-row {
+  margin-top: 0.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  .optional-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  label {
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: db.$ui-gray;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .optional-hint {
+    margin: 0;
+    font-size: 0.7rem;
+    opacity: 0.7;
+  }
+}
+
+/* On wider screens, align checkbox+hint and email side-by-side cleanly */
+@media (min-width: 640px) {
+  .optional-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: flex-start;
+    column-gap: 0.75rem;
+
+    .optional-copy {
+      max-width: none;
+      padding-right: 0.25rem;
+    }
+
+    .email-input {
+      margin-top: 0.1rem;
+    }
+  }
+}
+
+/* Footer */
+
+.feedback-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.feedback-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.feedback-note {
+  margin: 0;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.dumb {
+  position: absolute;
+  left: -9999px;
+  height: 0;
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+}

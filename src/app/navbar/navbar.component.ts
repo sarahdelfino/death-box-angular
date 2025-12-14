@@ -1,12 +1,11 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { HowToPlayComponent } from '../how-to-play/how-to-play.component';
 import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'],
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
 
@@ -15,6 +14,7 @@ export class NavbarComponent implements OnInit {
   currentPlayer: string = '';
   correctGuesses: any[] = [];
   infoClicked = false;
+  @Input() isCurrentTurn = false;
   @Input() gameId: string = '';
   @Input() correct: number = 0;
   @Input() player: string = '';
@@ -32,15 +32,6 @@ export class NavbarComponent implements OnInit {
     } else {
       this.correctGuesses = new Array(0);
     }
-  }
-
-  toggleInfo(): void {
-    this.infoClicked = true;
-    this.dialog.open(HowToPlayComponent, {
-      width: '400px',
-      height: 'fit-content',
-      panelClass: 'how-to-play-dialog',
-    });
   }
 
 }

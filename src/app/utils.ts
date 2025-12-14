@@ -1,9 +1,9 @@
 import { Card, StackGrid, Suit, CardStack } from './models/game-state.model';
 
-// Create a 52-card deck (+2 jokers if needed)
+
 export function generateShuffledDeck(includeJokers = false): Card[] {
   const suits: Suit[] = ['H', 'D', 'C', 'S'];
-  const values = Array.from({ length: 13 }, (_, i) => i + 1); // 1–13
+  const values = Array.from({ length: 13 }, (_, i) => i + 1); 
 
   let deck: Card[] = [];
 
@@ -36,7 +36,7 @@ export function generateShuffledDeck(includeJokers = false): Card[] {
   return shuffle(deck);
 }
 
-// Fisher–Yates shuffle
+
 export function shuffle<T>(array: T[]): T[] {
   const copy = [...array];
   for (let i = copy.length - 1; i > 0; i--) {
@@ -46,7 +46,7 @@ export function shuffle<T>(array: T[]): T[] {
   return copy;
 }
 
-// Create an empty 3x3 StackGrid: { "0-0": { cards: [] }, ..., "2-2": { cards: [] } }
+
 export function initEmptyStackGrid(): StackGrid {
   const grid: StackGrid = {};
 
@@ -60,11 +60,11 @@ export function initEmptyStackGrid(): StackGrid {
   return grid;
 }
 
-// Deal one card to each grid stack (mutates stackGrid + deck)
+
 export function dealInitialStacks(deck: Card[], stackGrid: StackGrid): { deck: Card[]; stackGrid: StackGrid } {
   const positions = Object.keys(stackGrid);
   const newDeck = [...deck];
-  const newGrid: StackGrid = JSON.parse(JSON.stringify(stackGrid)); // deep clone
+  const newGrid: StackGrid = JSON.parse(JSON.stringify(stackGrid)); 
 
   for (const pos of positions) {
     const card = newDeck.pop();

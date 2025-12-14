@@ -1,0 +1,67 @@
+<section class="feedback-shell">
+    <button type="button" class="feedback-toggle" (click)="toggleFeedback()" [class.active]="showFeedback"
+        [attr.aria-expanded]="showFeedback" aria-controls="feedback-body">
+        <div class="feedback-toggle-left">
+            <span class="material-symbols-outlined feedback-icon" aria-hidden="true">
+                bug_report
+            </span>
+            <span class="feedback-label">
+                Something off? Have an idea?
+            </span>
+        </div>
+        <span class="feedback-chevron" aria-hidden="true">
+            {{ showFeedback ? '–' : '+' }}
+        </span>
+    </button>
+
+    <div class="feedback-body" id="feedback-body" [class.collapsed]="!showFeedback">
+        <form class="feedback-form" [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
+            <div class="input-row">
+                <label>What’s this about?</label>
+                <select class="arcade-input" formControlName="type">
+                    <option value="bug">A bug</option>
+                    <option value="idea">An idea</option>
+                    <option value="other">Something else</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label for="fbMessage">Tell me what happened</label>
+                <textarea id="fbMessage" class="arcade-input textarea" rows="3" formControlName="message"
+                    placeholder="Tell me what’s confusing, busted, or could be better."></textarea>
+            </div>
+
+            <div class="input-row optional-row">
+                <div class="optional-copy">
+                    <label>
+                        <input type="checkbox" formControlName="canContact" />
+                        <span>Want me to follow up?</span>
+                    </label>
+                    <p class="optional-hint">
+                        Totally optional — only if you'd like a reply.
+                    </p>
+                </div>
+
+                <input class="arcade-input email-input" type="email" placeholder="Your email" formControlName="email"
+                    [disabled]="!feedbackForm.get('canContact')?.value" />
+                <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
+            </div>
+
+            <div class="feedback-footer">
+                <p class="feedback-note" *ngIf="feedbackSent">
+                    Thanks for reaching out!
+                </p>
+
+                <div class="feedback-actions">
+                    <button type="submit" class="arcade-btn primary"
+                        [disabled]="feedbackForm.invalid || feedbackSubmitting">
+                        {{ feedbackSubmitting ? 'Sending...' : 'Send' }}
+                    </button>
+                    <button type="button" class="arcade-btn small" (click)="toggleFeedback()">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

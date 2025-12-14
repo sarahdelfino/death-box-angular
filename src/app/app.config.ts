@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     { provide: TitleStrategy, useClass: AppTitleStrategy },
     provideHttpClient(withInterceptorsFromDi()),
 
-    // Firebase
+    
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => {
       const auth = getAuth();
@@ -29,6 +29,6 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAnalytics(() => getAnalytics()),
     provideDatabase(() => getDatabase()),
-    // provideFirestore(() => getFirestore()),
+    
   ],
 };

@@ -1,26 +1,26 @@
 <div class="messages-container">
-  <div class="chats">
+  <!-- Scroll area -->
+  <div class="chats" #messageList>
     @for (msg of (messages$ | async); track msg.key) {
-      <div #messageList class="messages">
-        <div
-          [id]="msg.key"
-          class="message"
-          [ngClass]="msg.player === user ? 'my-message' : 'other-message'"
-        >
-          <div class="body-flex">
-              <div class="username">{{ msg.player }}</div>
-            <div class="message-body">
-              {{ msg.message }}
-            </div>
+      <div
+        [id]="msg.key"
+        class="message"
+        [ngClass]="msg.player === user ? 'my-message' : 'other-message'"
+      >
+        <div class="body-flex">
+          <div class="username">{{ msg.player }}</div>
+          <div class="message-body">
+            {{ msg.message }}
           </div>
-          <div class="meta-line">
-            <!-- <span class="timestamp">{{ msg.time }}</span> -->
-          </div>
+        </div>
+        <div class="meta-line">
+          <!-- <span class="timestamp">{{ msg.time }}</span> -->
         </div>
       </div>
     }
   </div>
 
+  <!-- Input row -->
   <div class="submit-form">
     <input
       #message
@@ -28,11 +28,13 @@
       class="chat-input"
       placeholder="Type a message..."
       autocomplete="off"
+      maxlength="240"
+      (keyup.enter)="sendMessage(message.value)"
     />
     <button
       class="chat-btn"
+      type="button"
       (click)="sendMessage(message.value)"
-      type="submit"
     >
       Send
     </button>

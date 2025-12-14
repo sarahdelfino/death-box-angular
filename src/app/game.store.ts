@@ -33,7 +33,7 @@ export class GameStore extends ComponentStore<GameStoreState> {
     });
   }
 
-  // === SELECTORS ===
+  
   readonly game$ = this.select(s => s.game);
   readonly loading$ = this.select(s => s.loading);
   readonly error$ = this.select(s => s.error);
@@ -41,19 +41,19 @@ export class GameStore extends ComponentStore<GameStoreState> {
     switchMap(gameId =>
       gameId
         ? runInInjectionContext(this.injector, () =>
-            this.backend.getMessages(gameId) // <- AngularFire call here
+            this.backend.getMessages(gameId) 
           )
         : of<Record<string, { message: string; player: string }>>({})
     ),
     map(obj =>
       Object.entries(obj ?? {})
         .map(([key, val]) => ({ key, player: val.player, message: val.message }))
-        .sort((a, b) => a.key.localeCompare(b.key)) // oldest -> newest
+        .sort((a, b) => a.key.localeCompare(b.key)) 
     )
   );
 
 
-  // === UPDATERS ===
+  
   readonly setGameId = this.updater((state, gameId: string) => ({ ...state, gameId }));
   readonly setLoading = this.updater((state, loading: boolean) => ({ ...state, loading }));
   readonly setError = this.updater((state, error: string | null) => ({ ...state, error }));
@@ -65,7 +65,7 @@ export class GameStore extends ComponentStore<GameStoreState> {
     })
   );
 
-  // === EFFECT: LOAD GAME ===
+  
   readonly loadGame = this.effect<string>(gameId$ =>
     gameId$.pipe(
       tap(() => this.setLoading(true)),
@@ -89,7 +89,7 @@ export class GameStore extends ComponentStore<GameStoreState> {
     )
   );
 
-// === EFFECT: CREATE GAME ===
+
 readonly createGame = this.effect<{ gameId: string, playerName: string, dumb?: string }>(params$ =>
   params$.pipe(
     switchMap(({ gameId, playerName, dumb }) =>
@@ -112,7 +112,7 @@ readonly createGame = this.effect<{ gameId: string, playerName: string, dumb?: s
   )
 );
 
-// === EFFECT: ADD PLAYER ===
+
 readonly addPlayer = this.effect<{ gameId: string, playerName: string, dumb?: string }>(params$ =>
   params$.pipe(
     switchMap(({ gameId, playerName, dumb }) =>
@@ -121,14 +121,14 @@ readonly addPlayer = this.effect<{ gameId: string, playerName: string, dumb?: st
   )
 );
 
-  // === EFFECT: START GAME ===
+  
 readonly startGame = this.effect<string>(gameId$ =>
   gameId$.pipe(
     switchMap(gameId =>
       this.backend.setStart(gameId).pipe(
         tap({
           next: (updatedGame) => {
-            // Store full updated state: status + deck + stackGrid
+            
             this.setGameId(gameId);
             this.setGame(updatedGame);
             this.setError(null);
@@ -143,7 +143,7 @@ readonly startGame = this.effect<string>(gameId$ =>
   )
 );
 
-  // === EFFECT: SET CURRENT TURN ===
+  
 readonly setCurrentTurnAndResetGuesses = this.effect<{
   gameId: string;
   newPlayerId: string;
@@ -159,7 +159,7 @@ readonly setCurrentTurnAndResetGuesses = this.effect<{
   )
 );
 
-  // === EFFECT: DECK & STACK GRID ===
+  
   readonly updateDeck = this.effect<{ gameId: string; deck: Card[] }>(
     input$ => input$.pipe(
       switchMap(({ gameId, deck }) => this.backend.updateDeck(gameId, deck))
@@ -172,14 +172,14 @@ readonly setCurrentTurnAndResetGuesses = this.effect<{
     )
   );
 
-  // === EFFECT: PLAYERS ===
+  
   readonly updatePlayers = this.effect<{ gameId: string; players: Record<string, Player> }>(
     input$ => input$.pipe(
       switchMap(({ gameId, players }) => this.backend.updatePlayers(gameId, players))
     )
   );
 
-  // === EFFECT: COUNTING / TIMER ===
+  
   readonly updateCounting = this.effect<{ gameId: string; counting: boolean }>(input$ =>
     input$.pipe(
       switchMap(({ gameId, counting }) => this.backend.updateCounting(gameId, counting))
@@ -212,14 +212,14 @@ readonly setCurrentTurnAndResetGuesses = this.effect<{
     )
   );
 
-  // === EFFECT: COUNTER ===
+  
   readonly setCounter = this.effect<{ gameId: string; name: string }>(input$ =>
     input$.pipe(
       switchMap(({ gameId, name }) => this.backend.setCounter(gameId, name))
     )
   );
 
-  // === EFFECT: MESSAGES ===
+  
 readonly sendMessage = this.effect<{ gameId: string; player: string; message: string; timestamp: string }>(input$ =>
   input$.pipe(
     switchMap(({ gameId, player, message, timestamp }) =>

@@ -1,26 +1,32 @@
-<div class="nav-container">
-  <div class="nav-items">
-    <div class="player-container">
-      <div class="player-img">
-        <img src="{{
-                        'https://robohash.org/' + gameId + this.player + '?set=set5'
-                      }}">
-      </div>
-      <div class="player-text">
-        <div class="nav-flex">
-          <h3>{{ this.currentPlayer }}</h3>
+<div class="turn-hud">
+  <div class="player-block">
+    <div class="player-img">
+      <img
+        [src]="'https://robohash.org/' + gameId + player + '?set=set5'"
+        alt="Player avatar"
+      />
+    </div>
+
+    <div class="player-info">
+      <div class="player-row">
+        <h3 class="player-name">{{ player }}</h3>
+
+        <div class="checks">
           @for (i of this.correctGuesses; track $index) {
-          <span class="material-symbols-outlined">
-            check_small
-          </span>
+            <span class="material-symbols-outlined check-icon">
+              check_small
+            </span>
           }
         </div>
-        <h3 style="font-size: 0.5em;">pick any
-          card</h3>
+      </div>
+
+      <div class="turn-state">
+        @if (currentPlayer === player) {
+          <span class="turn-chip turn-chip--you">Your turn</span>
+        } @else {
+          <span class="turn-chip turn-chip--waiting">Waiting</span>
+        }
       </div>
     </div>
-    <span class="material-symbols-outlined help" (click)="toggleInfo()">
-      help
-    </span>
   </div>
 </div>

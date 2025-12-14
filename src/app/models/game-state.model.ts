@@ -1,13 +1,13 @@
-// CARD & STACK TYPES
+
 
 export type Suit = 'H' | 'D' | 'C' | 'S' | 'JOKER';
 export type GuessDirection = 'higher' | 'lower';
 
 export interface Card {
-  value: number; // 1–13 for Ace–King, 0 or 14 for Jokers
+  value: number; 
   suit: Suit;
-  cardName: string; // e.g. "5H", "13S", "JOKER"
-  cardPath: string; // URL or local path to image asset
+  cardName: string; 
+  cardPath: string; 
   tilt?: number;
 }
 
@@ -15,17 +15,17 @@ export interface CardStack {
   cards: Card[];
 }
 
-// GAME GRID STRUCTURE
+
 export type StackGrid = {
-  [position: string]: CardStack; // position = "0-0", "1-2", etc.
+  [position: string]: CardStack; 
 };
 
-// PLAYER TYPE
+
 
 export interface Player {
   id: string;
   name: string;
-  secondsDrank: number; // total seconds drank
+  secondsDrank: number; 
   correctGuesses: number;
   isHost?: boolean;
 }
@@ -37,13 +37,13 @@ export interface GameStats {
   };
 }
 
-// GAME STATE (DB Root Object)
+
 
 export interface GameState {
   id: string;
   status: 'waiting' | 'active' | 'finished';
   createdAt: number;
-  currentTurn: string; // playerId
+  currentTurn: string; 
   deck: Card[];
   stackGrid: StackGrid;
   counting: boolean;

@@ -4,7 +4,7 @@ import { Card } from '../models/game-state.model';
 @Component({
   selector: 'app-stack',
   templateUrl: './stack.component.html',
-  styleUrls: ['./stack.component.css'],
+  styleUrls: ['./stack.component.scss'],
   standalone: true,
 })
 export class StackComponent {
@@ -15,7 +15,9 @@ export class StackComponent {
   @Input() selectedCard: Card | null = null;
   @Input() currentPlayer!: string;
   @Input() id!: string;
+
   @Input() lastAddedCardId: string | null = null;
+  @Input() wrongCardId: string | null = null;
 
   @Output() clickedCardEmitter = new EventEmitter<Card>();
 
@@ -27,30 +29,19 @@ export class StackComponent {
     }
   }
 
+  isWrong(card: Card): boolean {
+    return !!this.wrongCardId && this.wrongCardId === card.cardName;
+  }
+
   altName(card: Card): string {
     let text = `${card.value} of`;
-    switch(card.suit) {
-      case "S": {
-        text = `${card.value} of Spades`
-        break;
-      }
-      case "C": {
-        text = `${text} Clubs`
-        break;
-      }
-      case "D": {
-        text = `${text} of Diamonds`
-        break;
-      }
-      case "H": {
-        text = `${text} of Hearts`
-        break;
-      }
-      default: {
-        text = 'Joker'
-      }
+    switch (card.suit) {
+      case 'S': return `${card.value} of Spades`;
+      case 'C': return `${card.value} of Clubs`;
+      case 'D': return `${card.value} of Diamonds`;
+      case 'H': return `${card.value} of Hearts`;
+      default:  return 'Joker';
     }
-    return text;
   }
 
   getTilt(card: Card): string {

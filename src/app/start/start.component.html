@@ -1,100 +1,110 @@
-<div id="container" class="container">
-  <div class="logo-container">
-    <img class="logo" src="../../assets/deathbox-logo.png" alt="deathbox-logo" />
-  </div>
-
-  <div class="content">
-    <h2 style="font-size: 1.25rem; margin-bottom: 24px;">
-      The ultimate drinking game
-    </h2>
-
-    <div class="button-container">
-      <button class="arcade-btn primary" [class.selected]="createClicked" (click)="toggleCreate()" type="button"
-        [attr.aria-pressed]="createClicked">
-        New Game
+<div class="container">
+  @if (showCookieBanner) {
+  <div class="cookie-banner">
+    <p class="cookie-text">
+      We use anonymous analytics to understand how people play Deathbox and improve the game.
+      Do you want to enable analytics cookies?
+    </p>
+    <div class="cookie-actions">
+      <button type="button" class="arcade-btn primary small" (click)="acceptAnalytics()">
+        Allow analytics
       </button>
-
-      <button class="arcade-btn secondary" [class.selected]="joinClicked" (click)="toggleJoin()" type="button"
-        [attr.aria-pressed]="joinClicked">
-        Join Game
-      </button>
-
-      <button class="arcade-btn tertiary how-to-btn" type="button" (click)="toggleInfo()"
-        [attr.aria-expanded]="showInfo" aria-controls="how-to-panel">
-        <span class="material-symbols-outlined how-to-icon">
-          menu_book
-        </span>
-        <span>How to Play</span>
+      <button type="button" class="arcade-btn small" (click)="rejectAnalytics()">
+        No thanks
       </button>
     </div>
-
-    @if (showInfo) {
-    <section id="how-to-panel" class="how-to-panel" aria-label="How to play Deathbox" #howToPanel>
-      <h2>How to Play</h2>
-
-      <h3>Your Turn</h3>
-      <ul>
-        <li>Choose one of the <strong>nine face-up stacks</strong>.</li>
-        <li>Predict whether the next card will be <strong>higher</strong> or <strong>lower</strong> than the top card.
-        </li>
-        <li>Get <strong>three predictions</strong> right to clear your turn.</li>
-      </ul>
-
-      <h3>If You’re Wrong</h3>
-      <ul>
-        <li>The number of cards in your chosen stack becomes your <strong>drinking time</strong>.</li>
-        <li>A countdown begins — you must drink until it ends.</li>
-      </ul>
-
-      <h3>The Counters</h3>
-      <ul>
-        <li>Other players can <strong>tap</strong> to speed up your timer.</li>
-        <li>They might help you out… or drag it on.</li>
-      </ul>
-      <p class="how-to-note">
-        This is a drinking game. Know your limits and drink responsibly.
-      </p>
-    </section>
-    }
-
-    <!-- CREATE GAME FORM -->
-    @if (this.createClicked) {
-    <form [formGroup]="createGameForm" id="create" (ngSubmit)="createGame(createGameForm)">
-      <div class="input-container">
-        <label for="createName">Who goes there?</label>
-        <input id="createName" class="arcade-input" formControlName="name" required autocomplete="off"
-          placeholder="Name" />
-        <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
-      </div>
-      <button class="arcade-btn" type="submit" [disabled]="createGameForm.invalid"
-        [class.ghost]="createGameForm.invalid">
-        Create
-      </button>
-    </form>
-    }
-
-    <!-- JOIN GAME FORM -->
-    @if (this.joinClicked) {
-    <form [formGroup]="joinGameForm" id="join" (ngSubmit)="joinGame(joinGameForm)">
-      <div class="input-container">
-        <label for="joinName">Who goes there?</label>
-        <input id="joinName" class="arcade-input" formControlName="name" required autocomplete="off"
-          placeholder="Name" />
-      </div>
-
-      <div class="input-container" style="margin-top: 10px;">
-        <label for="joinId">What's the password?</label>
-        <input id="joinId" class="arcade-input" formControlName="id" required autocomplete="off"
-          placeholder="Game ID" />
-      </div>
-
-      <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
-
-      <button class="arcade-btn secondary" type="submit" [disabled]="joinGameForm.invalid"
-        [class.ghost]="joinGameForm.invalid">
-        Join
-      </button>
-    </form>
-    }
   </div>
+  }
+
+  <section class="home-panel">
+    <!-- Header: logo + tagline + main actions -->
+    <header class="home-header">
+      <div class="logo-group">
+        <img class="logo" src="../../assets/deathbox-logo.png" alt="deathbox-logo" />
+        <div class="home-meta">
+          <p class="label">Deathbox</p>
+          <p class="tagline">The ultimate drinking game</p>
+          <p class="sub">
+            Fast, loud, and a little bit cursed.
+          </p>
+        </div>
+      </div>
+
+      <div class="home-actions">
+        <div class="primary-actions">
+          <button class="arcade-btn primary" [class.selected]="createClicked" (click)="toggleCreate()" type="button"
+            [attr.aria-pressed]="createClicked">
+            New game
+          </button>
+
+          <button class="arcade-btn secondary" [class.selected]="joinClicked" (click)="toggleJoin()" type="button"
+            [attr.aria-pressed]="joinClicked">
+            Join game
+          </button>
+        </div>
+
+        <!-- Forms area -->
+        <section class="home-forms">
+          @if (createClicked) {
+          <form [formGroup]="createGameForm" id="create" (ngSubmit)="createGame(createGameForm)" class="form-card">
+            <div class="input-container">
+              <label for="createName">Who goes there?</label>
+              <input id="createName" class="arcade-input" formControlName="name" required autocomplete="off"
+                placeholder="Name" />
+              <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
+            </div>
+            <button class="arcade-btn primary" type="submit" [disabled]="createGameForm.invalid"
+              [class.ghost]="createGameForm.invalid">
+              Create
+            </button>
+          </form>
+          }
+
+          @if (joinClicked) {
+          <form [formGroup]="joinGameForm" id="join" (ngSubmit)="joinGame(joinGameForm)" class="form-card">
+            <div class="input-container">
+              <label for="joinName">Who goes there?</label>
+              <input id="joinName" class="arcade-input" formControlName="name" required autocomplete="off"
+                placeholder="Name" />
+            </div>
+
+            <div class="input-container">
+              <label for="joinId">What’s the password?</label>
+              <input id="joinId" class="arcade-input" formControlName="id" required autocomplete="off"
+                placeholder="Game ID" />
+            </div>
+
+            <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
+
+            <button class="arcade-btn secondary" type="submit" [disabled]="joinGameForm.invalid"
+              [class.ghost]="joinGameForm.invalid">
+              Join
+            </button>
+          </form>
+          }
+        </section>
+
+        <!-- How to Play toggle inside panel -->
+        <section class="how-to-panel" id="how-to-panel" aria-label="How to play Deathbox">
+          <button class="how-to-inline how-to-toggle" type="button" (click)="toggleInfo()" [class.active]="showInfo"
+            [attr.aria-expanded]="showInfo" aria-controls="how-to-body">
+            <div class="how-to-toggle-left">
+              <span class="material-symbols-outlined how-to-icon">
+                menu_book
+              </span>
+              <span>How to play</span>
+            </div>
+            <span class="how-to-chevron" aria-hidden="true">
+              {{ showInfo ? '–' : '+' }}
+            </span>
+          </button>
+
+          <div class="how-to-body" id="how-to-body" [class.collapsed]="!showInfo">
+            <app-rules></app-rules>
+          </div>
+        </section>
+          <app-feedback screen="start"></app-feedback>
+      </div>
+    </header>
+  </section>
 </div>

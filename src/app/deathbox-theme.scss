@@ -1,4 +1,4 @@
-/* src/styles/_deathbox-theme.scss */
+@use "sass:color";
 
 /* ===== Tokens (configurable) ===== */
 $neon-skull-green: #39FF14 !default;
@@ -9,6 +9,8 @@ $dead-pixel-gray:  #3C3C47 !default;
 $night-violet:     #5E3A87 !default;
 $toxic-mint:       #7AFFB1 !default;
 $crimson-glitch-red:#FF4F64 !default;
+$ui-gray: #9B9BA3 !default;
+$ui-gray-soft: #808089 !default;
 
 /* Derived tokens (also configurable) */
 $primary-color:     $neon-skull-green !default;

@@ -1,19 +1,28 @@
-<div class="count-container">
+<div class="count-container" [class.drinker]="isDrinking">
   <div class="text-container">
-    @if (isDrinking) {
-    <h1 class="title-glitch">Bottoms up, {{ drinker }}!</h1>
-    <p class="ominous">Have fun.</p>
-    } @else {
-    <h1 class="title-glitch">Tap to speed it up</h1>
-    <p class="flavor"><span>{{ drinker }}</span> is drinking.</p>
-    <p class="flavor">Help end it… or make them sweat.</p>
-    <p class="ominous">{{ drinker }} can’t stop the clock.</p>
-    }
+    <h1 class="title-glitch">
+      WRONG
+    </h1>
+
+    <p class="flavor-main">
+      It’s your turn to drink, <span class="name">{{ drinker }}</span>.
+    </p>
+    <p class="flavor-secondary" *ngIf="assignedSeconds !== null">
+
+      You’re drinking for
+      <strong>{{ assignedSeconds }}</strong>
+      {{ assignedSeconds === 1 ? 'second' : 'seconds' }}.
+    </p>
   </div>
 
-  <div class="crt-counter" [class.active]="isActive" (click)="onTap()">
-    <div class="fill-bar" [style.height]="liquidHeight"></div>
+  <div class="crt-counter" [class.active]="stage === 'counting'" [class.prep]="stage === 'prep'"
+    [class.tappable]="isActive" (click)="stage === 'counting' && onTap()">
+    <div class="fill-bar" [style.--fill]="fillScale"></div>
     <div class="skull-bg"></div>
-    <div class="timer">{{ game.seconds }}</div>
+
+    <div class="timer">
+      {{ displaySeconds }}
+    </div>
   </div>
+
 </div>

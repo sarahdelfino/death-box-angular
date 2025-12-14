@@ -11,14 +11,14 @@ export class TapService {
     this.flushTimer = setInterval(() => {
       if (this.tapCount > 0) {
         const now = Date.now();
-        const bucket = Math.floor(now / 250); // 4 buckets/sec
+        const bucket = Math.floor(now / 250); 
         set(
           ref(this.rtdb, `games/${gameId}/tapBuffer/${playerId}/${bucket}`),
           true
         );
         this.tapCount = 0;
       }
-    }, 400); // ≤3 writes/sec
+    }, 400); 
   }
 
   tap() {

@@ -20,11 +20,11 @@ export class CountdownAuthorityService {
   private rafId?: number;
 
   private currentSpeed = 1.0;
-  private readonly BASE = 1.0;         // idle = normal speed
-  private readonly GAIN = 1.2;         // effect of tapping
-  private readonly GLOBAL_CAP = 3.5;   // upper bound
+  private readonly BASE = 1.0;         
+  private readonly GAIN = 1.2;         
+  private readonly GLOBAL_CAP = 3.5;   
   private readonly TAP_WINDOW_MS = 800;
-  private readonly BUCKET_MS = 250;    // 4 buckets/sec
+  private readonly BUCKET_MS = 250;    
 
   start(
     gameId: string,
@@ -32,13 +32,13 @@ export class CountdownAuthorityService {
     initialMs: number,
     drinkerId: string
   ): void {
-    // Record assigned time (running total)
+    
     this.incrementStat(gameId, drinkerId, 'assigned', Math.round(initialMs / 1000));
 
     let initialized = false; 
-    let startTime = performance.now(); // measure immediately — prevents drift
+    let startTime = performance.now(); 
 
-    // --- Subscribe to tapBuffer data ---
+    
     const tapsRef = ref(this.rtdb, `games/${gameId}/tapBuffer`);
     this.tapsUnsub = onValue(tapsRef, (snapshot) => {
       const now = Date.now();
@@ -82,7 +82,7 @@ export class CountdownAuthorityService {
         this.BASE + effectiveIntensity * this.GAIN
       );
 
-      // --- Speed logic ---
+      
       if (!initialized && active.length === 0) {
         this.currentSpeed = 1.0;
       } else {
@@ -91,7 +91,7 @@ export class CountdownAuthorityService {
       }
     });
 
-    // --- Countdown loop ---
+    
     const gameRef = ref(this.rtdb, `games/${gameId}`);
     let lastFrame = startTime;
     let elapsedSinceLastPublish = 0;
@@ -129,7 +129,7 @@ export class CountdownAuthorityService {
       this.rafId = requestAnimationFrame(tick);
     };
 
-    // start immediately — no artificial delay
+    
     lastFrame = startTime;
     this.rafId = requestAnimationFrame(tick);
   }
