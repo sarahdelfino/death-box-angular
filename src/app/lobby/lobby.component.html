@@ -1,63 +1,113 @@
-<div class="container">
-  <span class="material-symbols-outlined help" (click)="toggleInfo()">
-    help
-  </span>
-  <!-- Join dialog -->
-  <dialog id="dialog">
-    <form [formGroup]="joinGameForm" id="join" method="dialog">
-      <label for="name">Who goes there?</label>
-      <input id="name" formControlName="playerName" required autocomplete="off" placeholder="Name" />
-      <button class="primary" (click)="joinGame()" type="submit">
-        Join game
-      </button>
-    </form>
-  </dialog>
-
-  <!-- Logo -->
-  <img class="logo" src="../../assets/deathbox-logo.png" alt="deathbox-logo" />
-
-  <!-- Game details -->
-  @if (game$ | async; as game) {
-  <!-- Game ID -->
-  <div class="gameId">
-    <h1 class="gameId" style="margin-top: -40px; margin-bottom: 0px;">
-      {{ game.id }}
-    </h1>
-  </div>
-
-  <div class="lobby-content">
-    <div class="buttons" [style.display]="isHost ? 'flex' : 'block'">
-      <!-- Host controls -->
-      @if (isHost) {
-
-      <button class="arcade-btn primary" (click)="startGame()">Let's play!</button>
-      } @else {
-      <h3>Waiting on host to start the game...</h3>
-      }
-
-      <!-- Invite link -->
-      <div class="invite-container">
-        @if (showPopup) {
-          <p class="popup-text">Copied to clipboard</p>
-        }
-        <button class="arcade-btn secondary" (click)="inviteClicked()">
-          Invite a friend
-        </button>
-      </div>
-    </div>
-
-    <!-- Player list -->
-    <div class="players" [class.scroll]="isHost">
-      @for (player of game.players | keyvalue; track player.key) {
-      <div class="list-flex">
-        <div class="avatar-wrapper" [class.loading]="isLoadingAvatars[player.key] !== false">
-          <img class="avatar loading" [src]="'https://robohash.org/' + game.id + player.key + '?set=set5'"
-            (load)="onImageLoad(player.key)" />
+@if (game$ | async; as game) {
+  <section class="lobby-panel">
+    <!-- Left: logo, game code, buttons, how-to -->
+    <header class="lobby-header">
+      <div class="logo-group">
+        <img
+          class="logo"
+          src="../../assets/deathbox-logo.png"
+          alt="deathbox-logo"
+        />
+        <div class="game-meta">
+          <p class="label">Lobby code</p>
+          <p class="gameId">{{ game.id }}</p>
+          <div style="display: flex; flex-direction: row-reverse;">
+          @if (isHost) {
+            <a class="status-pill status-host" (click)="startGame()">Start Game</a>
+          } @else {
+            <p class="status-pill status-waiting">
+              Waiting on host to start…
+            </p>
+          }
+          <a class="status-pill" (click)="inviteClicked()">Invite a friend</a>
+          </div>
         </div>
-        <p>{{ player.key }}</p>
       </div>
-      }
-    </div>
-  </div>
-  }
+
+<div class="controls">
+  <!-- other controls can stay here if you add them later -->
 </div>
+
+<section
+  class="how-to-panel"
+  id="how-to-panel"
+>
+  <button
+    class="how-to-inline how-to-toggle"
+    type="button"
+    (click)="toggleInfo()"
+    [class.active]="infoClicked"
+    [attr.aria-expanded]="infoClicked"
+    aria-controls="how-to-body"
+  >
+    <div class="how-to-toggle-left">
+      <span class="material-symbols-outlined how-to-icon">
+        menu_book
+      </span>
+      <span>How to play</span>
+    </div>
+    <span class="how-to-chevron" aria-hidden="true">
+      {{ infoClicked ? '–' : '+' }}
+    </span>
+  </button>
+
+  <div
+    class="how-to-body"
+    id="how-to-body"
+    [class.collapsed]="!infoClicked"
+  >
+    <h3>On Your Turn</h3>
+    <ul>
+      <li>Choose one of the <strong>nine face-up stacks</strong>.</li>
+      <li>Predict whether the next card will be <strong>higher</strong> or <strong>lower</strong> than the top card.</li>
+      <li>Get <strong>three predictions</strong> right to clear your turn.</li>
+    </ul>
+
+    <h3>If You’re Wrong</h3>
+    <ul>
+      <li>The number of cards in your chosen stack becomes your <strong>drinking time</strong>.</li>
+      <li>A countdown begins — you must drink until it ends.</li>
+    </ul>
+
+    <h3>The Counters</h3>
+    <ul>
+      <li>Other players can <strong>tap</strong> to speed up your timer.</li>
+      <li>They might help you out… or drag it on.</li>
+    </ul>
+  </div>
+</section>
+
+
+    </header>
+
+    <!-- Right: players -->
+    <section class="lobby-players">
+      <h2 class="players-title">
+        Players
+      </h2>
+
+      <div class="players" [class.scroll]="isHost">
+        @for (player of game.players | keyvalue; track player.key) {
+          <div class="list-flex">
+            <div
+              class="avatar-wrapper"
+              [class.loading]="isLoadingAvatars[player.key] !== false"
+            >
+              <img
+                class="avatar"
+                [src]="'https://robohash.org/' + game.id + player.key + '?set=set5'"
+                (load)="onImageLoad(player.key)"
+              />
+            </div>
+            <p>{{ player.key }}</p>
+          </div>
+        }
+      </div>
+    </section>
+      @if (showInviteToast) {
+    <div class="invite-toast">
+      {{ inviteToastMessage }}
+    </div>
+  }
+  </section>
+}

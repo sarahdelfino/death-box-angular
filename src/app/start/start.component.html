@@ -1,15 +1,13 @@
 <div id="container" class="container">
-  <span class="material-symbols-outlined help" (click)="toggleInfo()">
-    help
-  </span>
-
   <div class="logo-container">
     <img class="logo" src="../../assets/deathbox-logo.png" alt="deathbox-logo" />
   </div>
 
-
   <div class="content">
-        <h2 style="font-size: 1.25rem; margin-bottom: 24px;">The ultimate drinking game</h2>
+    <h2 style="font-size: 1.25rem; margin-bottom: 24px;">
+      The ultimate drinking game
+    </h2>
+
     <div class="button-container">
       <button class="arcade-btn primary" [class.selected]="createClicked" (click)="toggleCreate()" type="button"
         [attr.aria-pressed]="createClicked">
@@ -20,8 +18,44 @@
         [attr.aria-pressed]="joinClicked">
         Join Game
       </button>
+
+      <button class="arcade-btn tertiary how-to-btn" type="button" (click)="toggleInfo()"
+        [attr.aria-expanded]="showInfo" aria-controls="how-to-panel">
+        <span class="material-symbols-outlined how-to-icon">
+          menu_book
+        </span>
+        <span>How to Play</span>
+      </button>
     </div>
 
+    @if (showInfo) {
+    <section id="how-to-panel" class="how-to-panel" aria-label="How to play Deathbox" #howToPanel>
+      <h2>How to Play</h2>
+
+      <h3>Your Turn</h3>
+      <ul>
+        <li>Choose one of the <strong>nine face-up stacks</strong>.</li>
+        <li>Predict whether the next card will be <strong>higher</strong> or <strong>lower</strong> than the top card.
+        </li>
+        <li>Get <strong>three predictions</strong> right to clear your turn.</li>
+      </ul>
+
+      <h3>If You’re Wrong</h3>
+      <ul>
+        <li>The number of cards in your chosen stack becomes your <strong>drinking time</strong>.</li>
+        <li>A countdown begins — you must drink until it ends.</li>
+      </ul>
+
+      <h3>The Counters</h3>
+      <ul>
+        <li>Other players can <strong>tap</strong> to speed up your timer.</li>
+        <li>They might help you out… or drag it on.</li>
+      </ul>
+      <p class="how-to-note">
+        This is a drinking game. Know your limits and drink responsibly.
+      </p>
+    </section>
+    }
 
     <!-- CREATE GAME FORM -->
     @if (this.createClicked) {

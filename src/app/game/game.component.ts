@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, inject, viewChild } from '@angular/core';
+import { Component, ElementRef, QueryList, ViewChild, ViewChildren, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GameStore } from '../game.store';
 import { Card, StackGrid, Player, GameState } from '../models/game-state.model';
@@ -10,6 +10,7 @@ import { StackComponent } from '../stack/stack.component';
 import { MessagesComponent } from '../messages/messages.component';
 import { DeckComponent } from '../deck/deck.component';
 import { ScoreboardComponent } from "../scoreboard/scoreboard.component";
+import { Analytics, logEvent } from '@angular/fire/analytics';
 
 @Component({
   selector: 'app-game',
@@ -24,23 +25,24 @@ import { ScoreboardComponent } from "../scoreboard/scoreboard.component";
     StackComponent,
     MessagesComponent,
     ScoreboardComponent
-],
+  ],
   providers: [GameStore],
 })
 export class GameComponent {
   private route = inject(ActivatedRoute);
   readonly store = inject(GameStore);
+  private analytics = inject(Analytics);
 
   @ViewChild('deckEl', { read: ElementRef }) deckEl!: ElementRef;
-@ViewChildren(StackComponent) stacks!: QueryList<StackComponent>;
+  @ViewChildren(StackComponent) stacks!: QueryList<StackComponent>;
 
-flyingStyle: { top: string; left: string; transform: string } = {
-  top: '0px',
-  left: '0px',
-  transform: 'translate(0,0)',
-};
+  flyingStyle: { top: string; left: string; transform: string } = {
+    top: '0px',
+    left: '0px',
+    transform: 'translate(0,0)',
+  };
 
-cardTransform = 'translate(0,0)';
+  cardTransform = 'translate(0,0)';
 
   // === Reactive state ===
   game$ = this.store.game$;
@@ -53,6 +55,7 @@ cardTransform = 'translate(0,0)';
   isMobile = window.innerWidth < 500;
 
   // === UI flags ===
+  gameId = this.route.snapshot.paramMap.get('id');
   cardSelected = false;
   messagesClicked = false;
   playersView = false;
@@ -74,17 +77,18 @@ cardTransform = 'translate(0,0)';
   lastAddedCardId: string | null = null;
   flyingCard: Card | null = null;
   flyingTransform = 'translate(0,0)';
+  player_count: Number = 0;
 
   constructor() {
-    const gameId = this.route.snapshot.paramMap.get('id');
-    if (gameId) {
-      this.store.loadGame(gameId);
+    if (this.gameId) {
+      this.store.loadGame(this.gameId);
       this.store.game$.subscribe(game => {
         if (game) {
           this.deck = game.deck;
           this.counting = game.counting;
           let currentDrinker = game.currentTurn
           let players = Object.keys(game.players);
+          this.player_count = players.length;
           if (game.players[currentDrinker].correctGuesses === 3) {
             let currentIndex = players.indexOf(currentDrinker);
             let nextIndex = (currentIndex + 1) % players.length;
@@ -94,6 +98,14 @@ cardTransform = 'translate(0,0)';
         }
       })
     }
+  }
+
+  ngOnDestroy(): void {
+    logEvent(this.analytics, 'left_during_game', {
+      game_id: this.gameId,
+      deck_size: this.deck?.length ?? 0,
+      player_count: Number(this.player_count) ?? 0,
+    });
   }
 
   // === UI Actions ===
@@ -127,72 +139,72 @@ cardTransform = 'translate(0,0)';
         stackLength: stackGrid[stackKey].cards.length,
       };
     } else {
-        this.removeStacks(stackGrid);
+      this.removeStacks(stackGrid);
     }
   }
 
-drawFromDeck(prediction: 'higher' | 'lower') {
-  const gameId = this.route.snapshot.paramMap.get('id')!;
-  if (this.deck.length === 0 || !this.clickedData) return;
+  drawFromDeck(prediction: 'higher' | 'lower') {
+    const gameId = this.route.snapshot.paramMap.get('id')!;
+    if (this.deck.length === 0 || !this.clickedData) return;
 
-  this.choice = prediction;
-  const drawCard = this.deck.shift()!;
-  drawCard.tilt = Math.random() * 12 - 6;
-  this.flyingCard = drawCard;
+    this.choice = prediction;
+    const drawCard = this.deck.shift()!;
+    drawCard.tilt = Math.random() * 12 - 6;
+    this.flyingCard = drawCard;
 
-  const { stackKey } = this.clickedData;
+    const { stackKey } = this.clickedData;
 
-  const deckRect = this.deckEl.nativeElement.getBoundingClientRect();
-  const stackCmp = this.stacks.find(cmp => cmp.id === stackKey);
-  if (!stackCmp) return;
+    const deckRect = this.deckEl.nativeElement.getBoundingClientRect();
+    const stackCmp = this.stacks.find(cmp => cmp.id === stackKey);
+    if (!stackCmp) return;
 
-  const stackRect = stackCmp.el.nativeElement.getBoundingClientRect();
+    const stackRect = stackCmp.el.nativeElement.getBoundingClientRect();
 
-  // centers
-  const deckCenterX = deckRect.left + deckRect.width / 2;
-  const deckCenterY = deckRect.top + deckRect.height / 2;
-  const stackCenterX = stackRect.left + stackRect.width / 2;
-  const stackCenterY = stackRect.top + stackRect.height / 2;
+    // centers
+    const deckCenterX = deckRect.left + deckRect.width / 2;
+    const deckCenterY = deckRect.top + deckRect.height / 2;
+    const stackCenterX = stackRect.left + stackRect.width / 2;
+    const stackCenterY = stackRect.top + stackRect.height / 2;
 
-  // set starting position
-  this.flyingStyle = {
-    top: `${deckCenterY - 70}px`,   // 70 = half of card height (140px)
-    left: `${deckCenterX - 50}px`,  // 50 = half of card width (100px)
-    transform: 'translate(0,0)',
-  };
-
-  // target offsets
-  const dx = stackCenterX - deckCenterX;
-  const dy = stackCenterY - deckCenterY;
-  const tilt = drawCard.tilt ?? 0;
-
-  // animate
-  requestAnimationFrame(() => {
+    // set starting position
     this.flyingStyle = {
-      ...this.flyingStyle,
-      transform: `translate(${dx}px, ${dy}px) rotateZ(${tilt}deg)`,
+      top: `${deckCenterY - 70}px`,   // 70 = half of card height (140px)
+      left: `${deckCenterX - 50}px`,  // 50 = half of card width (100px)
+      transform: 'translate(0,0)',
     };
-  });
 
-  // after flight
-  setTimeout(() => {
-    this.flyingCard = null;
+    // target offsets
+    const dx = stackCenterX - deckCenterX;
+    const dy = stackCenterY - deckCenterY;
+    const tilt = drawCard.tilt ?? 0;
 
-    this.store.game$.pipe(take(1)).subscribe(current => {
-      if (!current) return;
-      const newGrid: StackGrid = { ...current.stackGrid };
-      newGrid[stackKey] = { cards: [drawCard, ...newGrid[stackKey].cards] };
-
-      this.store.updateStackGrid({ gameId, grid: newGrid });
-      this.store.updateDeck({ gameId, deck: this.deck });
-
-      this.lastAddedCardId = drawCard.cardName;
-      setTimeout(() => (this.lastAddedCardId = null), 600);
+    // animate
+    requestAnimationFrame(() => {
+      this.flyingStyle = {
+        ...this.flyingStyle,
+        transform: `translate(${dx}px, ${dy}px) rotateZ(${tilt}deg)`,
+      };
     });
 
-    this.compareCards(drawCard);
-  }, 600);
-}
+    // after flight
+    setTimeout(() => {
+      this.flyingCard = null;
+
+      this.store.game$.pipe(take(1)).subscribe(current => {
+        if (!current) return;
+        const newGrid: StackGrid = { ...current.stackGrid };
+        newGrid[stackKey] = { cards: [drawCard, ...newGrid[stackKey].cards] };
+
+        this.store.updateStackGrid({ gameId, grid: newGrid });
+        this.store.updateDeck({ gameId, deck: this.deck });
+
+        this.lastAddedCardId = drawCard.cardName;
+        setTimeout(() => (this.lastAddedCardId = null), 600);
+      });
+
+      this.compareCards(drawCard);
+    }, 600);
+  }
   compareCards(drawnCard: any) {
     if (!this.clickedData || !this.choice) return;
     const gameId = this.route.snapshot.paramMap.get('id');

@@ -1,98 +1,461 @@
 @use '../deathbox-theme.scss' as db;
 
+// Light, readable grays on dark background
+$ui-gray: lighten(db.$dead-pixel-gray, 35%);
+$ui-gray-soft: lighten(db.$dead-pixel-gray, 25%);
+
 .container {
   max-width: 100vw;
-  margin: auto;
-  text-align: center;
+  min-height: 100vh;
+  max-height: 100vh;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
   animation: retro-open 0.6s ease-out;
+  background:
+    radial-gradient(circle at top, rgba(db.$glitch-purple, 0.25), transparent 55%),
+    radial-gradient(circle at bottom, rgba(db.$neon-skull-green, 0.2), transparent 55%);
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
-span.material-symbols-outlined.help {
-  position: absolute;
-  top: 24px;
-  right: 24px;
+.invite-toast {
+  position: fixed; // overlay, not tied to scroll inside panel
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 999;
+
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(db.$toxic-mint, 0.9);
+
+  background:
+    radial-gradient(circle at top, rgba(db.$neon-skull-green, 0.28), transparent 70%),
+    rgba(0, 0, 0, 0.85);
+
   color: db.$toxic-mint;
-}
-
-.lobby-content {
-  width: 100%;
-  max-width: 100%;
-  margin: auto;
-  overflow-x: hidden;
-}
-
-/* === GAME ID === */
-.gameId {
-  font-size: 3rem;
-  color: db.$neon-skull-green;
-  text-shadow: 0 0 6px db.$neon-skull-green, 0 0 12px db.$glitch-purple;
-  letter-spacing: 2px;
-  margin: 1.5rem 0 1rem;
-  animation: text-flicker 3s infinite;
-}
-
-/* Invite link */
-
-.invite {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: db.$glitch-purple;
-  text-shadow: 0 0 4px rgba(db.$glitch-purple, 0.6);
+  text-shadow: 0 0 6px rgba(db.$neon-skull-green, 0.9);
+
+  box-shadow:
+    0 0 10px rgba(db.$neon-skull-green, 0.7),
+    0 0 18px rgba(db.$glitch-purple, 0.5);
+
+  animation: invite-toast-up 0.2s ease-out, invite-toast-fade 0.2s ease-in 1.6s forwards;
 }
 
-p.popup-text {
+@keyframes invite-toast-up {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes invite-toast-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* === LOBBY PANEL === */
+.lobby-panel {
+  max-width: 900px;
+  border-radius: 16px;
+  background: radial-gradient(circle at top left, #1c2032, #050509 70%);
+  box-shadow:
+    0 0 0 1px rgba(db.$glitch-purple, 0.3),
+    0 18px 40px rgba(0, 0, 0, 0.9);
+  padding: 1.5rem 1.25rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    padding: 1.25rem 1rem;
+    max-height: calc(100vh - 2.5rem);
+  }
+}
+
+/* === HEADER / LEFT COLUMN === */
+.lobby-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+img.logo {
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.game-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.game-meta .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $ui-gray;
   margin: 0;
 }
 
-/* === PLAYER GRID === */
-.players {
-  margin: 1.5rem auto;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* always 2 across */
-  gap: 1.2rem;
-  max-width: 500px;
+.gameId {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: db.$neon-skull-green;
+  text-shadow: 0 0 6px db.$neon-skull-green, 0 0 12px db.$glitch-purple;
+  letter-spacing: 0.2em;
+  margin: 0;
+  animation: text-flicker 3s infinite;
+}
+
+.status-pill {
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 0.3rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  border: 1px solid $ui-gray;
+}
+
+.status-host {
+  background: rgba(db.$neon-skull-green, 0.18);
+  color: db.$neon-skull-green;
+  margin-left: 5px;
+}
+
+.status-waiting {
+  background: rgba(db.$crimson-glitch-red, 0.14);
+  color: lighten(db.$crimson-glitch-red, 10%);
+  margin-left: 5px;
+}
+
+/* === CONTROLS (button area) === */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.start-btn {
+  min-width: 170px;
+}
+
+.waiting-text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: db.$crimson-glitch-red;
+  animation: text-flicker 4s infinite;
+}
+
+.invite-btn {
+  flex-shrink: 0;
+}
+
+.controls-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: baseline;
+}
+
+.popup-text {
+  margin: 0;
+  font-size: 0.75rem;
+  color: db.$toxic-mint;
+}
+
+.invite-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: $ui-gray;
+}
+
+/* Inline how-to toggle inside the panel */
+.how-to-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   width: 100%;
+  font-size: 0.8rem;
+  padding-inline: 0.75rem;
+  padding-block: 0.5rem;
+  border-radius: 10px;
+  border-style: dashed;
+  border-width: 1px;
+  border-color: rgba(db.$toxic-mint, 0.9);
+  background: rgba(0, 0, 0, 0.25);
+  color: db.$toxic-mint;
+  box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.9;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+
+  .how-to-icon {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    opacity: 1;
+    border-color: db.$neon-skull-green;
+    background: rgba(db.$neon-skull-green, 0.08);
+    box-shadow: 0 0 8px rgba(db.$neon-skull-green, 0.45);
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    border-style: solid;
+    border-color: db.$neon-skull-green;
+    background: radial-gradient(
+      circle at top left,
+      rgba(db.$neon-skull-green, 0.22),
+      transparent 70%
+    );
+    box-shadow: 0 0 10px rgba(db.$neon-skull-green, 0.6);
+  }
+}
+
+.how-to-toggle-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.how-to-chevron {
+  font-size: 1rem;
+  line-height: 1;
+  color: $ui-gray;
+}
+
+/* === INLINE HOW-TO PANEL === */
+/* Panel border + background always visible; only body collapses */
+.how-to-panel {
+  margin: 0.75rem 0;
+  border-radius: 12px;
+  border: 1px solid $ui-gray-soft;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(db.$glitch-purple, 0.35),
+      rgba(db.$neon-skull-green, 0.16)
+    );
+  padding: 0.65rem 0.75rem 0.75rem;
+  position: relative;
+}
+
+/* Scanline effect across whole panel */
+.how-to-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.12) 0px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.how-to-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Collapsible body */
+.how-to-body {
+  margin-top: 0.6rem;
+  max-height: 900px;
+  overflow: hidden;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    max-height 0.25s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.how-to-body.collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+/* Typography inside how-to body */
+.how-to-body h2,
+.how-to-body h3,
+.how-to-body ul {
+  position: relative;
+  z-index: 1;
+}
+
+.how-to-body h2 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: db.$neon-skull-green;
+}
+
+.how-to-body h3 {
+  margin: 0.5rem 0 0.2rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $ui-gray;
+}
+
+.how-to-body ul {
+  margin: 0 0 0.25rem 1.1rem;
+  padding-left: 0.4rem;
+  font-size: 0.8rem;
+  color: $ui-gray;
+}
+
+.how-to-body li + li {
+  margin-top: 0.15rem;
+}
+
+.how-to-body strong {
+  color: db.$toxic-mint;
+}
+
+/* Actions row with "Got it" button */
+.how-to-actions {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* === PLAYER GRID / RIGHT COLUMN === */
+.lobby-players {
+  border-radius: 12px;
+  border: 1px solid $ui-gray-soft;
+  background: radial-gradient(circle at top, rgba(db.$glitch-purple, 0.16), transparent 70%);
+  padding: 0.9rem 0.85rem 0.9rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.lobby-players::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background-image: linear-gradient(
+    135deg,
+    rgba(db.$glitch-purple, 0.3),
+    transparent,
+    rgba(db.$neon-skull-green, 0.25)
+  );
+  opacity: 0.35;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.players-title {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 0.7rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: $ui-gray;
+}
+
+/* Player grid */
+.players {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  max-width: 100%;
   box-sizing: border-box;
-  overflow-y: auto;   /* scroll vertically if too tall */
-  max-height: 60vh;   /* keep within screen */
-  padding-right: 0.5rem;
+  overflow-y: auto;
+  max-height: 50vh;
+  padding-right: 0.35rem;
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .list-flex {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   gap: 0.4rem;
 }
 
+/* Avatar card */
 .avatar-wrapper {
-  width: 96px;
-  height: 96px;
-  border: 2px solid db.$dead-pixel-gray;
-  border-radius: 4px;
+  width: 86px;
+  height: 86px;
+  border: 2px solid $ui-gray;
+  border-radius: 8px;
   background: #0a0a0f;
-  box-shadow: inset 0 0 12px rgba(db.$glitch-purple, 0.4);
-  transition: all 0.3s ease;
+  box-shadow: inset 0 0 12px rgba(db.$glitch-purple, 0.45);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   overflow: hidden;
+  position: relative;
   margin: 0 auto;
 
   &.loading {
     animation: glitch-flicker 1.2s infinite alternate;
   }
 
-  &.loaded::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(db.$neon-skull-green, 0.05) 0px,
-      transparent 3px
-    );
-    animation: scanline-drift 8s linear infinite;
-    pointer-events: none;
+  &:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+      inset 0 0 12px rgba(db.$glitch-purple, 0.6),
+      0 0 12px rgba(db.$neon-skull-green, 0.55);
+    border-color: db.$neon-skull-green;
   }
 }
 
@@ -113,16 +476,7 @@ p.popup-text {
   overflow-wrap: break-word;
 }
 
-.buttons {
-  display: flex;
-  justify-content: center;
-  align-items: end;
-}
-
-button.arcade-btn {
-  padding: 0px;
-}
-
+/* Waiting message (if you keep <h3> anywhere else) */
 h3 {
   color: db.$crimson-glitch-red;
   font-size: 0.9rem;
@@ -149,9 +503,4 @@ h3 {
   0% { border-color: db.$glitch-purple; }
   50% { border-color: db.$neon-skull-green; }
   100% { border-color: db.$glitch-purple; }
-}
-
-@keyframes scanline-drift {
-  from { background-position: 0 0; }
-  to   { background-position: 0 100%; }
 }

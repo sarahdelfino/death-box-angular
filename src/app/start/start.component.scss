@@ -5,6 +5,7 @@
   margin: 0 auto;
   text-align: center;
   animation: logo 0.5s;
+  padding-bottom: 6rem;
 }
 
 .help {
@@ -52,6 +53,95 @@ label {
   opacity: 0;
   pointer-events: none;
 }
+
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* Visually distinct from primary/secondary */
+.arcade-btn.tertiary.how-to-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-inline: 1rem;
+  border: 2px dashed rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.4);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.9;
+
+  .how-to-icon {
+    font-size: 1.1rem;
+  }
+
+  &:hover {
+    opacity: 1;
+    border-style: solid;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* Inline instructions panel */
+.how-to-panel {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: radial-gradient(circle at top left, #2a1435 0, #05030a 55%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+  max-width: 520px;
+  width: 100%;
+  margin-inline: auto;
+  text-align: left;
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  ol {
+    padding-left: 1.25rem;
+    margin: 0 0 0.75rem;
+  }
+
+  li + li {
+    margin-top: 0.3rem;
+  }
+
+  .how-to-note {
+    margin: 0.25rem 0 0;
+    font-size: 0.8rem;
+    opacity: 0.8;
+  }
+}
+
+/* Mobile: stack buttons nicely */
+@media (max-width: 600px) {
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+
+    .arcade-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .arcade-btn.tertiary.how-to-btn {
+    margin-top: 0.25rem;
+  }
+}
+
 
 @keyframes logo {
   from { opacity: 0; }

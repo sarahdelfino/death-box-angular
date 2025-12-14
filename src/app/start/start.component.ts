@@ -1,10 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { nanoid } from 'nanoid';
 import { GameStore } from '../game.store';
 import { MatDialog } from '@angular/material/dialog';
-import { HowToPlayComponent } from '../how-to-play/how-to-play.component';
 import { getAnalytics, logEvent } from '@angular/fire/analytics';
 
 @Component({
@@ -20,6 +19,9 @@ export class StartComponent implements OnInit {
   private store = inject(GameStore);
   private dialog = inject(MatDialog);
   private route = inject(ActivatedRoute);
+
+  @ViewChild('howToPanel') howToPanel!: ElementRef;
+
 
   analytics = getAnalytics();
 
@@ -37,7 +39,7 @@ export class StartComponent implements OnInit {
   joinClicked = false;
   createClicked = false;
   isMobile = window.innerWidth < 500;
-  infoClicked = false;
+  showInfo = false;
 
   ngOnInit() {
     // Listen for ?join=GAMEID param
@@ -59,27 +61,52 @@ export class StartComponent implements OnInit {
   }
 
   toggleJoin(): void {
+    if (!this.joinClicked) {
+      logEvent(this.analytics, 'click_join_game');
+    }
     this.joinClicked = !this.joinClicked;
     if (this.joinClicked) this.createClicked = false;
   }
 
   toggleCreate(): void {
+    if (!this.createClicked) {
+      logEvent(this.analytics, 'click_new_game');
+    }
     this.createClicked = !this.createClicked;
     if (this.createClicked) this.joinClicked = false;
   }
 
   toggleInfo(): void {
-    this.infoClicked = true;
-    this.dialog.open(HowToPlayComponent, {
-      width: '400px',
-      height: 'fit-content',
-      panelClass: 'how-to-play-dialog',
+    if (!this.showInfo) {
+        logEvent(this.analytics, 'click_instructions', {
+    screen: 'home',
+  });
+    }
+    this.showInfo = !this.showInfo;
+    if (this.showInfo) {
+      // Wait for DOM to update, then scroll
+      setTimeout(() => {
+        this.scrollToHowTo();
+      }, 50);
+    }
+  }
+
+  private scrollToHowTo(): void {
+    if (!this.howToPanel) return;
+
+    const rect = this.howToPanel.nativeElement.getBoundingClientRect();
+    const absoluteY = rect.top + window.scrollY;
+
+    window.scrollTo({
+      top: absoluteY - 80, // pull it up a bit
+      behavior: 'smooth',
     });
   }
 
+
   joinGame(form: FormGroup): void {
     const { name, id, dumb } = form.value;
-    if (!name || !id || dumb ) { return }
+    if (!name || !id || dumb) { return }
     const img = new Image();
     img.src = `https://robohash.org/${id}${name}?set=set5`;
 
@@ -87,7 +114,7 @@ export class StartComponent implements OnInit {
     sessionStorage.setItem('host', 'false');
 
     logEvent(this.analytics, 'game_joined', {
-      gameId: id,
+      game_id: id,
       player: name
     });
 
@@ -106,8 +133,8 @@ export class StartComponent implements OnInit {
     sessionStorage.setItem('player', name);
     sessionStorage.setItem('host', 'true');
 
-      logEvent(this.analytics, 'game_created', {
-      gameId: id,
+    logEvent(this.analytics, 'game_created', {
+      game_id: id,
       player: name
     });
 

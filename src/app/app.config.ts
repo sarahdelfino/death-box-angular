@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, TitleStrategy } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
@@ -9,11 +9,13 @@ import { provideAnalytics, getAnalytics, logEvent } from '@angular/fire/analytic
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
+import { AppTitleStrategy } from './title-strategy';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+    { provide: TitleStrategy, useClass: AppTitleStrategy },
     provideHttpClient(withInterceptorsFromDi()),
 
     // Firebase
