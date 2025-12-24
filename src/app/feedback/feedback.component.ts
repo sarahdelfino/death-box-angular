@@ -34,7 +34,7 @@ export class FeedbackComponent {
         [
           Validators.required,
           Validators.minLength(5),
-          Validators.maxLength(1000), 
+          Validators.maxLength(500), 
         ],
       ],
       canContact: [false],
@@ -43,7 +43,7 @@ export class FeedbackComponent {
         { value: '', disabled: true },
         [
           Validators.email,
-          Validators.maxLength(254), 
+          Validators.maxLength(80), 
         ],
       ],
     });

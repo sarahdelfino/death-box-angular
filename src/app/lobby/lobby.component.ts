@@ -38,7 +38,7 @@ export class LobbyComponent implements OnInit {
   showJoinForm = false;
   showPopup = false;
   isHost = sessionStorage.getItem('host') === 'true';
-  infoClicked = true;
+  infoClicked = false;
   isLoadingAvatars: Record<string, boolean> = {};
   gameId = (location.pathname.split('/')[2] || '').toUpperCase();
   showInviteToast = false;
@@ -179,13 +179,13 @@ export class LobbyComponent implements OnInit {
     });
 
     const url = window.location.origin + `?join=${cleanGameId}`;
-    const shareText = 'Play Deathbox with me!';
+    const shareText = 'Play Death Box with me!';
 
     const navAny = navigator as any;
     if (navAny.share) {
       navAny
         .share({
-          title: `Deathbox Lobby - ${cleanGameId}`,
+          title: `Death Box Lobby - ${cleanGameId}`,
           text: shareText,
           url,
         })
