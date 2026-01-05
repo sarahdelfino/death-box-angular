@@ -1,110 +1,166 @@
-<div class="container">
+<div class="home-shell">
   @if (showCookieBanner) {
-  <div class="cookie-banner">
-    <p class="cookie-text">
-      We use anonymous analytics to understand how people play Death Box and improve the game.
-      Do you want to enable analytics cookies?
-    </p>
-    <div class="cookie-actions">
-      <button type="button" class="arcade-btn primary small" (click)="acceptAnalytics()">
-        Allow analytics
-      </button>
-      <button type="button" class="arcade-btn small" (click)="rejectAnalytics()">
-        No thanks
-      </button>
+    <div class="cookie-banner">
+      <p class="cookie-text">
+        We use anonymous analytics to understand how people play Death Box and improve the game.
+        Do you want to enable analytics cookies?
+      </p>
+      <div class="cookie-actions">
+        <button type="button" class="arcade-btn primary small" (click)="acceptAnalytics()">
+          Allow analytics
+        </button>
+        <button type="button" class="arcade-btn small" (click)="rejectAnalytics()">
+          No thanks
+        </button>
+      </div>
     </div>
-  </div>
   }
 
-  <section class="home-panel">
-    <!-- Header: logo + tagline + main actions -->
-    <header class="home-header">
-      <div class="logo-group">
-        <img class="logo" src="../../assets/deathbox-logo.png" alt="deathbox-logo" />
-        <div class="home-meta">
-          <p class="label">Death Box</p>
-          <p class="tagline">The ultimate drinking game</p>
-          <p class="sub">
-            Fast, loud, and a little bit cursed.
-          </p>
-        </div>
-      </div>
-
-      <div class="home-actions">
-        <div class="primary-actions">
-          <button class="arcade-btn primary" [class.selected]="createClicked" (click)="toggleCreate()" type="button"
-            [attr.aria-pressed]="createClicked">
-            New game
-          </button>
-
-          <button class="arcade-btn secondary" [class.selected]="joinClicked" (click)="toggleJoin()" type="button"
-            [attr.aria-pressed]="joinClicked">
-            Join game
-          </button>
-        </div>
-
-        <!-- Forms area -->
-        <section class="home-forms">
-          @if (createClicked) {
-          <form [formGroup]="createGameForm" id="create" (ngSubmit)="createGame(createGameForm)" class="form-card">
-            <div class="input-container">
-              <label for="createName">Who goes there?</label>
-              <input id="createName" class="arcade-input" formControlName="name" required autocomplete="off"
-                placeholder="Name" />
-              <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
-            </div>
-            <button class="arcade-btn primary" type="submit" [disabled]="createGameForm.invalid"
-              [class.ghost]="createGameForm.invalid">
-              Create
-            </button>
-          </form>
-          }
-
-          @if (joinClicked) {
-          <form [formGroup]="joinGameForm" id="join" (ngSubmit)="joinGame(joinGameForm)" class="form-card">
-            <div class="input-container">
-              <label for="joinName">Who goes there?</label>
-              <input id="joinName" class="arcade-input" formControlName="name" required autocomplete="off"
-                placeholder="Name" />
-            </div>
-
-            <div class="input-container">
-              <label for="joinId">What’s the password?</label>
-              <input id="joinId" class="arcade-input" formControlName="id" required autocomplete="off"
-                placeholder="Game ID" />
-            </div>
-
-            <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
-
-            <button class="arcade-btn secondary" type="submit" [disabled]="joinGameForm.invalid"
-              [class.ghost]="joinGameForm.invalid">
-              Join
-            </button>
-          </form>
-          }
-        </section>
-
-        <!-- How to Play toggle inside panel -->
-        <section class="how-to-panel" id="how-to-panel" aria-label="How to play Death Box">
-          <button class="how-to-inline how-to-toggle" type="button" (click)="toggleInfo()" [class.active]="showInfo"
-            [attr.aria-expanded]="showInfo" aria-controls="how-to-body">
-            <div class="how-to-toggle-left">
-              <span class="material-symbols-outlined how-to-icon">
-                menu_book
-              </span>
-              <span>How to play</span>
-            </div>
-            <span class="how-to-chevron" aria-hidden="true">
-              {{ showInfo ? '–' : '+' }}
-            </span>
-          </button>
-
-          <div class="how-to-body" id="how-to-body" [class.collapsed]="!showInfo">
-            <app-rules></app-rules>
-          </div>
-        </section>
-          <app-feedback screen="start"></app-feedback>
+  <main class="home-card" role="main">
+    <!-- Brand header -->
+    <header class="brand">
+      <img class="brand__logo" src="../../assets/deathbox-logo.png" alt="Death Box logo" />
+      <div class="brand__text">
+        <p class="brand__label">Death Box</p>
+        <h1 class="brand__title">The ultimate drinking game</h1>
+        <p class="brand__sub">Will your friends show you mercy?</p>
       </div>
     </header>
-  </section>
+
+    <!-- Primary CTA row -->
+    <section class="cta">
+      <button
+        class="arcade-btn primary"
+        [class.selected]="createClicked"
+        (click)="toggleCreate()"
+        type="button"
+        [attr.aria-pressed]="createClicked"
+      >
+        New game
+      </button>
+
+      <button
+        class="arcade-btn secondary"
+        [class.selected]="joinClicked"
+        (click)="toggleJoin()"
+        type="button"
+        [attr.aria-pressed]="joinClicked"
+      >
+        Join game
+      </button>
+    </section>
+
+    <!-- Forms -->
+    <section class="forms" aria-label="Game forms">
+      @if (createClicked) {
+        <form
+          [formGroup]="createGameForm"
+          id="create"
+          (ngSubmit)="createGame(createGameForm)"
+          class="form-card"
+          autocomplete="off"
+        >
+          <div class="input-container">
+            <label for="createName">Who goes there?</label>
+            <input
+              id="createName"
+              class="arcade-input"
+              formControlName="name"
+              required
+              autocomplete="off"
+              placeholder="Name"
+              inputmode="text"
+            />
+            <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
+          </div>
+
+          <button
+            class="arcade-btn primary"
+            type="submit"
+            [disabled]="createGameForm.invalid"
+            [class.ghost]="createGameForm.invalid"
+          >
+            Create
+          </button>
+        </form>
+      }
+
+      @if (joinClicked) {
+        <form
+          [formGroup]="joinGameForm"
+          id="join"
+          (ngSubmit)="joinGame(joinGameForm)"
+          class="form-card"
+          autocomplete="off"
+        >
+          <div class="input-container">
+            <label for="joinName">Who goes there?</label>
+            <input
+              id="joinName"
+              class="arcade-input"
+              formControlName="name"
+              required
+              autocomplete="off"
+              placeholder="Name"
+              inputmode="text"
+            />
+          </div>
+
+          <div class="input-container">
+            <label for="joinId">What’s the password?</label>
+            <input
+              id="joinId"
+              class="arcade-input"
+              formControlName="id"
+              required
+              autocomplete="off"
+              placeholder="Game ID"
+              inputmode="text"
+              autocapitalize="characters"
+            />
+          </div>
+
+          <input type="text" name="dumb" formControlName="dumb" autocomplete="off" tabindex="-1" class="dumb" />
+
+          <button
+            class="arcade-btn secondary"
+            type="submit"
+            [disabled]="joinGameForm.invalid"
+            [class.ghost]="joinGameForm.invalid"
+          >
+            Join
+          </button>
+        </form>
+      }
+    </section>
+
+    <!-- How to -->
+    <section class="howto-wrap" id="how-to-panel" aria-label="How to play Death Box">
+      <button
+        class="how-to-inline how-to-toggle"
+        type="button"
+        (click)="toggleInfo()"
+        [class.active]="showInfo"
+        [attr.aria-expanded]="showInfo"
+        aria-controls="how-to-body"
+      >
+        <div class="how-to-toggle-left">
+          <span class="material-symbols-outlined how-to-icon">menu_book</span>
+          <span>How to play</span>
+        </div>
+        <span class="how-to-chevron" aria-hidden="true">
+          {{ showInfo ? '–' : '+' }}
+        </span>
+      </button>
+
+      <div class="how-to-body" id="how-to-body" [class.collapsed]="!showInfo">
+        <app-rules></app-rules>
+      </div>
+    </section>
+
+    <!-- Bottom row -->
+    <section class="bottom">
+      <app-feedback screen="start"></app-feedback>
+    </section>
+  </main>
 </div>

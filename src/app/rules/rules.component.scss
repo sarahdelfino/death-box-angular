@@ -1,8 +1,258 @@
 @use '../deathbox-theme.scss' as db;
 
-.how-to-note {
+.howto {
+  width: 100%;
+}
+
+.howto__header {
+  padding: 0.25rem 0.25rem 0.65rem;
+}
+
+.howto__titleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.35rem;
+}
+
+.howto__title {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(db.$toxic-mint, 0.95);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.howto__lede {
   margin: 0.4rem 0 0;
+  color: rgba(db.$ui-gray, 0.95);
   font-size: 0.75rem;
-  color: db.$ui-gray;
+  line-height: 1.6;
+
+  strong {
+    color: rgba(db.$toxic-mint, 0.95);
+  }
+}
+
+
+.howto__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-top: 0.65rem;
+}
+
+
+@media (min-width: 860px) {
+  .howto__grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .card--span {
+    grid-column: 1 / -1;
+  }
+}
+
+
+.card {
+  border-radius: 14px;
+  border: 1px solid rgba(db.$ui-gray-soft, 0.45);
+  background:
+    radial-gradient(circle at top left, rgba(db.$glitch-purple, 0.10), transparent 60%),
+    rgba(0, 0, 0, 0.20);
+  padding: 0.85rem 0.95rem;
+}
+
+.card--warn {
+  border-color: rgba(db.$crimson-glitch-red, 0.32);
+  background:
+    radial-gradient(circle at top left, rgba(db.$crimson-glitch-red, 0.10), transparent 60%),
+    rgba(0, 0, 0, 0.20);
+}
+
+.card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.card__icon {
+  font-size: 1rem;
+  color: rgba(db.$toxic-mint, 0.9);
+}
+
+.card--warn .card__icon {
+  color: rgba(db.$crimson-glitch-red, 0.95);
+}
+
+.card__title {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(db.$toxic-mint, 0.95);
+}
+
+.card__p {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: rgba(db.$ui-gray, 0.95);
+
+  strong {
+    color: rgba(db.$toxic-mint, 0.95);
+  }
+}
+
+
+.card__cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 760px) {
+  .card__cols {
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: start;
+  }
+}
+
+.callout {
+  border-radius: 12px;
+  border: 1px dashed rgba(db.$toxic-mint, 0.45);
+  background: rgba(0, 0, 0, 0.22);
+  padding: 0.65rem 0.7rem;
+}
+
+.callout__k {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(db.$ui-gray, 0.85);
+  margin-bottom: 0.35rem;
+}
+
+.callout__v {
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: rgba(db.$ui-gray, 0.95);
+
+  strong {
+    color: rgba(db.$toxic-mint, 0.95);
+  }
+}
+
+
+.list {
+  margin: 0;
+  padding-left: 1.05rem;
+  color: rgba(db.$ui-gray, 0.95);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.list__item + .list__item {
+  margin-top: 0.45rem;
+}
+
+.list__item strong {
+  color: rgba(db.$toxic-mint, 0.95);
+}
+
+.list__item--strong strong {
+  color: rgba(db.$crimson-glitch-red, 0.95);
+}
+
+.list--tight .list__item + .list__item {
+  margin-top: 0.3rem;
+}
+
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.steps__item {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 0.6rem;
+  align-items: start;
+}
+
+.steps__n {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(db.$toxic-mint, 0.55);
+  background: rgba(0, 0, 0, 0.28);
+  color: rgba(db.$toxic-mint, 0.95);
+  font-size: 0.65rem;
+}
+
+.steps__t {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: rgba(db.$ui-gray, 0.95);
+
+  strong {
+    color: rgba(db.$toxic-mint, 0.95);
+  }
+}
+
+
+.divider {
+  height: 1px;
+  background: rgba(db.$ui-gray-soft, 0.35);
+  margin: 0.75rem 0;
+}
+
+.mini__title {
+  margin: 0 0 0.4rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(db.$ui-gray, 0.85);
+}
+
+
+.hint {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  padding: 0.6rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(db.$ui-gray-soft, 0.35);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.hint__icon {
+  font-size: 1rem;
+  color: rgba(db.$toxic-mint, 0.8);
   opacity: 0.9;
+  margin-top: 1px;
+}
+
+.hint__text {
+  font-size: 0.7rem;
+  line-height: 1.55;
+  color: rgba(db.$ui-gray, 0.95);
+}
+
+
+.how-to-note {
+  margin: 0.85rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(db.$ui-gray, 0.9);
+  opacity: 0.95;
 }

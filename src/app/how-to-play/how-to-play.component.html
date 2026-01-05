@@ -1,0 +1,32 @@
+<div class="container howto-container">
+  <section class="home-panel howto-panel">
+    <!-- top bar -->
+    <header class="howto-top">
+      <a class="howto-brand" routerLink="/" aria-label="Back to home">
+        <img class="howto-logo" src="/assets/deathbox-logo.png" alt="Death Box" />
+        <div class="howto-brand-text">
+          <p class="label">Death Box</p>
+          <p class="howto-title">How to Play</p>
+        </div>
+      </a>
+
+      <nav class="howto-nav" aria-label="How to Play navigation">
+        <a routerLink="/" class="howto-link">Home</a>
+        <a routerLink="/" fragment="how-to-panel" class="howto-link">Rules</a>
+        <a routerLink="/" class="howto-link">Play</a>
+      </nav>
+    </header>
+
+    <!-- content card inside the panel -->
+    <main class="howto-content" role="main">
+      <app-rules></app-rules>
+    </main>
+
+    <!-- footer -->
+    <footer class="howto-footer">
+      <a routerLink="/" class="howto-back">← Back to home</a>
+      <span class="howto-sep">•</span>
+      <a routerLink="/" fragment="how-to-panel" class="howto-back">Read rules on home</a>
+    </footer>
+  </section>
+</div>

@@ -1,27 +1,87 @@
-<div class="how-to-body">
-  <h3>Remember:</h3>
-  <ul>
-    <li><strong>This is a drinking game. Know your limits and drink responsibly.</strong></li>
-    <li>Ace is <strong>low</strong>, just to be annoying.</li>
-    <li>If you pull a <strong>joker</strong>, you drink.</li>
-    <li>When the deck runs out, stacks are merged and reshuffled to keep the game going. The goal is to survive until only <strong>one stack</strong> remains.</li>
-  </ul>
+<section class="howto" aria-label="How to play Death Box">
+  <header class="howto__header">
+    <div class="howto__titleRow">
+      <h2 class="howto__title">How to play Death Box</h2>
+    </div>
 
-  <h3>On Your Turn</h3>
-  <ul>
-    <li>Choose one of the <strong>nine stacks</strong>.</li>
-    <li>Predict whether the next card will be <strong>higher</strong> or <strong>lower</strong>.</li>
-    <li>Get <strong>three predictions</strong> right to end your turn.</li>
-  </ul>
+    <p class="howto__lede">
+      Guess whether the next card is <strong>higher</strong> or <strong>lower</strong>.
+      If you’re wrong, you drink until the timer hits zero. Survive until there’s only
+      <strong>one stack</strong> left.
+    </p>
+  </header>
 
-  <h3>If You’re Wrong</h3>
-  <ul>
-    <li>The size of the stack becomes your <strong>drinking time</strong>.</li>
-    <li>A countdown starts — drink until it hits zero.</li>
-  </ul>
+  <div class="howto__grid">
+    <!-- FULL-WIDTH: Before you start -->
+    <section class="card card--warn card--span">
+      <div class="card__head">
+        <span class="card__icon material-symbols-outlined" aria-hidden="true">warning</span>
+        <h3 class="card__title">Before you start</h3>
+      </div>
 
-  <h3>The Counters</h3>
-  <ul>
-    <li>They can help you out… or make it worse. Tap to <strong>speed up</strong> the drinking time.</li>
-  </ul>
-</div>
+      <div class="card__cols">
+        <ul class="list">
+          <li class="list__item list__item--strong">
+            <strong>This is a drinking game. Know your limits and drink responsibly.</strong>
+          </li>
+          <li class="list__item">Ace is <strong>low</strong>, just to be annoying.</li>
+          <li class="list__item">If you pull a <strong>joker</strong>, you drink.</li>
+        </ul>
+
+        <div class="callout">
+          <div class="callout__k">Endgame</div>
+          <div class="callout__v">
+            When the deck runs out, stacks are merged and reshuffled.
+            Your goal is to survive until only <strong>one stack</strong> remains.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEFT: Turn flow (combined) -->
+    <section class="card">
+      <div class="card__head">
+        <span class="card__icon material-symbols-outlined" aria-hidden="true">sports_esports</span>
+        <h3 class="card__title">On your turn</h3>
+      </div>
+
+      <ol class="steps">
+        <li class="steps__item">
+          <span class="steps__n">1</span>
+          <span class="steps__t">Choose one of the <strong>nine stacks</strong>.</span>
+        </li>
+        <li class="steps__item">
+          <span class="steps__n">2</span>
+          <span class="steps__t">Predict <strong>higher</strong> or <strong>lower</strong>.</span>
+        </li>
+        <li class="steps__item">
+          <span class="steps__n">3</span>
+          <span class="steps__t">Get <strong>three predictions</strong> right to end your turn.</span>
+        </li>
+      </ol>
+
+      <div class="divider"></div>
+
+      <div class="mini">
+        <div class="mini__title">If you’re wrong</div>
+        <ul class="list list--tight">
+          <li class="list__item">The stack size becomes your <strong>drinking time</strong>.</li>
+          <li class="list__item">A countdown starts — drink until it hits zero.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- RIGHT: Counters -->
+    <section class="card">
+      <div class="card__head">
+        <span class="card__icon material-symbols-outlined" aria-hidden="true">touch_app</span>
+        <h3 class="card__title">The counters</h3>
+      </div>
+
+      <p class="card__p">
+        Other players can help you out or make it worse.
+        Tap to <strong>speed up</strong> the drinking time.
+      </p>
+    </section>
+  </div>
+</section>

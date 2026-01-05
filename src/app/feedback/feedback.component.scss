@@ -2,28 +2,40 @@
 
 .feedback-shell {
   margin-top: 0.9rem;
+  width: 100%;
 }
 
-/* Header toggle – mirrors .how-to-inline vibe */
 .feedback-toggle {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  width: 100%;
+
   font-size: 0.8rem;
-  padding-inline: 0.8rem;
-  padding-block: 0.5rem;
-  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+
   border-style: dashed;
-  border-width: 1px;
+  border-width: 2px;
   border-color: rgba(db.$ui-gray-soft, 0.9);
+  border-radius: 10px;
+
   background: rgba(0, 0, 0, 0.35);
   color: db.$ui-gray;
-  box-shadow: none;
+
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  opacity: 0.92;
   cursor: pointer;
+
+  margin: 0;
+  height: auto;
+  box-shadow: none;
+  outline: none;
+
   transition:
     background 0.15s ease,
     border-color 0.15s ease,
@@ -49,6 +61,12 @@
       transparent 70%
     );
     box-shadow: 0 0 10px rgba(db.$neon-skull-green, 0.5);
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    border-color: db.$neon-skull-green;
+    box-shadow: 0 0 10px rgba(db.$neon-skull-green, 0.55);
   }
 }
 
@@ -56,15 +74,17 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  min-width: 0;
 }
 
 .feedback-icon {
   font-size: 1rem;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .feedback-label {
   font-size: 0.75rem;
+  min-width: 0;
 }
 
 .feedback-chevron {
@@ -73,7 +93,9 @@
   color: db.$ui-gray;
 }
 
-/* Collapsible body – matches how-to-body + form-card hybrid */
+/* ---------------------------------------------------------
+   Collapsible body (unchanged)
+   --------------------------------------------------------- */
 
 .feedback-body {
   margin-top: 0.6rem;
@@ -104,7 +126,9 @@
   pointer-events: none;
 }
 
-/* Form layout */
+/* ---------------------------------------------------------
+   Form layout (unchanged)
+   --------------------------------------------------------- */
 
 .feedback-form {
   display: flex;
@@ -130,7 +154,7 @@
   }
 }
 
-/* Checkbox + email layout */
+
 
 .optional-row {
   margin-top: 0.1rem;
@@ -161,7 +185,6 @@
   }
 }
 
-/* On wider screens, align checkbox+hint and email side-by-side cleanly */
 @media (min-width: 640px) {
   .optional-row {
     display: grid;
@@ -180,7 +203,7 @@
   }
 }
 
-/* Footer */
+
 
 .feedback-footer {
   display: flex;
@@ -195,6 +218,10 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+
+  .arcade-btn {
+    margin: 0 !important;
+  }
 }
 
 .feedback-note {
@@ -202,6 +229,7 @@
   font-size: 0.75rem;
   opacity: 0.8;
 }
+
 
 .dumb {
   position: absolute;

@@ -1,7 +1,8 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FirebaseApp } from '@angular/fire/app';
-import { getAnalytics, isSupported, logEvent, type Analytics } from 'firebase/analytics';
+
+type Analytics = import('firebase/analytics').Analytics;
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
@@ -11,7 +12,7 @@ export class AnalyticsService {
   private analytics: Analytics | null = null;
   private initPromise: Promise<void> | null = null;
 
-  // tiny queue so early events aren’t lost
+  // small queue so early events aren’t lost
   private queue: Array<{ name: string; params?: Record<string, any> }> = [];
   private readonly MAX_QUEUE = 50;
 
@@ -30,32 +31,44 @@ export class AnalyticsService {
     localStorage.setItem('dbx_analytics_consent', granted ? 'granted' : 'denied');
 
     if (!granted) {
-      // stop future events; keep queue empty
       this.queue = [];
-      // we can also drop the instance reference
       this.analytics = null;
-    } else {
-      void this.initIfAllowed();
+      this.initPromise = null;
+      return;
     }
+
+    void this.initIfAllowed();
   }
 
+  /**
+   * CRITICAL: dynamic import ensures Firebase registers the "analytics" component
+   * before getAnalytics() is called (avoids "Component analytics has not been registered yet").
+   */
   initIfAllowed(): Promise<void> {
     if (!this.isBrowser()) return Promise.resolve();
     if (!this.hasConsent()) return Promise.resolve();
     if (this.analytics) return Promise.resolve();
-
     if (this.initPromise) return this.initPromise;
 
     this.initPromise = (async () => {
       try {
-        if (!(await isSupported())) return;
-        this.analytics = getAnalytics(this.firebaseApp);
+        const mod = await import('firebase/analytics');
+
+        if (!(await mod.isSupported())) return;
+
+        // after importing, the component is registered
+        this.analytics = mod.getAnalytics(this.firebaseApp);
 
         // flush queued events
-        if (this.analytics && this.queue.length) {
-          for (const e of this.queue) logEvent(this.analytics, e.name, e.params);
+        if (this.queue.length) {
+          for (const e of this.queue) mod.logEvent(this.analytics, e.name, e.params);
           this.queue = [];
         }
+      } catch (err) {
+        // swallow — analytics should never break gameplay
+        // console.debug('[AnalyticsService] init failed', err);
+        this.analytics = null;
+        this.queue = [];
       } finally {
         this.initPromise = null;
       }
@@ -69,7 +82,8 @@ export class AnalyticsService {
     if (!this.hasConsent()) return;
 
     if (this.analytics) {
-      logEvent(this.analytics, name, params);
+      // load logEvent lazily
+      void import('firebase/analytics').then((m) => m.logEvent(this.analytics!, name, params));
       return;
     }
 

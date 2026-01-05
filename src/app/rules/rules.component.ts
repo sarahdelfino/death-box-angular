@@ -1,11 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-rules',
-  imports: [],
   templateUrl: './rules.component.html',
-  styleUrl: './rules.component.scss',
+  styleUrls: ['./rules.component.scss'],
 })
-export class RulesComponent {
+export class RulesComponent implements OnInit {
+  private meta = inject(Meta);
 
+  ngOnInit(): void {
+    this.meta.updateTag({
+      name: 'description',
+      content:
+        'Learn how to play Death Box, a free online multiplayer drinking game. Simple rules, fast rounds, and real-time chaos with friends.',
+    });
+  }
 }

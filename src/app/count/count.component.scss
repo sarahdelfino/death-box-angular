@@ -115,7 +115,7 @@
   @media (max-width: 480px) { max-width: 280px; }
 }
 
-/* Fill uses transform + CSS var to avoid jumpiness */
+
 .fill-bar {
   --fill: 0; /* 0..1 */
   position: absolute;
@@ -152,7 +152,7 @@
   @media (max-width: 480px) { font-size: 3rem; }
 }
 
-/* === Animations === */
+
 @keyframes retro-open {
   0% { opacity: 0; transform: scale(0.9); filter: blur(6px); }
   25% { opacity: 0.5; transform: scale(1.02); filter: blur(2px); }

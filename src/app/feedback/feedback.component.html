@@ -6,7 +6,7 @@
         bug_report
       </span>
       <span class="feedback-label">
-        Something off? Have an idea?
+        Feedback
       </span>
     </div>
     <span class="feedback-chevron" aria-hidden="true">
@@ -55,7 +55,7 @@
         }
 
         <div class="feedback-actions">
-          <button type="submit" class="arcade-btn primary"
+          <button type="submit" class="arcade-btn small"
             [disabled]="feedbackForm.invalid || feedbackSubmitting">
             {{ feedbackSubmitting ? 'Sending...' : 'Send' }}
           </button>

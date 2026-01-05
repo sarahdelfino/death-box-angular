@@ -48,7 +48,7 @@
   }
 }
 
-/* === LOBBY PANEL === */
+
 .lobby-panel {
   display: flex;
   flex-direction: column;
@@ -70,7 +70,7 @@
   }
 }
 
-/* === HEADER / LEFT COLUMN === */
+
 .lobby-header {
   display: flex;
   flex-direction: column;
@@ -137,7 +137,7 @@ img.logo {
   margin-left: 5px;
 }
 
-/* === CONTROLS (button area) === */
+
 .controls {
   display: flex;
   flex-direction: column;
@@ -186,7 +186,7 @@ img.logo {
   color: db.$ui-gray;
 }
 
-/* Inline how-to toggle inside the panel */
+
 .how-to-inline {
   display: flex;
   align-items: center;
@@ -250,8 +250,8 @@ img.logo {
   color: db.$ui-gray;
 }
 
-/* === INLINE HOW-TO PANEL === */
-/* Panel border + background always visible; only body collapses */
+
+
 .how-to-panel {
   margin: 0.75rem 0;
   border-radius: 12px;
@@ -276,7 +276,7 @@ img.logo {
 }
 
 
-/* Scanline effect across whole panel */
+
 .how-to-panel::before {
   content: "";
   position: absolute;
@@ -297,7 +297,7 @@ img.logo {
   z-index: 1;
 }
 
-/* Collapsible body */
+
 .how-to-body {
   margin-top: 0.6rem;
   max-height: 900px;
@@ -318,7 +318,7 @@ img.logo {
   pointer-events: none;
 }
 
-/* Typography inside how-to body */
+
 .how-to-body h2,
 .how-to-body h3,
 .how-to-body ul {
@@ -357,7 +357,7 @@ img.logo {
   color: db.$toxic-mint;
 }
 
-/* Actions row with "Got it" button */
+
 .how-to-actions {
   position: relative;
   z-index: 1;
@@ -366,7 +366,7 @@ img.logo {
   justify-content: flex-end;
 }
 
-/* === PLAYER GRID / RIGHT COLUMN === */
+
 .lobby-players {
   border-radius: 12px;
   border: 1px solid db.$ui-gray-soft;
@@ -401,7 +401,7 @@ img.logo {
   color: db.$ui-gray;
 }
 
-/* Player grid */
+
 .players {
   position: relative;
   z-index: 1;
@@ -427,7 +427,7 @@ img.logo {
   gap: 0.4rem;
 }
 
-/* Avatar card */
+
 .avatar-wrapper {
   width: 86px;
   height: 86px;
@@ -470,7 +470,7 @@ img.logo {
   overflow-wrap: break-word;
 }
 
-/* Waiting message (if you keep <h3> anywhere else) */
+
 h3 {
   color: db.$crimson-glitch-red;
   font-size: 0.9rem;
@@ -478,7 +478,7 @@ h3 {
   animation: text-flicker 4s infinite;
 }
 
-/* === ANIMATIONS === */
+
 @keyframes retro-open {
   0% { opacity: 0; transform: scale(0.9); filter: blur(6px); }
   50% { opacity: 1; transform: scale(1.02); filter: blur(1px); }

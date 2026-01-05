@@ -1,13 +1,13 @@
 @use '../deathbox-theme.scss' as db;
 
-/* === Layout Container (transparent – side panel provides card) === */
+
 .messages-container {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* === Chat Scroll Area === */
+
 .chats {
   flex: 1;
   min-height: 0;
@@ -25,7 +25,7 @@
   }
 }
 
-/* === Message Blocks === */
+
 .message {
   margin-bottom: 0.4rem;
   display: flex;
@@ -35,7 +35,7 @@
   animation: fadeIn 0.2s ease-in;
 }
 
-/* alignment */
+
 .my-message {
   margin-left: auto;
   align-items: flex-end;
@@ -52,7 +52,7 @@
   gap: 0.15rem;
 }
 
-/* name label */
+
 .username {
   font-weight: 600;
   font-size: 0.7rem;
@@ -61,7 +61,7 @@
   color: rgba(db.$ui-gray, 0.95);
 }
 
-/* bubbles */
+
 .message-body {
   border-radius: 999px;
   padding: 0.35rem 0.8rem 0.4rem;
@@ -74,7 +74,7 @@
   color: #f5f5f5;
 }
 
-/* my messages = neon green chip */
+
 .my-message .message-body {
   background: radial-gradient(circle at top left,
     rgba(db.$neon-skull-green, 0.26),
@@ -83,7 +83,7 @@
   text-shadow: 0 0 4px rgba(db.$neon-skull-green, 0.5);
 }
 
-/* others = glitch purple chip */
+
 .other-message .message-body {
   background: radial-gradient(circle at top left,
     rgba(db.$glitch-purple, 0.22),
@@ -102,7 +102,7 @@
   }
 }
 
-/* === Input Area – pill row === */
+
 .submit-form {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -112,7 +112,7 @@
   border-top: 1px solid rgba(db.$ui-gray, 0.35);
 }
 
-/* pill input */
+
 .chat-input {
   width: 100%;
   border-radius: 999px;
@@ -134,7 +134,7 @@
   }
 }
 
-/* neon send button */
+
 .chat-btn {
   border-radius: 999px;
   border: 0;
@@ -159,7 +159,7 @@
   filter: brightness(0.95);
 }
 
-/* === Subtle Fade-In === */
+
 @keyframes fadeIn {
   from {
     opacity: 0;

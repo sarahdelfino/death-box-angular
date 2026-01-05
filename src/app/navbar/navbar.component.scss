@@ -4,7 +4,7 @@
   display: block;
 }
 
-/* Flat HUD bar, not a pill */
+
 .turn-hud {
   display: inline-flex;
   align-items: center;
@@ -79,7 +79,7 @@
   text-shadow: 0 0 4px rgba(db.$neon-skull-green, 0.9);
 }
 
-/* Turn state chip – very small */
+
 .turn-state {
   display: flex;
   align-items: center;
@@ -108,7 +108,7 @@
   color: db.$glitch-purple;
 }
 
-/* Help icon */
+
 .help-btn {
   margin-left: 0.1rem;
   border: 0;
@@ -140,7 +140,7 @@
   transform: translateY(1px);
 }
 
-/* Mobile: let it shrink horizontally */
+
 @media (max-width: 600px) {
   .turn-hud {
     padding-inline: 0.45rem;

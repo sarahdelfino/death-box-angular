@@ -9,9 +9,9 @@ export const routes: Routes = [
   },
   {
     path: 'how-to-play',
-    title: 'How to Play (Rules & Tips)',
+    title: 'How to Play',
     loadComponent: () =>
-      import('./rules/rules.component').then(m => m.RulesComponent),
+      import('./how-to-play/how-to-play.component').then(m => m.HowToPlayComponent),
   },
   {
     path: 'lobby/:id',

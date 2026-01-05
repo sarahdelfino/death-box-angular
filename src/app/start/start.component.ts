@@ -16,16 +16,7 @@ import { RulesComponent } from '../rules/rules.component';
 import { FeedbackComponent } from '../feedback/feedback.component';
 import { Subscription } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { FirebaseApp } from '@angular/fire/app';
 import { AnalyticsService } from '../analytics.service';
-
-// ✅ Use Firebase Analytics SDK directly (NOT @angular/fire/analytics)
-import {
-  getAnalytics,
-  isSupported,
-  logEvent,
-  type Analytics,
-} from 'firebase/analytics';
 
 @Component({
   selector: 'app-start',
@@ -44,10 +35,6 @@ export class StartComponent implements OnInit, OnDestroy {
   @ViewChild('howToPanel') howToPanel!: ElementRef;
 
   private platformId = inject(PLATFORM_ID);
-  private firebaseApp = inject(FirebaseApp);
-
-  private analytics: Analytics | null = null;
-  private analyticsReady = false;
 
   private readonly PLAYER_NAME_REGEX = /^[A-Za-z0-9 _-]+$/;
   private readonly GAME_ID_REGEX = /^[A-Za-z0-9]{3,5}$/;
@@ -92,26 +79,11 @@ export class StartComponent implements OnInit, OnDestroy {
 
   private readonly GA_ID = 'G-CRCM73VNGM';
 
-  private async initAnalyticsIfAllowed(): Promise<void> {
-    if (!isPlatformBrowser(this.platformId)) return; // SSR guard
-    if (this.analyticsReady) return;
-
-    const consent = localStorage.getItem('dbx_analytics_consent');
-    if (consent !== 'granted') return;
-
-    if (!(await isSupported())) return;
-
-    this.analytics = getAnalytics(this.firebaseApp);
-    this.analyticsReady = true;
-  }
-
   private track(name: string, params?: Record<string, any>) {
-    if (!this.analytics) return;
-    logEvent(this.analytics, name, params);
+    this.analyticsService.track(name, params);
   }
 
   async ngOnInit() {
-    // SSR-safe window usage
     if (isPlatformBrowser(this.platformId)) {
       this.isMobile = window.innerWidth < 500;
     }
@@ -143,8 +115,8 @@ export class StartComponent implements OnInit, OnDestroy {
       const stored = localStorage.getItem('dbx_analytics_consent');
 
       if (stored === 'granted') {
-        await this.initAnalyticsIfAllowed();
-        this.enableAnalytics(); // your gtag consent update (optional)
+        await this.analyticsService.initIfAllowed();
+        this.enableAnalytics(); // gtag consent update (optional)
         this.showCookieBanner = false;
       } else if (stored === 'denied') {
         this.showCookieBanner = false;
@@ -184,9 +156,11 @@ export class StartComponent implements OnInit, OnDestroy {
 
     this.analyticsService.setConsent(true);
 
-    await this.initAnalyticsIfAllowed();
-    this.enableAnalytics();
+    await this.analyticsService.initIfAllowed();
+    this.enableAnalytics(); // optional gtag path
     this.showCookieBanner = false;
+
+    this.track('analytics_consent_granted', { screen: 'start' });
   }
 
   rejectAnalytics(): void {
@@ -201,6 +175,7 @@ export class StartComponent implements OnInit, OnDestroy {
         ad_storage: 'denied',
       });
     }
+
     this.showCookieBanner = false;
   }
 
@@ -297,7 +272,7 @@ export class StartComponent implements OnInit, OnDestroy {
     sessionStorage.setItem('player', cleanName);
     sessionStorage.setItem('host', 'false');
 
-    this.track('game_joined', { game_id: cleanId, player: cleanName });
+    this.track('game_joined', { game_id: cleanId });
 
     this.store.addPlayer({ gameId: cleanId, playerName: cleanName });
     this.router.navigateByUrl(`/lobby/${cleanId}`);
@@ -329,7 +304,7 @@ export class StartComponent implements OnInit, OnDestroy {
     sessionStorage.setItem('player', cleanName);
     sessionStorage.setItem('host', 'true');
 
-    this.track('game_created', { game_id: id, player: cleanName });
+    this.track('game_created', { game_id: id });
 
     this.store.createGame({ gameId: id, playerName: cleanName });
     this.router.navigateByUrl(`/lobby/${id}`);

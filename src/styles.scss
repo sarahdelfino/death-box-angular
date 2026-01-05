@@ -1,229 +1,212 @@
 @use '@angular/material' as mat;
 @use './app/deathbox-theme.scss' as db;
 
-html, body, button, input, select, textarea {
+html,
+body,
+button,
+input,
+select,
+textarea {
   font-family: 'Press Start 2P', monospace;
 }
 
 body {
   margin: 0;
-  color: db.$glitch-purple;
-    height: 100vh;
+  height: 100%;
+  color: db.$toxic-mint;
+  background: #000;
 }
 
-/* CRT scanline effect */
-@keyframes scanline {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100vh);
-  }
-}
-
-.crt-scanline::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(transparent, rgba(var(--color-primary), 0.3));
-  animation: scanline 8s linear infinite;
-  pointer-events: none;
-  z-index: 50;
+h1,
+h2,
+h3 {
+  color: db.$toxic-mint;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 h2 {
-  font-size: 1rem;
-  text-transform: uppercase;
-  color: db.$neon-skull-green;
-  text-shadow: 0 0 6px rgba(db.$neon-skull-green, 0.8);
-  margin: 1rem 0 0.5rem;
-  padding-bottom: 0.25rem;
+  font-size: 0.95rem;
+  margin: 1rem 0 0.4rem;
 }
 
-p, li {
+p,
+li {
   color: db.$toxic-mint;
   font-size: 0.75rem;
-  line-height: 1.5;
-  margin-bottom: 0.8rem;
+  line-height: 1.55;
+  margin-bottom: 0.75rem;
 }
 
-.material-symbols-outlined:hover {
-  cursor: pointer;
+label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(db.$toxic-mint, 0.9);
+}
+
+
+.arcade-input {
+  margin-bottom: 0.9rem;
+}
+
+
+.arcade-input:last-child {
+  margin-bottom: 0;
 }
 
 .arcade-input {
-  background: transparent;
-  color: db.$neon-skull-green;
-  border: 2px solid db.$glitch-purple;
-  border-radius: 4px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 18px;
-  padding: 10px;
+  background: rgba(0, 0, 0, 0.38);
+  color: #f7f7ff;
+
+  border: 1px solid rgba(db.$ui-gray-soft, 0.65);
+  border-radius: 10px;
+
+  font-size: 16px; /* prevents iOS zoom */
+  padding: 0.6rem 0.75rem;
+  height: 52px;
+
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6);
   outline: none;
-  height: 50px;
-  box-shadow: 0 0 6px rgba(db.$glitch-purple, 0.8),
-              0 0 12px rgba(db.$glitch-purple, 0.6);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 
-  &::placeholder {
-    color: rgba(db.$neon-skull-green, 0.5);
-    text-shadow: 0 0 4px rgba(db.$neon-skull-green, 0.6);
-  }
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
 
-  &:focus {
-    border-color: db.$toxic-mint;
-    box-shadow: 0 0 6px rgba(db.$toxic-mint, 1),
-                0 0 14px rgba(db.$toxic-mint, 0.8),
-                0 0 24px rgba(db.$glitch-purple, 0.6);
-    animation: glitch-flicker 1.5s ease-out 2;
-  }
+.arcade-input::placeholder {
+  color: rgba(db.$ui-gray, 0.65);
+  text-shadow: none;
+}
+
+
+.arcade-input:focus,
+.arcade-input:focus-visible {
+  border-color: rgba(db.$toxic-mint, 0.95);
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 0 0 2px rgba(db.$toxic-mint, 0.18),
+    0 0 8px rgba(db.$toxic-mint, 0.35),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.65);
+}
+
+
+textarea.arcade-input {
+  height: auto;
+  min-height: 80px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+
+select.arcade-input {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.1rem;
+
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(db.$ui-gray, 0.9) 50%),
+    linear-gradient(135deg, rgba(db.$ui-gray, 0.9) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+
+.arcade-input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .arcade-btn {
   position: relative;
   display: inline-block;
-  font-family: 'Press Start 2P', monospace;
+
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 2px;
+
   width: 150px;
   height: 50px;
   margin: 5px;
-  border: 2px solid db.$glitch-purple;
+
+  border: 2px solid db.$ui-gray-soft;
   border-radius: 4px;
+
   background: transparent;
-  color: db.$neon-skull-green;
+  color: db.$toxic-mint;
+
   cursor: pointer;
-  transition: all 0.25s ease;
   overflow: hidden;
-
-  &:focus {
-    outline: none;
-    animation: glitch-flicker 1.5s ease-out 1;
-    border-color: db.$neon-skull-green;
-    box-shadow: 0 0 6px rgba(db.$neon-skull-green, 1),
-                0 0 14px rgba(db.$neon-skull-green, 0.8),
-                0 0 24px rgba(db.$glitch-purple, 0.6);
-  }
-
-  &:active {
-    transform: scale(0.97);
-  }
-
-  
-  
-  
-  
-  
-  
-  
-
-    &.primary {
-        border-color: db.$toxic-mint;
-    color: db.$toxic-mint;
-    box-shadow: 0 0 6px rgba(db.$toxic-mint, 0.8),
-                0 0 12px rgba(db.$toxic-mint, 0.6);
-    animation: idle-pulse-mint 3s infinite alternate;
-  }
-
-  &.secondary {
-    border-color: db.$glitch-purple;
-    color: db.$glitch-purple;
-    box-shadow: 0 0 6px rgba(db.$glitch-purple, 0.8),
-                0 0 12px rgba(db.$glitch-purple, 0.6);
-    animation: idle-pulse-purple 3s infinite alternate;
-  }
-
-  &.tertiary {
-        border-color: db.$toxic-mint;
-    color: db.$toxic-mint;
-    box-shadow: 0 0 6px rgba(db.$toxic-mint, 0.8),
-                0 0 12px rgba(db.$toxic-mint, 0.6);
-    animation: idle-pulse-mint 3s infinite alternate;
-  }
-
-  &.ghost,
-  &:disabled {
-    border-color: db.$dead-pixel-gray !important;
-    color: db.$dead-pixel-gray !important;
-    box-shadow: none !important;
-    animation: none !important;
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  &.selected {
-    border-color: db.$crimson-glitch-red !important;
-    color: db.$crimson-glitch-red !important;
-    box-shadow: 0 0 10px rgba(db.$crimson-glitch-red, 0.9),
-                0 0 22px rgba(db.$crimson-glitch-red, 0.6);
-    transform: translateY(-1px);
-    animation: idle-pulse-red 3s infinite alternate;
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(
-        0deg,
-        transparent 0%,
-        rgba(db.$crimson-glitch-red, 0.12) 50%,
-        transparent 100%
-      );
-      mix-blend-mode: screen;
-      animation: selected-scan 2.2s linear infinite;
-      border-radius: 4px;
-    }
-  }
+  transition: all 0.25s ease;
 }
 
-@keyframes idle-pulse-green {
-  0%   { box-shadow: 0 0 4px rgba(db.$neon-skull-green, 0.6); }
-  100% { box-shadow: 0 0 12px rgba(db.$neon-skull-green, 0.9); }
+.arcade-btn:focus {
+  outline: none;
+  border-color: db.$toxic-mint;
+  box-shadow:
+    0 0 6px rgba(db.$toxic-mint, 0.9),
+    0 0 14px rgba(db.$toxic-mint, 0.6);
 }
 
-@keyframes idle-pulse-purple {
-  0%   { box-shadow: 0 0 4px rgba(db.$glitch-purple, 0.6); }
-  100% { box-shadow: 0 0 12px rgba(db.$glitch-purple, 0.9); }
+.arcade-btn:active {
+  transform: scale(0.97);
 }
 
-@keyframes idle-pulse-mint {
-  0%   { box-shadow: 0 0 4px rgba(db.$toxic-mint, 0.6); }
-  100% { box-shadow: 0 0 12px rgba(db.$toxic-mint, 0.9); }
+
+.arcade-btn.primary {
+  border-color: db.$toxic-mint;
+  color: db.$toxic-mint;
+  box-shadow:
+    0 0 6px rgba(db.$toxic-mint, 0.8),
+    0 0 12px rgba(db.$toxic-mint, 0.6);
 }
 
-@keyframes idle-pulse-red {
-  0%   { box-shadow: 0 0 4px rgba(db.$crimson-glitch-red, 0.6); }
-  100% { box-shadow: 0 0 12px rgba(db.$crimson-glitch-red, 0.9); }
+.arcade-btn.secondary {
+  border-color: db.$glitch-purple;
+  color: db.$glitch-purple;
+  box-shadow:
+    0 0 6px rgba(db.$glitch-purple, 0.8),
+    0 0 12px rgba(db.$glitch-purple, 0.6);
 }
 
-@keyframes glitch-flicker {
-  0%   { text-shadow: 2px 0 db.$crimson-glitch-red; }
-  20%  { text-shadow: -2px 0 db.$glitch-purple; }
-  40%  { text-shadow: 2px 2px db.$crimson-glitch-red; }
-  60%  { text-shadow: -2px -2px db.$neon-skull-green; }
-  80%  { text-shadow: 2px -2px db.$glitch-purple; }
-  100% { text-shadow: -2px 2px db.$neon-skull-green; }
+.arcade-btn.small {
+  height: 40px;
+  font-size: 12px;
+  padding: 0 0.8rem;
 }
 
-@keyframes selected-scan {
-  0%   { opacity: 0.12; transform: translateY(-8%); }
-  50%  { opacity: 0.22; transform: translateY(0%); }
-  100% { opacity: 0.12; transform: translateY(8%); }
+
+.arcade-btn.ghost,
+.arcade-btn:disabled {
+  border-color: db.$dead-pixel-gray !important;
+  color: db.$dead-pixel-gray !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-/* === CRT Grid Background === */
+
+.arcade-btn.selected {
+  border-color: db.$crimson-glitch-red !important;
+  color: db.$crimson-glitch-red !important;
+  box-shadow:
+    0 0 10px rgba(db.$crimson-glitch-red, 0.9),
+    0 0 22px rgba(db.$crimson-glitch-red, 0.6);
+  transform: translateY(-1px);
+}
+
 .crt-grid {
   position: absolute;
   z-index: -1;
   inset: 0;
-  opacity: 0.10;
+  opacity: 0.1;
   pointer-events: none;
-  overflow: hidden;
 }
 
 .crt-lines {
@@ -238,7 +221,6 @@ p, li {
   );
 }
 
-/* Mobile: thinner scanlines for high DPI screens */
 @media (max-width: 768px) {
   .crt-lines {
     background-image: repeating-linear-gradient(
