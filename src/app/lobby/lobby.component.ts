@@ -1,13 +1,13 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { GameStore } from '../game.store';
 import { MatDialog } from '@angular/material/dialog';
-import { getAnalytics, logEvent } from '@angular/fire/analytics';
 import { RulesComponent } from "../rules/rules.component";
+import { AnalyticsService } from '../analytics.service';
 
 @Component({
   selector: 'app-lobby',
@@ -22,13 +22,13 @@ export class LobbyComponent implements OnInit {
   private dialog = inject(MatDialog);
   readonly store = inject(GameStore);
 
+  private analytics = inject(AnalyticsService);
+  private platformId = inject(PLATFORM_ID);
+
   game$ = this.store.game$;
   loading$ = this.store.loading$;
   error$ = this.store.error$;
 
-  analytics = getAnalytics();
-
-  
   private readonly PLAYER_NAME_REGEX = /^[A-Za-z0-9 _-]+$/;
   private readonly GAME_ID_REGEX = /^[A-Za-z0-9]{3,5}$/;
   private readonly ACTION_THROTTLE_MS = 2500;
@@ -37,10 +37,11 @@ export class LobbyComponent implements OnInit {
   joinGameForm: FormGroup;
   showJoinForm = false;
   showPopup = false;
-  isHost = sessionStorage.getItem('host') === 'true';
+
+  isHost = false;
   infoClicked = false;
   isLoadingAvatars: Record<string, boolean> = {};
-  gameId = (location.pathname.split('/')[2] || '').toUpperCase();
+  gameId = '';
   showInviteToast = false;
   inviteToastMessage = '';
 
@@ -55,7 +56,7 @@ export class LobbyComponent implements OnInit {
           Validators.pattern(this.PLAYER_NAME_REGEX),
         ],
       ],
-      dumb: [''], 
+      dumb: [''],
     });
 
     this.game$
@@ -69,11 +70,13 @@ export class LobbyComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    this.isHost = sessionStorage.getItem('host') === 'true';
+    this.gameId = (location.pathname.split('/')[2] || '').toUpperCase();
+
     const cleanId = this.sanitize(this.gameId);
-    if (!this.GAME_ID_REGEX.test(cleanId)) {
-      return; 
-    }
+    if (!this.GAME_ID_REGEX.test(cleanId)) return;
     this.gameId = cleanId;
 
     if (this.gameId) {
@@ -87,12 +90,10 @@ export class LobbyComponent implements OnInit {
     }
   }
 
-  
-
   private tooSoon(): boolean {
     const now = Date.now();
     if (now - this.lastActionTs < this.ACTION_THROTTLE_MS) {
-      logEvent(this.analytics, 'rate_limited_action', {
+      this.analytics.track('rate_limited_action', {
         screen: 'lobby',
         game_id: this.gameId,
       });
@@ -118,9 +119,8 @@ export class LobbyComponent implements OnInit {
     this.isLoadingAvatars[playerKey] = false;
   }
 
-  
-
   joinGame() {
+    if (!isPlatformBrowser(this.platformId)) return;
     if (this.tooSoon()) return;
 
     const { playerName, dumb } = this.joinGameForm.value as {
@@ -128,11 +128,8 @@ export class LobbyComponent implements OnInit {
       dumb?: string;
     };
 
-    
     if (dumb && dumb.trim().length > 0) {
-      logEvent(this.analytics, 'honeypot_triggered_join_lobby', {
-        game_id: this.gameId,
-      });
+      this.analytics.track('honeypot_triggered_join_lobby', { game_id: this.gameId });
       return;
     }
 
@@ -150,12 +147,13 @@ export class LobbyComponent implements OnInit {
     this.showJoinForm = false;
   }
 
-  
-
   toggleInfo(): void {
-    logEvent(this.analytics, 'click_instructions', {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    this.analytics.track('click_instructions', {
       game_id: this.gameId,
       player: sessionStorage.getItem('player'),
+      screen: 'lobby'
     });
 
     this.infoClicked = !this.infoClicked;
@@ -168,12 +166,12 @@ export class LobbyComponent implements OnInit {
     }
   }
 
-  
-
   inviteClicked() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const cleanGameId = this.gameId;
 
-    logEvent(this.analytics, 'click_invite', {
+    this.analytics.track('click_invite', {
       game_id: cleanGameId,
       player: sessionStorage.getItem('player'),
     });
@@ -189,35 +187,29 @@ export class LobbyComponent implements OnInit {
           text: shareText,
           url,
         })
-        .catch((err: unknown) => {
-          console.warn('Share dismissed or failed', err);
-        });
+        .catch((err: unknown) => console.warn('Share dismissed or failed', err));
       return;
     }
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard
         .writeText(`${shareText} ${url}`)
-        .then(() => {
-          this.showInviteFeedback('Link copied! Paste it to your friends.');
-        })
+        .then(() => this.showInviteFeedback('Link copied! Paste it to your friends.'))
         .catch((err) => {
           console.error('Clipboard error', err);
-          this.showInviteFeedback(
-            'Copy failed. Try long-press or right-click to copy the address bar.',
-          );
+          this.showInviteFeedback('Copy failed. Try long-press or right-click to copy the address bar.');
         });
     } else {
       this.showInviteFeedback('Copy the link from the address bar and share it.');
     }
   }
 
-  
-
   startGame() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const cleanGameId = this.gameId;
 
-    logEvent(this.analytics, 'click_start', {
+    this.analytics.track('click_start', {
       game_id: cleanGameId,
       screen: 'lobby',
     });

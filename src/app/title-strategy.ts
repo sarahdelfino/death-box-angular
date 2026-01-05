@@ -23,9 +23,9 @@ export class AppTitleStrategy extends TitleStrategy {
     let final = 'Death Box';
 
     if (path.startsWith('lobby') && id) {
-      final = `Lobby ${id}`;
+      final = `Death Box - Lobby ${id}`;
     } else if (path.startsWith('play') && id) {
-      final = `Game ${id}`;
+      final = `Death Box - Game ${id}`;
     } else if (routeTitle) {
       final = `Death Box – ${routeTitle}`;
     }

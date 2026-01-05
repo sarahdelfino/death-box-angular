@@ -6,6 +6,8 @@ import {
   ViewChildren,
   inject,
   OnDestroy,
+  OnInit,
+  PLATFORM_ID,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GameStore } from '../game.store';
@@ -13,13 +15,13 @@ import { Card, StackGrid, Player } from '../models/game-state.model';
 import { take } from 'rxjs';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { CountComponent } from '../count/count.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { StackComponent } from '../stack/stack.component';
 import { MessagesComponent } from '../messages/messages.component';
 import { DeckComponent } from '../deck/deck.component';
 import { ScoreboardComponent } from '../scoreboard/scoreboard.component';
-import { Analytics, logEvent } from '@angular/fire/analytics';
 import { RulesComponent } from '../rules/rules.component';
+import { AnalyticsService } from '../analytics.service';
 
 @Component({
   selector: 'app-game',
@@ -34,22 +36,20 @@ import { RulesComponent } from '../rules/rules.component';
     StackComponent,
     MessagesComponent,
     ScoreboardComponent,
-    RulesComponent
+    RulesComponent,
   ],
   providers: [GameStore],
 })
-export class GameComponent implements OnDestroy {
+export class GameComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   readonly store = inject(GameStore);
-  private analytics = inject(Analytics);
+  private analytics = inject(AnalyticsService);
+  private platformId = inject(PLATFORM_ID);
 
   @ViewChild('deckEl', { read: ElementRef }) deckEl!: ElementRef;
   @ViewChildren(StackComponent) stacks!: QueryList<StackComponent>;
 
-
   showCount = false;
-
-
   private wasCounting = false;
 
   flyingStyle: { top: string; left: string; transform: string } = {
@@ -58,19 +58,16 @@ export class GameComponent implements OnDestroy {
     transform: 'translate(0,0)',
   };
 
-
   game$ = this.store.game$;
   loading$ = this.store.loading$;
   error$ = this.store.error$;
 
-
-  sessionPlayer = sessionStorage.getItem('player');
-  isHost = sessionStorage.getItem('host') === 'true';
-  isMobile = window.innerWidth < 500;
+  sessionPlayer: string | null = null;
+  isHost = false;
+  isMobile = false;
   isResolving = false;
 
-
-  gameId = this.route.snapshot.paramMap.get('id');
+  gameId: string | null = null;
   cardSelected = false;
   messagesClicked = false;
   playersView = false;
@@ -91,9 +88,18 @@ export class GameComponent implements OnDestroy {
   newCard: Card | null = null;
   lastAddedCardId: string | null = null;
   flyingCard: Card | null = null;
-  player_count: Number = 0;
+  player_count: number = 0;
 
-  constructor() {
+  ngOnInit(): void {
+    // ✅ SSR-safe reads
+    if (isPlatformBrowser(this.platformId)) {
+      this.sessionPlayer = sessionStorage.getItem('player');
+      this.isHost = sessionStorage.getItem('host') === 'true';
+      this.isMobile = window.innerWidth < 500;
+    }
+
+    this.gameId = this.route.snapshot.paramMap.get('id');
+
     if (this.gameId) {
       this.store.loadGame(this.gameId);
 
@@ -103,16 +109,12 @@ export class GameComponent implements OnDestroy {
         this.deck = game.deck;
         this.counting = game.counting;
 
-
         if (game.counting) {
           this.showCount = true;
         }
 
-
         if (game.counting && !this.wasCounting) {
           this.moveTopJokerToBottom(game);
-
-
         }
         this.wasCounting = game.counting;
 
@@ -139,13 +141,12 @@ export class GameComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    logEvent(this.analytics, 'left_during_game', {
+    this.analytics.track('left_during_game', {
       game_id: this.gameId,
       deck_size: this.deck?.length ?? 0,
-      player_count: Number(this.player_count) ?? 0,
+      player_count: this.player_count ?? 0,
     });
   }
-
 
   toggleMessages() {
     this.messagesClicked = !this.messagesClicked;
@@ -179,15 +180,18 @@ export class GameComponent implements OnDestroy {
   }
 
   drawFromDeck(prediction: 'higher' | 'lower') {
+    // ✅ This method uses DOM + RAF; keep it browser-only
+    if (!isPlatformBrowser(this.platformId)) return;
+
     if (this.isResolving) return;
     if (this.deck.length === 0 || !this.clickedData) return;
 
     this.isResolving = true;
     this.choice = prediction;
+
     const gameId = this.route.snapshot.paramMap.get('id')!;
     if (this.deck.length === 0 || !this.clickedData) return;
 
-    this.choice = prediction;
     const drawCard = this.deck.shift()!;
     drawCard.tilt = Math.random() * 12 - 6;
     this.flyingCard = drawCard;
@@ -228,7 +232,6 @@ export class GameComponent implements OnDestroy {
       this.store.game$.pipe(take(1)).subscribe((current) => {
         if (!current) return;
 
-
         const newGrid: StackGrid = { ...current.stackGrid };
         newGrid[stackKey] = { cards: [drawCard, ...newGrid[stackKey].cards] };
 
@@ -255,7 +258,6 @@ export class GameComponent implements OnDestroy {
     return drawn.value < clicked.value;
   }
 
-
   private moveTopJokerToBottom(game: any) {
     const grid: StackGrid = { ...game.stackGrid };
 
@@ -276,6 +278,7 @@ export class GameComponent implements OnDestroy {
 
   compareCards(drawnCard: any) {
     if (!this.clickedData || !this.choice) return;
+
     const gameId = this.route.snapshot.paramMap.get('id');
     if (!gameId || !this.sessionPlayer) return;
 
@@ -325,8 +328,7 @@ export class GameComponent implements OnDestroy {
           }, 600);
         }, 900);
       } else {
-        const turns =
-          (current.players[this.sessionPlayer!]?.correctGuesses ?? 0) + 1;
+        const turns = (current.players[this.sessionPlayer!]?.correctGuesses ?? 0) + 1;
 
         const updatedPlayers: Record<string, Player> = {
           ...current.players,

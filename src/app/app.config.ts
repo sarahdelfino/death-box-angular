@@ -1,15 +1,16 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, inject, PLATFORM_ID, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, TitleStrategy } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth, signInAnonymously } from '@angular/fire/auth';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
-import { provideAnalytics, getAnalytics, logEvent } from '@angular/fire/analytics';
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { AppTitleStrategy } from './title-strategy';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,8 +28,5 @@ export const appConfig: ApplicationConfig = {
       });
       return auth;
     }),
-    provideAnalytics(() => getAnalytics()),
-    provideDatabase(() => getDatabase()),
-    
-  ],
+    provideDatabase(() => getDatabase()), provideClientHydration(withEventReplay())]
 };
