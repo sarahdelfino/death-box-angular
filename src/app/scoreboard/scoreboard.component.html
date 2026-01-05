@@ -1,45 +1,78 @@
 <div class="scoreboard">
   <header class="scoreboard-header">
-    <h2>Scoreboard</h2>
-    <p>See who got spared and who got sabotaged.</p>
+    <div class="header-left">
+      <span class="material-symbols-outlined header-icon" aria-hidden="true">scoreboard</span>
+      <div class="header-text">
+        <h2>Scoreboard</h2>
+        <p>See who got spared and who got sabotaged.</p>
+      </div>
+    </div>
   </header>
 
-  <table class="score-table">
-    <thead>
-      <tr>
-        <th class="col-player">Player</th>
-        <th class="col-time">Assigned (s)</th>
-        <th class="col-time">Actual (s)</th>
-        <th class="col-diff">+ / −</th>
-      </tr>
-    </thead>
+  <div class="score-panel">
+    <div class="table-wrap" role="region" aria-label="Scoreboard table" tabindex="0">
+      <table class="score-table">
+        <thead>
+          <tr>
+            <th class="col-player">Player</th>
+            <th class="col-time">Assigned</th>
+            <th class="col-time">Actual</th>
+            <th class="col-diff">+ / −</th>
+          </tr>
+        </thead>
 
-    <tbody>
-      @for (p of playerIds; track p) {
-        <tr>
-          <td class="player-cell">
-            {{ game.players[p].name }}
-          </td>
-          <td class="time-cell">
-            {{ game.stats?.[p]?.assigned || '-' }}
-          </td>
-          <td class="time-cell">
-            {{ game.stats?.[p]?.actual || '-' }}
-          </td>
-          <td
-            class="diff-cell"
-            [class.over]="diff(p) > 0"
-            [class.under]="diff(p) < 0"
-            >
-            <span class="diff-sign">
-              {{ diff(p) > 0 ? '▲' : diff(p) < 0 ? '▼' : '·' }}
-            </span>
-            <span class="diff-value">
-              {{ diff(p) > 0 ? '+' : '' }}{{ diff(p) }}
-            </span>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+        <tbody>
+          @for (p of playerIds; track p) {
+            <tr>
+              <td class="player-cell">
+                <span class="player-name">{{ game.players[p].name }}</span>
+              </td>
+
+              <td class="time-cell">
+                <span class="pill">
+                  {{ game.stats?.[p]?.assigned ?? '-' }}
+                  <span class="unit" *ngIf="game.stats?.[p]?.assigned != null">s</span>
+                </span>
+              </td>
+
+              <td class="time-cell">
+                <span class="pill">
+                  {{ game.stats?.[p]?.actual ?? '-' }}
+                  <span class="unit" *ngIf="game.stats?.[p]?.actual != null">s</span>
+                </span>
+              </td>
+
+              <td
+                class="diff-cell"
+                [class.over]="diff(p) > 0"
+                [class.under]="diff(p) < 0"
+                [class.even]="diff(p) === 0"
+              >
+                <span class="diff-sign" aria-hidden="true">
+                  {{ diff(p) > 0 ? '▲' : diff(p) < 0 ? '▼' : '·' }}
+                </span>
+                <span class="diff-value">
+                  {{ diff(p) > 0 ? '+' : '' }}{{ diff(p) }}
+                </span>
+              </td>
+            </tr>
+          }
+
+          @if (!playerIds || playerIds.length === 0) {
+            <tr class="empty-row">
+              <td colspan="4">
+                <div class="empty-state">
+                  <div class="empty-badge">
+                    <span class="material-symbols-outlined" aria-hidden="true">sports_score</span>
+                    <span>NO STATS YET</span>
+                  </div>
+                  <p class="empty-text">Play a round and the damage report shows up here.</p>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

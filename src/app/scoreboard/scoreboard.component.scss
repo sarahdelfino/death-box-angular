@@ -4,123 +4,297 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  color: db.$ui-gray;
-  font-family: 'Courier New', monospace;
+  min-height: 0;
+  color: rgba(db.$ui-gray, 0.95);
+  width: 100%;
 }
 
+/* Header */
+.scoreboard-header { margin-bottom: 0.55rem; }
 
-.scoreboard-header {
-  margin-bottom: 0.5rem;
-
-  h2 {
-    margin: 0;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: db.$neon-skull-green;
-    text-shadow: 0 0 6px rgba(db.$neon-skull-green, 0.8);
-  }
-
-  p {
-    margin: 0.2rem 0 0;
-    font-size: 0.7rem;
-    color: db.$ui-gray;
-  }
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
 }
 
+.header-icon {
+  font-size: 22px;
+  color: rgba(db.$toxic-mint, 0.85);
+  text-shadow: 0 0 10px rgba(db.$toxic-mint, 0.2);
+}
 
+.scoreboard-header h2 {
+  margin: 0;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(db.$toxic-mint, 0.92);
+  text-shadow:
+    0 0 10px rgba(db.$toxic-mint, 0.25),
+    0 0 16px rgba(db.$glitch-purple, 0.12);
+}
+
+.scoreboard-header p {
+  margin: 0.25rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: rgba(#f7f7ff, 0.72);
+}
+
+/* Panel */
+.score-panel { flex: 1; min-height: 0; width: 100%; }
+
+.table-wrap {
+  height: 100%;
+  min-height: 140px;
+  overflow: auto;
+  padding: 0.6rem;
+
+  border-radius: 16px;
+  border: 1px solid rgba(db.$ui-gray-soft, 0.55);
+
+  background:
+    radial-gradient(circle at top left, rgba(db.$glitch-purple, 0.10), transparent 60%),
+    rgba(0, 0, 0, 0.22);
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(db.$toxic-mint, 0.22) transparent;
+
+  &::-webkit-scrollbar { height: 8px; width: 6px; }
+  &::-webkit-scrollbar-thumb { background: rgba(db.$toxic-mint, 0.22); border-radius: 10px; }
+}
+
+/* TABLE */
 .score-table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.75rem;
+  border-collapse: separate;
+  border-spacing: 0;
   table-layout: fixed;
-
-  border-top: 1px solid db.$ui-gray_soft;
-  border-bottom: 1px solid db.$ui-gray_soft;
+  font-size: 0.75rem;
+  min-width: 520px;
 }
 
-.score-table th,
-.score-table td {
-  padding: 0.35rem 0.4rem;
+/* HEADER CELLS */
+.score-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+
+  padding: 0.55rem 0.55rem;
   text-align: center;
-  white-space: nowrap;
+
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.65rem;
+
+  color: rgba(db.$ui-gray, 0.95);
+  background: rgba(0, 0, 0, 0.65);
+
+  border-bottom: 1px solid rgba(db.$ui-gray-soft, 0.55);
+}
+
+.score-table thead th:first-child { text-align: left; }
+
+/* BODY CELLS — IMPORTANT: uniform alignment baseline */
+.score-table tbody td {
+  padding: 0.55rem 0.55rem;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(db.$ui-gray-soft, 0.22);
+
+  /* make every cell a consistent alignment box */
+  text-align: center;
+}
+
+.col-player { width: 44%; }
+.col-time { width: 18%; }
+.col-diff { width: 20%; }
+
+.player-cell { text-align: left; }
+
+.player-name {
+  display: block;
+  color: rgba(#ffffff, 0.92);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.02em;
+  text-align: left;
+
+  /* prevent funky centering caused by overflow */
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-
-.col-player {
-  text-align: left;
-  width: 40%;
+/* TIME PILL: make it centered consistently */
+.time-cell {
+  text-align: center;
 }
 
-.col-time,
-.col-diff {
-  width: 20%;
+.pill {
+  /* key change: behaves like a centered block */
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem;
+
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+
+  border: 1px solid rgba(db.$ui-gray-soft, 0.45);
+  background: rgba(0, 0, 0, 0.55);
+
+  color: rgba(#f7f7ff, 0.82);
+  font-variant-numeric: tabular-nums;
+
+  /* align widths under headers (prevents "floaty" look) */
+  min-width: 4.6rem;
 }
 
-.score-table th {
-  color: db.$ui-gray;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border-bottom: 1px solid db.$ui-gray_soft;
+.unit {
+  font-size: 0.62rem;
+  color: rgba(db.$ui-gray, 0.8);
 }
 
+/* ZEBRA */
+.score-table tbody tr:nth-child(odd) td { background: rgba(0, 0, 0, 0.18); }
+.score-table tbody tr:nth-child(even) td { background: rgba(0, 0, 0, 0.28); }
 
-.score-table tbody tr:nth-child(odd) {
-  background: rgba(0, 0, 0, 0.45);
-}
-.score-table tbody tr:nth-child(even) {
-  background: rgba(0, 0, 0, 0.65);
-}
-
-.score-table tbody tr:hover {
-  background: radial-gradient(circle at center,
-    rgba(db.$neon-skull-green, 0.15),
-    rgba(0, 0, 0, 0.65)
+.score-table tbody tr:hover td {
+  background: radial-gradient(
+    circle at center,
+    rgba(db.$toxic-mint, 0.08),
+    rgba(0, 0, 0, 0.28)
   );
 }
 
-
-.player-cell {
-  color: #f3f3f3;
-  text-align: left;
-}
-
-.time-cell {
-  color: db.$ui-gray;
-}
-
+/* DIFF PILL — FIX: center within the cell + consistent width */
 .diff-cell {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.25rem;
+  /* KEY FIX: don't make the TD itself inline-flex.
+     Make it behave like a normal cell and center the pill */
+  text-align: center;
+
+  .diff-sign {
+    font-size: 0.72rem;
+    line-height: 1;
+    opacity: 0.9;
+  }
+}
+
+/* Make the pill element fill a consistent width under the header */
+.diff-cell .diff-sign,
+.diff-cell .diff-value {
   font-variant-numeric: tabular-nums;
 }
 
-.diff-sign {
-  font-size: 0.7rem;
+.diff-cell {
+  /* treat the whole diff content as the pill */
+  display: table-cell; /* ensures it stays a normal td in layout */
 }
 
-.diff-value {
-  min-width: 2.2rem;
-  text-align: right;
+.diff-cell > .diff-sign,
+.diff-cell > .diff-value {
+  /* nothing */
 }
 
+/* create the actual pill using :before wrapper effect by styling td as inline-flex *inside* */
+.score-table td.diff-cell {
+  position: relative;
+}
 
-.diff-cell.over {
-  color: db.$crimson-glitch-red;
+.score-table td.diff-cell {
+  /* create a centered pill container */
+}
 
-  .diff-sign {
-    text-shadow: 0 0 6px rgba(db.$crimson-glitch-red, 0.8);
+.score-table td.diff-cell {
+  /* reset any inherited flex from earlier versions */
+}
+
+.score-table td.diff-cell {
+  /* Use an inner flex "pill" look by styling the td's contents via a pseudo wrapper:
+     easiest: just restyle the td itself as inline-flex but keep centering correct by forcing width 100% */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+
+  /* This is the actual pill */
+  padding: 0.25rem 0.55rem;
+  margin: 0.25rem auto; /* gives breathing room inside row */
+  border-radius: 999px;
+
+  border: 1px solid rgba(db.$ui-gray-soft, 0.45);
+  background: rgba(0, 0, 0, 0.55);
+
+  width: fit-content;
+  min-width: 5.2rem; /* aligns nicely under header */
+  box-sizing: border-box;
+}
+
+/* Over = red */
+.score-table td.diff-cell.over {
+  color: rgba(db.$crimson-glitch-red, 0.95);
+  border-color: rgba(db.$crimson-glitch-red, 0.45);
+  box-shadow: 0 0 10px rgba(db.$crimson-glitch-red, 0.12);
+
+  .diff-sign { text-shadow: 0 0 8px rgba(db.$crimson-glitch-red, 0.35); }
+}
+
+/* Under = mint */
+.score-table td.diff-cell.under {
+  color: rgba(db.$toxic-mint, 0.95);
+  border-color: rgba(db.$toxic-mint, 0.45);
+  box-shadow: 0 0 10px rgba(db.$toxic-mint, 0.12);
+
+  .diff-sign { text-shadow: 0 0 8px rgba(db.$toxic-mint, 0.28); }
+}
+
+/* Even = neutral */
+.score-table td.diff-cell.even {
+  color: rgba(db.$ui-gray, 0.95);
+  border-color: rgba(db.$ui-gray-soft, 0.55);
+  box-shadow: none;
+}
+
+/* EMPTY STATE */
+.empty-row td {
+  border-bottom: 0;
+  background: transparent !important;
+  padding: 1.1rem 0.6rem;
+}
+
+.empty-state {
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.empty-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+
+  padding: 0.55rem 0.7rem;
+  border-radius: 14px;
+  border: 1px dashed rgba(db.$ui-gray-soft, 0.85);
+  background: rgba(0, 0, 0, 0.28);
+
+  color: rgba(db.$ui-gray, 0.95);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+    color: rgba(db.$toxic-mint, 0.85);
   }
 }
 
-.diff-cell.under {
-  color: db.$neon-skull-green;
-
-  .diff-sign {
-    text-shadow: 0 0 6px rgba(db.$neon-skull-green, 0.8);
-  }
+.empty-text {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.55;
+  color: rgba(#f7f7ff, 0.72);
 }

@@ -1,40 +1,134 @@
 @use '../deathbox-theme.scss' as db;
 
-
 .messages-container {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
 }
 
-
+/* =========================================================
+   CHAT PANEL
+   Make the scroll area feel intentional even when empty
+   ========================================================= */
 .chats {
   flex: 1;
-  min-height: 0;
+  min-height: 140px; /* key: prevents “broken empty box” */
   overflow-y: auto;
-  padding: 0.4rem 0.1rem 0.2rem;
+  padding: 0.65rem 0.6rem 0.55rem;
+
+  border-radius: 16px;
+  border: 1px solid rgba(db.$ui-gray-soft, 0.55);
+  background:
+    radial-gradient(circle at top left, rgba(db.$glitch-purple, 0.10), transparent 60%),
+    rgba(0, 0, 0, 0.22);
+
   scrollbar-width: thin;
-  scrollbar-color: rgba(db.$neon-skull-green, 0.3) transparent;
+  scrollbar-color: rgba(db.$toxic-mint, 0.25) transparent;
 
   &::-webkit-scrollbar {
     width: 6px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(db.$neon-skull-green, 0.3);
+    background: rgba(db.$toxic-mint, 0.25);
+    border-radius: 10px;
   }
 }
 
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+.empty-state {
+  min-height: 110px;
+  height: 100%;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  text-align: center;
+  padding: 0.5rem 0.25rem;
+}
 
+.empty-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+
+  padding: 0.55rem 0.7rem;
+  border-radius: 14px;
+  border: 1px dashed rgba(db.$ui-gray-soft, 0.85);
+  background: rgba(0, 0, 0, 0.28);
+
+  color: rgba(db.$ui-gray, 0.95);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+    opacity: 0.9;
+    color: rgba(db.$toxic-mint, 0.85);
+  }
+}
+
+.empty-text {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: rgba(#f7f7ff, 0.84);
+}
+
+.empty-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.hint-chip {
+  border: 1px solid rgba(db.$ui-gray-soft, 0.75);
+  background: rgba(0, 0, 0, 0.22);
+  color: rgba(db.$toxic-mint, 0.9);
+
+  border-radius: 999px;
+  padding: 0.45rem 0.65rem;
+
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(db.$toxic-mint, 0.75);
+    box-shadow: 0 0 10px rgba(db.$toxic-mint, 0.18);
+    background: rgba(db.$toxic-mint, 0.06);
+  }
+
+  &:active {
+    transform: translateY(0px);
+  }
+}
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
 .message {
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.45rem;
   display: flex;
   flex-direction: column;
-  max-width: 78%;
+  max-width: min(78%, 520px);
   word-wrap: break-word;
   animation: fadeIn 0.2s ease-in;
 }
-
 
 .my-message {
   margin-left: auto;
@@ -49,76 +143,81 @@
 .body-flex {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.18rem;
 }
-
 
 .username {
   font-weight: 600;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: rgba(db.$ui-gray, 0.95);
 }
 
-
 .message-body {
   border-radius: 999px;
-  padding: 0.35rem 0.8rem 0.4rem;
+  padding: 0.38rem 0.85rem 0.42rem;
   font-size: 0.8rem;
   line-height: 1.4;
   font-family: 'Courier New', monospace;
+
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
   border: 1px solid rgba(db.$ui-gray, 0.35);
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.88);
   color: #f5f5f5;
 }
 
-
+/* Use ONE green: mint */
 .my-message .message-body {
-  background: radial-gradient(circle at top left,
-    rgba(db.$neon-skull-green, 0.26),
-    rgba(0, 0, 0, 0.95));
-  border-color: db.$neon-skull-green;
-  text-shadow: 0 0 4px rgba(db.$neon-skull-green, 0.5);
+  background: radial-gradient(
+    circle at top left,
+    rgba(db.$toxic-mint, 0.18),
+    rgba(0, 0, 0, 0.95)
+  );
+  border-color: rgba(db.$toxic-mint, 0.85);
+  text-shadow: 0 0 4px rgba(db.$toxic-mint, 0.35);
 }
 
-
 .other-message .message-body {
-  background: radial-gradient(circle at top left,
-    rgba(db.$glitch-purple, 0.22),
-    rgba(0, 0, 0, 0.95));
-  border-color: db.$glitch-purple;
-  text-shadow: 0 0 4px rgba(db.$glitch-purple, 0.5);
+  background: radial-gradient(
+    circle at top left,
+    rgba(db.$glitch-purple, 0.18),
+    rgba(0, 0, 0, 0.95)
+  );
+  border-color: rgba(db.$glitch-purple, 0.85);
+  text-shadow: 0 0 4px rgba(db.$glitch-purple, 0.35);
 }
 
 .meta-line {
   font-size: 0.6rem;
   color: rgba(db.$ui-gray, 0.8);
-  margin-top: 0.1rem;
+  margin-top: 0.12rem;
 
   .timestamp {
     opacity: 0.7;
   }
 }
 
-
+/* =========================================================
+   INPUT ROW
+   Make it feel like part of the panel, not floating weirdly
+   ========================================================= */
 .submit-form {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 0.45rem;
-  margin-top: 0.6rem;
-  padding-top: 0.55rem;
-  border-top: 1px solid rgba(db.$ui-gray, 0.35);
+  gap: 0.55rem;
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(db.$ui-gray-soft, 0.45);
 }
-
 
 .chat-input {
   width: 100%;
   border-radius: 999px;
-  border: 1px solid rgba(db.$ui-gray, 0.85);
-  background: rgba(0, 0, 0, 0.95);
-  padding: 0.45rem 0.85rem;
+  border: 1px solid rgba(db.$ui-gray-soft, 0.85);
+  background: rgba(0, 0, 0, 0.92);
+  padding: 0.55rem 0.95rem;
+
   font-size: 0.75rem;
   color: #fff;
   font-family: 'Courier New', monospace;
@@ -129,24 +228,29 @@
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 10px rgba(db.$neon-skull-green, 0.5);
-    border-color: db.$neon-skull-green;
+    box-shadow: 0 0 10px rgba(db.$toxic-mint, 0.35);
+    border-color: rgba(db.$toxic-mint, 0.85);
   }
 }
-
 
 .chat-btn {
   border-radius: 999px;
   border: 0;
-  padding: 0.45rem 0.9rem;
+  padding: 0.55rem 1rem;
+
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
+
   cursor: pointer;
-  background: db.$neon-skull-green;
+
+  /* mint = consistent */
+  background: db.$toxic-mint;
   color: #000;
+
   font-family: 'Press Start 2P', monospace;
-  box-shadow: 0 0 14px rgba(db.$neon-skull-green, 0.9);
+
+  box-shadow: 0 0 14px rgba(db.$toxic-mint, 0.65);
   transition:
     transform 0.08s ease,
     box-shadow 0.12s ease,
@@ -155,10 +259,9 @@
 
 .chat-btn:active {
   transform: translateY(1px);
-  box-shadow: 0 0 6px rgba(db.$neon-skull-green, 0.6);
+  box-shadow: 0 0 6px rgba(db.$toxic-mint, 0.45);
   filter: brightness(0.95);
 }
-
 
 @keyframes fadeIn {
   from {

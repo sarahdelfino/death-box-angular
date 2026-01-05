@@ -1,22 +1,50 @@
 <div class="messages-container">
   <!-- Scroll area -->
   <div class="chats" #messageList>
-    @for (msg of (messages$ | async); track msg.key) {
-      <div
-        [id]="msg.key"
-        class="message"
-        [ngClass]="msg.player === user ? 'my-message' : 'other-message'"
-      >
-        <div class="body-flex">
-          <div class="username">{{ msg.player }}</div>
-          <div class="message-body">
-            {{ msg.message }}
+    @if ((messages$ | async); as msgs) {
+      @if (msgs.length > 0) {
+        @for (msg of msgs; track msg.key) {
+          <div
+            [id]="msg.key"
+            class="message"
+            [ngClass]="msg.player === user ? 'my-message' : 'other-message'"
+          >
+            <div class="body-flex">
+              <div class="username">{{ msg.player }}</div>
+              <div class="message-body">
+                {{ msg.message }}
+              </div>
+            </div>
+            <div class="meta-line">
+              <!-- <span class="timestamp">{{ msg.time }}</span> -->
+            </div>
+          </div>
+        }
+      } @else {
+        <!-- EMPTY STATE -->
+        <div class="empty-state" aria-live="polite">
+          <div class="empty-badge">
+            <span class="material-symbols-outlined" aria-hidden="true">terminal</span>
+            <span>CHAT ONLINE</span>
+          </div>
+
+          <p class="empty-text">
+            No messages yet. Start the chaos.
+          </p>
+
+          <div class="empty-hints" role="list">
+            <button type="button" class="hint-chip" role="listitem" (click)="message.value='who’s drinking?'; message.focus()">
+              who’s drinking?
+            </button>
+            <button type="button" class="hint-chip" role="listitem" (click)="message.value='first to lose buys snacks'; message.focus()">
+              snacks bet
+            </button>
+            <button type="button" class="hint-chip" role="listitem" (click)="message.value='i will not survive this'; message.focus()">
+              doompost
+            </button>
           </div>
         </div>
-        <div class="meta-line">
-          <!-- <span class="timestamp">{{ msg.time }}</span> -->
-        </div>
-      </div>
+      }
     }
   </div>
 
