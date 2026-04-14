@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 
 import { GameState } from '../models/game-state.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-scoreboard',
-  imports: [],
+  imports: [CommonModule],
   standalone: true,
   templateUrl: './scoreboard.component.html',
   styleUrl: './scoreboard.component.scss'

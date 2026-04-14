@@ -10,7 +10,7 @@ import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { AppTitleStrategy } from './title-strategy';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { isPlatformBrowser } from '@angular/common';
+import { getAnalytics, provideAnalytics } from '@angular/fire/analytics';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,5 +28,6 @@ export const appConfig: ApplicationConfig = {
       });
       return auth;
     }),
-    provideDatabase(() => getDatabase()), provideClientHydration(withEventReplay())]
+    provideDatabase(() => getDatabase()), provideClientHydration(withEventReplay()),
+  provideAnalytics(() => getAnalytics())]
 };

@@ -1,135 +1,129 @@
 @if (game$ | async; as game) {
 
-  @if (showCount) {
-    <app-count
-      class="count"
-      [game]="game"
-      [sessionPlayer]="sessionPlayer"
-      (finished)="onCountFinished()"
-    ></app-count>
-  } @else {
+@if (showCount) {
+<app-count class="count" [game]="game" [sessionPlayer]="sessionPlayer" (finished)="onCountFinished()"></app-count>
+} @else {
 
-    <!-- GAME SHELL -->
-    <div class="game-shell">
-      <section class="game-panel">
-        <!-- LEFT: BOARD + CONTROLS -->
-        <section class="game-main">
-          <header class="game-header">
-            <div class="game-meta">
-              <span class="game-id-label">Game</span>
-              <span class="game-id">{{ game.id }}</span>
-            </div>
+<!-- GAME SHELL -->
+<div class="game-shell">
+  <section class="game-panel">
+    <!-- LEFT: BOARD + CONTROLS -->
+    <section class="game-main">
+      <header class="game-header">
+        <div class="game-meta">
+          <span class="game-id-label">Game</span>
+          <span class="game-id">{{ game.id }}</span>
+        </div>
+        <div class="game-meta">
+          <span class="game-id-label">Deck</span>
+          <span class="game-id">{{ game.deck.length }}</span>
+        </div>
 
-            <!-- Compact turn HUD -->
-            <app-navbar class="game-header-right"
-              [player]="game.currentTurn"
-              [correct]="game.players[sessionPlayer!].correctGuesses"
-              [gameId]="game.id"
-              [isCurrentTurn]="sessionPlayer === game.currentTurn"
-              (backToBoard)="endCounting()"
-            ></app-navbar>
-          </header>
+        <!-- Compact turn HUD -->
+        <app-navbar class="game-header-right"
+          [player]="game.currentTurn"
+          [correct]="game.players[sessionPlayer!].correctGuesses"
+          [gameId]="game.id"
+          [isCurrentTurn]="sessionPlayer === game.currentTurn"
+          (backToBoard)="endCounting()"></app-navbar>
+      </header>
 
-          <!-- BOARD -->
-          <section class="board">
-            <!-- Deck (hidden visually, but kept for logic/animation) -->
-            @if (!cardSelected) {
-              <div #deckEl class="deck">
-                <app-deck
-                  style="display: none;"
-                  [isFlipped]="!!choice && !!clickedData"
-                  [card]="newCard"
-                  (newCardEmitter)="compareCards($event)"
-                ></app-deck>
-              </div>
+      <!-- BOARD -->
+      <section class="board">
+        <!-- Deck (hidden visually, but kept for logic/animation) -->
+        @if (!cardSelected) {
+        <div #deckEl class="deck">
+          <app-deck
+            style="display: none;"
+            [isFlipped]="!!choice && !!clickedData"
+            [card]="newCard"
+            (newCardEmitter)="compareCards($event)"></app-deck>
+        </div>
 
-              <!-- Card grid -->
-              <div class="card-container">
-                @for (stack of (game.stackGrid | keyvalue); track stack) {
-                  <app-stack
-                    [id]="stack.key"
-                    [cards]="stack.value.cards"
-                    [currentPlayer]="game.currentTurn"
-                    (clickedCardEmitter)="chooseCard($event, game.deck, game.stackGrid)"
-                    [selectedCard]="selectedCard"
-                    [lastAddedCardId]="lastAddedCardId"
-                    [wrongCardId]="wrongCardId"
-                  ></app-stack>
-                }
-              </div>
+        <!-- Card grid -->
+        <div class="card-container" [class.rebuilding]="removingStackKeys.length > 0">
+          @for (stack of (game.stackGrid | keyvalue); track stack) {
+            <app-stack
+              [id]="stack.key"
+              [cards]="stack.value.cards"
+              [currentPlayer]="game.currentTurn"
+              (clickedCardEmitter)="chooseCard($event, game.deck, game.stackGrid)"
+              [selectedCard]="selectedCard"
+              [lastAddedCardId]="lastAddedCardId"
+              [wrongCardId]="wrongCardId"
+              [removing]="isStackRemoving(stack.key)"
+            ></app-stack>
+          }
+        </div>
 
-              <!-- Higher / Lower controls -->
-              <footer class="game-controls">
-                <div class="arcade-choices" role="group" aria-label="Choose Higher or Lower">
-                  <button
-                    class="arcade-pick higher"
-                    type="button"
-                    [class.selected]="choice === 'higher'"
-                    [disabled]="!clickedData"
-                    (click)="drawFromDeck('higher')"
-                    aria-pressed="{{ choice === 'higher' }}"
-                    >
-                    <span class="face">
-                      <span class="icon">▲</span>
-                      <span class="label">Higher</span>
-                    </span>
-                  </button>
+        <!-- Higher / Lower controls -->
+        <footer class="game-controls">
+          <div class="arcade-choices" role="group" aria-label="Choose Higher or Lower">
+            <button class="arcade-pick higher"
+              type="button"
+              [class.selected]="choice === 'higher'"
+              [disabled]="!clickedData"
+              (click)="drawFromDeck('higher')"
+              aria-pressed="{{ choice === 'higher' }}">
+              <span class="face">
+                <span class="icon">▲</span>
+                <span class="label">Higher</span>
+              </span>
+            </button>
 
-                  <button
-                    class="arcade-pick lower"
-                    type="button"
-                    [class.selected]="choice === 'lower'"
-                    [disabled]="!clickedData"
-                    (click)="drawFromDeck('lower')"
-                    aria-pressed="{{ choice === 'lower' }}"
-                    >
-                    <span class="face">
-                      <span class="icon">▼</span>
-                      <span class="label">Lower</span>
-                    </span>
-                  </button>
-                </div>
+            <button class="arcade-pick lower"
+              type="button"
+              [class.selected]="choice === 'lower'"
+              [disabled]="!clickedData"
+              (click)="drawFromDeck('lower')"
+              aria-pressed="{{ choice === 'lower' }}">
+              <span class="face">
+                <span class="icon">▼</span>
+                <span class="label">Lower</span>
+              </span>
+            </button>
+          </div>
 
-                <p class="controls-hint">
-                  Tap a stack first, then choose higher or lower.
-                </p>
-              </footer>
-            }
-          </section>
-        </section>
-
-        <!-- RIGHT: CHAT / SCOREBOARD SIDEPANEL -->
-        <aside class="game-side">
-          <section class="side-panel">
-            <div class="side-tabs">
-              <button class="side-tab" [class.active]="isChatActive()" (click)="setActiveTab('chat')" type="button">
-                Chat
-              </button>
-              <button class="side-tab" [class.active]="isScoreboardActive()" (click)="setActiveTab('scoreboard')" type="button">
-                Scoreboard
-              </button>
-              <button class="side-tab" [class.active]="isHowToActive()" (click)="setActiveTab('howto')" type="button">
-                Rules
-              </button>
-            </div>
-
-            <div class="side-body">
-              <div class="side-scroll">
-                @if (isChatActive()) {
-                  <app-messages class="side-content side-content--chat" [gameId]="game.id"></app-messages>
-                }
-                @if (isScoreboardActive()) {
-                  <app-scoreboard class="side-content side-content--score" [game]="game"></app-scoreboard>
-                }
-                @if (isHowToActive()) {
-                  <app-rules></app-rules>
-                }
-              </div>
-            </div>
-          </section>
-        </aside>
+          <p class="controls-hint">
+            Tap a stack first, then choose higher or lower.
+          </p>
+        </footer>
+        }
       </section>
-    </div>
+    </section>
 
-  }
+    <!-- RIGHT: CHAT / SCOREBOARD SIDEPANEL -->
+    <aside class="game-side">
+      <section class="side-panel">
+        <div class="side-tabs">
+          <button class="side-tab" [class.active]="isChatActive()" (click)="setActiveTab('chat')" type="button">
+            Chat
+          </button>
+          <button class="side-tab" [class.active]="isScoreboardActive()" (click)="setActiveTab('scoreboard')" type="button">
+            Scoreboard
+          </button>
+          <button class="side-tab" [class.active]="isHowToActive()" (click)="setActiveTab('howto')" type="button">
+            Rules
+          </button>
+        </div>
+
+        <div class="side-body">
+          <div class="side-scroll">
+            @if (isChatActive()) {
+              <app-messages class="side-content side-content--chat" [gameId]="game.id"></app-messages>
+            }
+            @if (isScoreboardActive()) {
+              <app-scoreboard class="side-content side-content--score" [game]="game"></app-scoreboard>
+            }
+            @if (isHowToActive()) {
+              <app-rules></app-rules>
+            }
+          </div>
+        </div>
+      </section>
+    </aside>
+  </section>
+</div>
+
+}
 }

@@ -2,7 +2,8 @@ import { Component, Input, inject, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { FeedbackService, FeedbackInput } from '../feedback.service';
-import { AnalyticsService } from '../analytics.service';
+import { getAnalytics, logEvent } from 'firebase/analytics';
+import { FirebaseApp } from '@angular/fire/app';
 
 @Component({
   selector: 'app-feedback',
@@ -16,7 +17,6 @@ export class FeedbackComponent {
   @Input() gameId: string | null = null;
 
   showFeedback = false;
-  feedbackForm: FormGroup;
   feedbackSubmitting = false;
   feedbackSent = false;
 
@@ -24,41 +24,40 @@ export class FeedbackComponent {
 
   private fb = inject(FormBuilder);
   private feedbackService = inject(FeedbackService);
-  private analytics = inject(AnalyticsService);
   private platformId = inject(PLATFORM_ID);
 
-  constructor() {
-    this.feedbackForm = this.fb.group({
-      type: ['bug', Validators.required],
-      message: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]],
-      canContact: [false],
-      dumb: [''],
-      email: [{ value: '', disabled: true }, [Validators.email, Validators.maxLength(80)]],
-    });
+  feedbackForm: FormGroup = this.fb.group({
+    type: ['bug', Validators.required],
+    message: ['', [Validators.required, Validators.maxLength(1000)]],
+    canContact: [false],
+    email: [''],
+    dumb: [''],
+  });
 
-    this.feedbackForm.get('canContact')?.valueChanges.subscribe((val) => {
-      const emailCtrl = this.feedbackForm.get('email');
-      if (!emailCtrl) return;
-      if (val) emailCtrl.enable();
-      else {
-        emailCtrl.disable();
-        emailCtrl.reset('');
+  constructor(private firebaseApp: FirebaseApp) {
+    this.feedbackForm.get('canContact')!.valueChanges.subscribe((canContact: boolean) => {
+      const emailControl = this.feedbackForm.get('email')!;
+
+      if (canContact) {
+        emailControl.setValidators([Validators.required, Validators.email]);
+      } else {
+        emailControl.clearValidators();
+        emailControl.setValue('', { emitEvent: false });
       }
+
+      emailControl.updateValueAndValidity({ emitEvent: false });
     });
   }
 
-  toggleFeedback() {
+  toggleFeedback(): void {
     this.showFeedback = !this.showFeedback;
 
     if (this.showFeedback) {
-      this.analytics.track('feedback_opened', {
-        screen: this.screen,
-        game_id: this.gameId || null,
-      });
+      logEvent(getAnalytics(this.firebaseApp), 'feedback_opened', {});
     }
   }
 
-  submitFeedback() {
+  submitFeedback(): void {
     if (this.feedbackForm.invalid || this.feedbackSubmitting) return;
 
     const formValue = this.feedbackForm.getRawValue() as {
@@ -69,13 +68,11 @@ export class FeedbackComponent {
       dumb: string;
     };
 
-    // honeypot
     if (formValue.dumb && formValue.dumb.trim().length > 0) {
-      this.analytics.track('feedback_spam_honeypot', { screen: this.screen });
+      logEvent(getAnalytics(this.firebaseApp), 'feedback_spam_honeypot', { screen: this.screen });
       return;
     }
 
-    // throttle (SSR-safe)
     if (isPlatformBrowser(this.platformId)) {
       const lastTs = Number(localStorage.getItem('dbx_last_feedback_ts') || 0);
       const now = Date.now();
@@ -104,7 +101,7 @@ export class FeedbackComponent {
         this.feedbackSubmitting = false;
         this.feedbackSent = true;
 
-        this.feedbackForm.patchValue({
+        this.feedbackForm.reset({
           type: 'bug',
           message: '',
           canContact: false,
@@ -112,11 +109,7 @@ export class FeedbackComponent {
           dumb: '',
         });
 
-        this.analytics.track('feedback_submitted', {
-          screen: this.screen,
-          type: payload.type,
-          has_email: !!payload.email,
-        });
+        logEvent(getAnalytics(this.firebaseApp), 'feedback_submitted', {});
       })
       .catch((err) => {
         this.feedbackSubmitting = false;

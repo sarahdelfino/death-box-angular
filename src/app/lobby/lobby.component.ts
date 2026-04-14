@@ -7,7 +7,6 @@ import { filter } from 'rxjs';
 import { GameStore } from '../game.store';
 import { MatDialog } from '@angular/material/dialog';
 import { RulesComponent } from "../rules/rules.component";
-import { AnalyticsService } from '../analytics.service';
 
 @Component({
   selector: 'app-lobby',
@@ -22,7 +21,6 @@ export class LobbyComponent implements OnInit {
   private dialog = inject(MatDialog);
   readonly store = inject(GameStore);
 
-  private analytics = inject(AnalyticsService);
   private platformId = inject(PLATFORM_ID);
 
   game$ = this.store.game$;
@@ -93,10 +91,6 @@ export class LobbyComponent implements OnInit {
   private tooSoon(): boolean {
     const now = Date.now();
     if (now - this.lastActionTs < this.ACTION_THROTTLE_MS) {
-      this.analytics.track('rate_limited_action', {
-        screen: 'lobby',
-        game_id: this.gameId,
-      });
       return true;
     }
     this.lastActionTs = now;
@@ -129,7 +123,6 @@ export class LobbyComponent implements OnInit {
     };
 
     if (dumb && dumb.trim().length > 0) {
-      this.analytics.track('honeypot_triggered_join_lobby', { game_id: this.gameId });
       return;
     }
 
@@ -150,12 +143,6 @@ export class LobbyComponent implements OnInit {
   toggleInfo(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    this.analytics.track('click_instructions', {
-      game_id: this.gameId,
-      player: sessionStorage.getItem('player'),
-      screen: 'lobby'
-    });
-
     this.infoClicked = !this.infoClicked;
     if (this.infoClicked) {
       setTimeout(() => {
@@ -170,11 +157,6 @@ export class LobbyComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const cleanGameId = this.gameId;
-
-    this.analytics.track('click_invite', {
-      game_id: cleanGameId,
-      player: sessionStorage.getItem('player'),
-    });
 
     const url = window.location.origin + `?join=${cleanGameId}`;
     const shareText = 'Play Death Box with me!';
@@ -208,11 +190,6 @@ export class LobbyComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const cleanGameId = this.gameId;
-
-    this.analytics.track('click_start', {
-      game_id: cleanGameId,
-      screen: 'lobby',
-    });
 
     if (cleanGameId) {
       this.store.startGame(cleanGameId);

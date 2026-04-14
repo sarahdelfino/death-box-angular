@@ -16,7 +16,9 @@ import { RulesComponent } from '../rules/rules.component';
 import { FeedbackComponent } from '../feedback/feedback.component';
 import { Subscription } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { AnalyticsService } from '../analytics.service';
+import { getAnalytics, logEvent } from 'firebase/analytics';
+import { FirebaseApp } from '@angular/fire/app';
+import { AnalyticsService } from '../analyticsservice.service';
 
 @Component({
   selector: 'app-start',
@@ -28,9 +30,9 @@ export class StartComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private store = inject(GameStore);
-  private dialog = inject(MatDialog);
   private route = inject(ActivatedRoute);
-  private analyticsService = inject(AnalyticsService);
+  private firebaseApp = inject(FirebaseApp);
+  private analytics = inject(AnalyticsService);
 
   @ViewChild('howToPanel') howToPanel!: ElementRef;
 
@@ -71,23 +73,15 @@ export class StartComponent implements OnInit, OnDestroy {
 
   joinClicked = false;
   createClicked = false;
-  isMobile = false;
   showInfo = false;
-  showCookieBanner = false;
 
   private lastActionTs = 0;
 
-  private readonly GA_ID = 'G-CRCM73VNGM';
-
   private track(name: string, params?: Record<string, any>) {
-    this.analyticsService.track(name, params);
+    this.analytics.track(name, params);
   }
 
   async ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.isMobile = window.innerWidth < 500;
-    }
-
     // Normalize inputs
     this.subs.add(
       this.joinGameForm.get('name')!.valueChanges.subscribe((v) => {
@@ -109,21 +103,6 @@ export class StartComponent implements OnInit, OnDestroy {
         if (next !== v) this.createGameForm.get('name')!.setValue(next, { emitEvent: false });
       })
     );
-
-    // Consent banner
-    if (isPlatformBrowser(this.platformId)) {
-      const stored = localStorage.getItem('dbx_analytics_consent');
-
-      if (stored === 'granted') {
-        await this.analyticsService.initIfAllowed();
-        this.enableAnalytics(); // gtag consent update (optional)
-        this.showCookieBanner = false;
-      } else if (stored === 'denied') {
-        this.showCookieBanner = false;
-      } else {
-        this.showCookieBanner = true;
-      }
-    }
 
     // Join param
     this.subs.add(
@@ -149,48 +128,6 @@ export class StartComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
-  }
-
-  async acceptAnalytics() {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    this.analyticsService.setConsent(true);
-
-    await this.analyticsService.initIfAllowed();
-    this.enableAnalytics(); // optional gtag path
-    this.showCookieBanner = false;
-
-    this.track('analytics_consent_granted', { screen: 'start' });
-  }
-
-  rejectAnalytics(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    this.analyticsService.setConsent(false);
-
-    const w = window as any;
-    if (typeof w.gtag === 'function') {
-      w.gtag('consent', 'update', {
-        analytics_storage: 'denied',
-        ad_storage: 'denied',
-      });
-    }
-
-    this.showCookieBanner = false;
-  }
-
-  private enableAnalytics(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    const w = window as any;
-    if (typeof w.gtag !== 'function') return;
-
-    w.gtag('consent', 'update', {
-      analytics_storage: 'granted',
-      ad_storage: 'denied',
-    });
-
-    w.gtag('config', this.GA_ID, { anonymize_ip: true });
   }
 
   toggleJoin(): void {

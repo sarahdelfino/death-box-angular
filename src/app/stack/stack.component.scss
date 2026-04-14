@@ -1,3 +1,5 @@
+@use '../deathbox-theme.scss' as db;
+
 .stack {
   position: relative;
   width: 80px;
@@ -68,4 +70,26 @@
 
 .playing-card.drop {
   animation: cardDrop 0.6s ease-out;
+}
+
+/* Stacks marked for removal (deck rebuild) */
+:host.removing {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  transition: filter 0.12s ease, transform 0.12s ease;
+
+  /* soft “warning” treatment — NOT cheesy, just a cue */
+  box-shadow:
+    0 0 0 1px rgba(db.$ui-gray-soft, 0.35),
+    0 0 14px rgba(db.$toxic-mint, 0.25);
+
+  /* make it feel "selected by the system" */
+  outline: 2px dashed rgba(db.$ui-gray, 0.6);
+  outline-offset: 3px;
+}
+
+/* Optional: slightly dim everything else while rebuilding */
+:host-context(.card-container.rebuilding) :host:not(.removing) {
+  opacity: 0.7;
+  filter: saturate(0.85);
 }

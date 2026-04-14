@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, inject, Input, Output } from '@angular/core';
 import { Card } from '../models/game-state.model';
 
 @Component({
@@ -19,9 +19,18 @@ export class StackComponent {
   @Input() lastAddedCardId: string | null = null;
   @Input() wrongCardId: string | null = null;
 
+  /** NEW: used to style stacks that will be removed for deck rebuild */
+  @Input() removing = false;
+  @HostBinding('class.removing') get isRemovingHostClass(): boolean {
+    return !!this.removing;
+  }
+
   @Output() clickedCardEmitter = new EventEmitter<Card>();
 
   onCardClick(card: Card) {
+    // If stack is flagged for removal, ignore clicks (prevents weird mid-rebuild interactions)
+    if (this.removing) return;
+
     if (this.currentPlayer === this.sessionPlayer && card) {
       this.clickedCardEmitter.emit(card);
     } else {
