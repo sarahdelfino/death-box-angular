@@ -1,0 +1,775 @@
+<main class="home">
+    <section class="hero">
+        <div class="hero__glow hero__glow--left"></div>
+        <div class="hero__glow hero__glow--right"></div>
+
+<header class="site-header">
+  <a
+    class="site-header__brand"
+    routerLink="/"
+    aria-label="Deathbox home"
+  >
+    <img
+      class="site-header__logo"
+      src="/assets/deathbox-logo.png"
+      alt="Death Box logo"
+      aria-hidden="true"
+    />
+  </a>
+
+  <nav class="site-header__nav" aria-label="Main navigation">
+    <a
+      class="site-header__link"
+      routerLink="/how-to-play"
+      routerLinkActive="site-header__link--active"
+    >
+      How to Play
+    </a>
+
+<button
+  class="site-header__button site-header__button--secondary"
+  type="button"
+  [class.selected]="joinClicked"
+  [attr.aria-pressed]="joinClicked"
+  (click)="openJoinForm()"
+>
+  <span class="material-symbols-outlined" aria-hidden="true">
+    group_add
+  </span>
+
+  Join Game
+</button>
+
+<button
+  class="site-header__button site-header__button--primary"
+  type="button"
+  [class.selected]="createClicked"
+  [attr.aria-pressed]="createClicked"
+  (click)="openCreateForm()"
+>
+  <span class="material-symbols-outlined" aria-hidden="true">
+    add
+  </span>
+
+  Create Game
+</button>
+  </nav>
+</header>
+
+        <div class="hero__content">
+            <div class="hero__copy">
+                <p class="eyebrow">
+                    The party game of strategy, luck &amp; sabotage
+                </p>
+
+                <h1>
+                    Stack smart<br />
+                    Or <span>drink</span> more.
+                </h1>
+
+                <p class="hero__description">
+                    Choose a card. Guess higher or lower. Get three right to end your
+                    turn. Get it wrong, and your friends control how long you drink.
+                </p>
+
+<div class="hero__buttons">
+  <button
+    class="button button--primary button--large"
+    type="button"
+    [class.selected]="createClicked"
+    [attr.aria-pressed]="createClicked"
+    (click)="openCreateForm()"
+  >
+    <span>Create Game</span>
+    <small>It’s free</small>
+  </button>
+
+  <button
+    class="button button--secondary button--large"
+    type="button"
+    [class.selected]="joinClicked"
+    [attr.aria-pressed]="joinClicked"
+    (click)="openJoinForm()"
+  >
+    <span>Join Game</span>
+    <small>Enter a code</small>
+  </button>
+</div>
+
+                <div class="hero__details" aria-label="Game details">
+                    <div class="detail">
+                        <span class="detail__icon" aria-hidden="true">♧</span>
+                        <span>
+                            <strong>2–20 Players</strong>
+                            <small>Great for any group</small>
+                        </span>
+                    </div>
+
+                    <div class="detail">
+                        <span class="detail__icon" aria-hidden="true">▯</span>
+                        <span>
+                            <strong>No Downloads</strong>
+                            <small>Play on any device</small>
+                        </span>
+                    </div>
+
+                    <div class="detail">
+                        <span class="detail__icon" aria-hidden="true">☺</span>
+                        <span>
+                            <strong>Free to Play</strong>
+                            <small>No signup required</small>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero__visual" aria-label="Deathbox gameplay preview">
+                <div class="floating-card floating-card--king" aria-hidden="true">
+                    <span class="playing-card playing-card--red">
+                        <span class="playing-card__corner">K<br />♥</span>
+                        <span class="playing-card__center">♥</span>
+                    </span>
+                </div>
+
+                <div class="phone">
+                    <div class="phone__speaker"></div>
+
+                    <div class="phone__screen">
+                        <div class="game-header">
+                            <span>Round 7</span>
+                            <button type="button" aria-label="Close game preview">×</button>
+                        </div>
+
+                        <h2>Choose a card</h2>
+
+                        <div class="card-grid">
+                            <button class="playing-card playing-card--red" type="button">
+                                <span class="playing-card__corner">8<br />♦</span>
+                                <span class="playing-card__center">♦</span>
+                            </button>
+
+                            <button class="playing-card" type="button">
+                                <span class="playing-card__corner">Q<br />♠</span>
+                                <span class="playing-card__center">♠</span>
+                            </button>
+
+                            <button class="playing-card playing-card--red" type="button">
+                                <span class="playing-card__corner">3<br />♥</span>
+                                <span class="playing-card__center">♥</span>
+                            </button>
+
+                            <button class="playing-card" type="button">
+                                <span class="playing-card__corner">K<br />♣</span>
+                                <span class="playing-card__center">♣</span>
+                            </button>
+
+                            <button class="playing-card playing-card--red" type="button">
+                                <span class="playing-card__corner">10<br />♥</span>
+                                <span class="playing-card__center">♥</span>
+                            </button>
+
+                            <button class="playing-card" type="button">
+                                <span class="playing-card__corner">4<br />♣</span>
+                                <span class="playing-card__center">♣</span>
+                            </button>
+
+                            <button class="playing-card playing-card--red" type="button">
+                                <span class="playing-card__corner">7<br />♥</span>
+                                <span class="playing-card__center">♥</span>
+                            </button>
+
+                            <button class="playing-card playing-card--red" type="button">
+                                <span class="playing-card__corner">A<br />♦</span>
+                                <span class="playing-card__center">♦</span>
+                            </button>
+
+                            <button class="playing-card" type="button">
+                                <span class="playing-card__corner">J<br />♠</span>
+                                <span class="playing-card__center">♠</span>
+                            </button>
+                        </div>
+
+                        <div class="deck-status">
+                            <span class="deck-status__deck" aria-hidden="true"></span>
+
+                            <span>
+                                <strong>Deck</strong>
+                                <small>23 cards left</small>
+                            </span>
+                        </div>
+
+                        <div class="prediction">
+                            <p>Will the next card be</p>
+
+                            <div class="prediction__buttons">
+                                <button type="button">
+                                    <span>↑</span>
+                                    Higher
+                                </button>
+
+                                <button type="button">
+                                    <span>↓</span>
+                                    Lower
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timer-card">
+                    <span class="timer-card__label">Drinking Time</span>
+                    <strong>You messed up!</strong>
+
+                    <div class="timer">
+                        <span class="timer__value">12</span>
+                        <span class="timer__unit">seconds</span>
+                    </div>
+
+                    <p>Drink until the timer hits 0.</p>
+
+                    <div class="timer-card__divider"></div>
+
+                    <span class="timer-card__warning">
+                        The table is slowing you down
+                    </span>
+
+                    <span class="timer-card__tap">
+                        <span aria-hidden="true">☝</span>
+                        Tap to add time
+                    </span>
+                </div>
+            </div>
+        </div>
+        <section
+  #gameForms
+  class="game-entry"
+  [class.game-entry--open]="createClicked || joinClicked"
+  aria-label="Start or join a Deathbox game"
+>
+  @if (createClicked || joinClicked) {
+    <div class="game-entry__panel">
+      <header class="game-entry__header">
+        <div>
+          <p class="game-entry__eyebrow">
+            {{ createClicked ? 'Start the chaos' : 'Enter the game' }}
+          </p>
+
+          <h2>
+            {{ createClicked ? 'Create a new game.' : 'Join your friends.' }}
+          </h2>
+        </div>
+
+        <button
+          class="game-entry__close"
+          type="button"
+          aria-label="Close game form"
+          (click)="closeGameForms()"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">
+            close
+          </span>
+        </button>
+      </header>
+
+      <div class="game-entry__tabs" role="tablist" aria-label="Game action">
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="createClicked"
+          [class.game-entry__tab--active]="createClicked"
+          (click)="showCreateForm()"
+        >
+          Create Game
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="joinClicked"
+          [class.game-entry__tab--active]="joinClicked"
+          (click)="showJoinForm()"
+        >
+          Join Game
+        </button>
+      </div>
+
+      @if (createClicked) {
+        <form
+          class="game-form"
+          id="create"
+          [formGroup]="createGameForm"
+          (ngSubmit)="createGame(createGameForm)"
+          autocomplete="off"
+        >
+          <div class="game-field">
+            <label for="createName">What should we call you?</label>
+
+            <input
+              id="createName"
+              formControlName="name"
+              required
+              autocomplete="off"
+              placeholder="Your name"
+              inputmode="text"
+            />
+          </div>
+
+          <input
+            class="honeypot"
+            type="text"
+            name="create-dumb"
+            formControlName="dumb"
+            autocomplete="off"
+            tabindex="-1"
+            aria-hidden="true"
+          />
+
+          <button
+            class="game-form__submit game-form__submit--primary"
+            type="submit"
+            [disabled]="createGameForm.invalid"
+            (ngSubmit)="createGame(createGameForm)"
+          >
+            <span>Create Game</span>
+            <span
+              class="material-symbols-outlined"
+              aria-hidden="true"
+            >
+              arrow_forward
+            </span>
+          </button>
+        </form>
+      }
+
+      @if (joinClicked) {
+        <form
+          class="game-form"
+          id="join"
+          [formGroup]="joinGameForm"
+          (ngSubmit)="joinGame(joinGameForm)"
+          autocomplete="off"
+        >
+          <div class="game-form__grid">
+            <div class="game-field">
+              <label for="joinName">What should we call you?</label>
+
+              <input
+                id="joinName"
+                formControlName="name"
+                required
+                autocomplete="off"
+                placeholder="Your name"
+                inputmode="text"
+              />
+            </div>
+
+            <div class="game-field">
+              <label for="joinId">Game code</label>
+
+              <input
+                id="joinId"
+                formControlName="id"
+                required
+                autocomplete="off"
+                placeholder="Enter code"
+                inputmode="text"
+                autocapitalize="characters"
+              />
+            </div>
+          </div>
+
+          <input
+            class="honeypot"
+            type="text"
+            name="join-dumb"
+            formControlName="dumb"
+            autocomplete="off"
+            tabindex="-1"
+            aria-hidden="true"
+          />
+
+          <button
+            class="game-form__submit game-form__submit--primary"
+            type="submit"
+            [disabled]="joinGameForm.invalid"
+          >
+            <span>Join Game</span>
+            <span
+              class="material-symbols-outlined"
+              aria-hidden="true"
+            >
+              arrow_forward
+            </span>
+          </button>
+        </form>
+      }
+    </div>
+  }
+</section>
+    </section>
+
+    <section class="how-it-works section-panel" id="how-it-works">
+        <header class="section-heading">
+            <span></span>
+            <p>How It Works</p>
+            <span></span>
+        </header>
+
+        <div class="steps">
+            <article class="step">
+                <div class="step__visual step__visual--grid">
+                    <div class="mini-grid" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span class="mini-grid__selected"></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <span class="step__number">1</span>
+                <h2>Choose a Card</h2>
+                <p>Pick any face-up card from the nine-card grid.</p>
+            </article>
+
+            <span class="step-arrow" aria-hidden="true">→</span>
+
+            <article class="step">
+                <div class="step__visual">
+                    <div class="choice-icons" aria-hidden="true">
+                        <span>↑</span>
+                        <span>↓</span>
+                    </div>
+                </div>
+
+                <span class="step__number">2</span>
+                <h2>Guess Higher or Lower</h2>
+                <p>Predict whether the next deck card will be higher or lower.</p>
+            </article>
+
+            <span class="step-arrow" aria-hidden="true">→</span>
+
+            <article class="step">
+                <div class="step__visual">
+                    <div class="mini-card-stack" aria-hidden="true">
+                        <span>10<br />♠</span>
+                    </div>
+                </div>
+
+                <span class="step__number">3</span>
+                <h2>Stack the Card</h2>
+                <p>Place the newly drawn card on top of the selected stack.</p>
+            </article>
+
+            <span class="step-arrow" aria-hidden="true">→</span>
+
+            <article class="step">
+                <div class="step__visual">
+                    <div class="drink-icon" aria-hidden="true">🥃</div>
+                </div>
+
+                <span class="step__number">4</span>
+                <h2>Mess Up? Drink.</h2>
+                <p>
+                    Drink for the stack size while everyone else tries to extend your
+                    timer.
+                </p>
+            </article>
+
+            <span class="step-arrow" aria-hidden="true">→</span>
+
+            <article class="step">
+                <div class="step__visual">
+                    <div class="correct-count" aria-hidden="true">
+                        <span>✓</span>
+                        <span>✓</span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <span class="step__number">5</span>
+                <h2>Get 3 Correct</h2>
+                <p>Three correct guesses end your turn. They do not need to be consecutive.</p>
+            </article>
+
+        </div>
+    </section>
+
+    <section class="remote-play section-panel">
+        <div class="remote-play__copy">
+            <p class="eyebrow">Same game. Different rooms.</p>
+
+            <h2>Play together from anywhere.</h2>
+
+            <p>
+                Deathbox includes live table chat, so your friends can play remotely,
+                react to every bad guess, and talk trash from across town or across the
+                country.
+            </p>
+        </div>
+
+        <div class="remote-play__messages" aria-hidden="true">
+            <span class="remote-message remote-message--one">
+                That stack is looking dangerous.
+            </span>
+
+            <span class="remote-message remote-message--two">
+                Go lower. Trust me.
+            </span>
+
+            <span class="remote-message remote-message--three">
+                Nobody trust Tyler.
+            </span>
+        </div>
+    </section>
+
+    <section class="features section-panel" id="features">
+        <article class="feature">
+            <span class="feature__icon" aria-hidden="true">◎</span>
+            <h2>Strategic Choices</h2>
+            <p>
+                Pick from the grid and predict whether the next card from the deck will be higher or
+                lower.
+            </p>
+        </article>
+
+        <article class="feature">
+            <span class="feature__icon" aria-hidden="true">▱</span>
+            <h2>Build &amp; Survive</h2>
+            <p>
+                Get three correct guesses to end your turn. They do not have to be in
+                a row.
+            </p>
+        </article>
+
+        <article class="feature">
+            <span class="feature__icon" aria-hidden="true">☝</span>
+            <h2>Sabotage Your Friends</h2>
+            <p>
+                While the victim drinks, repeatedly tap the screen to slow their timer down.
+            </p>
+        </article>
+
+        <article class="feature">
+            <span class="feature__icon" aria-hidden="true">▥</span>
+            <h2>Track the Chaos</h2>
+            <p>
+                Compare assigned time with actual drinking time and expose the worst
+                saboteurs.
+            </p>
+        </article>
+
+        <article class="feature">
+            <span class="feature__icon" aria-hidden="true">⟳</span>
+            <h2>The Deck Regenerates</h2>
+            <p>
+                When the deck runs out, consolidate a row, reshuffle, and keep the game
+                going until the final card.
+            </p>
+        </article>
+    </section>
+
+    <section class="chaos section-panel" id="stats">
+        <div class="chaos__intro">
+            <p class="eyebrow">The results speak for themselves</p>
+
+            <h2>
+                Real games.<br />
+                Real <span>chaos.</span>
+            </h2>
+
+            <p>
+                Every game keeps track of who drank, who got targeted, and who made
+                their friends suffer the longest.
+            </p>
+
+            <div class="stat-highlights">
+                <div>
+                    <strong>9</strong>
+                    <span>Starting stacks</span>
+                </div>
+
+                <div>
+                    <strong>3</strong>
+                    <span>Correct to escape</span>
+                </div>
+
+                <div>
+                    <strong>∞</strong>
+                    <span>Potential chaos</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="score-card">
+            <div class="panel-header">
+                <span>Drinking Time</span>
+                <span class="live-badge">Live</span>
+            </div>
+
+            <div class="score-table">
+                <div class="score-table__row score-table__header">
+                    <span>Player</span>
+                    <span>Assigned</span>
+                    <span>Actual</span>
+                    <span>Difference</span>
+                </div>
+
+                <div class="score-table__row">
+                    <span class="player">
+                        <span class="avatar">M</span>
+                        Megan
+                    </span>
+                    <span>32s</span>
+                    <span>58s</span>
+                    <strong class="difference difference--bad">+26s</strong>
+                </div>
+
+                <div class="score-table__row">
+                    <span class="player">
+                        <span class="avatar">T</span>
+                        Tyler
+                    </span>
+                    <span>28s</span>
+                    <span>47s</span>
+                    <strong class="difference difference--bad">+19s</strong>
+                </div>
+
+                <div class="score-table__row">
+                    <span class="player">
+                        <span class="avatar">B</span>
+                        Brandon
+                    </span>
+                    <span>24s</span>
+                    <span>24s</span>
+                    <strong class="difference difference--good">0s</strong>
+                </div>
+
+                <div class="score-table__row">
+                    <span class="player">
+                        <span class="avatar">S</span>
+                        Sophie
+                    </span>
+                    <span>16s</span>
+                    <span>41s</span>
+                    <strong class="difference difference--bad">+25s</strong>
+                </div>
+
+                <div class="score-table__row">
+                    <span class="player">
+                        <span class="avatar">D</span>
+                        Derek
+                    </span>
+                    <span>22s</span>
+                    <span>22s</span>
+                    <strong class="difference difference--good">0s</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-card">
+            <div class="panel-header">
+                <span>Table Chat</span>
+                <span class="online-status">5 online</span>
+            </div>
+
+            <div class="messages">
+                <div class="message">
+                    <span class="avatar">T</span>
+
+                    <div>
+                        <span class="message__meta">
+                            <strong>Tyler</strong>
+                            <small>8:41 PM</small>
+                        </span>
+                        <p>get wrecked 😈</p>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <span class="avatar">M</span>
+
+                    <div>
+                        <span class="message__meta">
+                            <strong>Megan</strong>
+                            <small>8:42 PM</small>
+                        </span>
+                        <p>you guys are brutal</p>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <span class="avatar">D</span>
+
+                    <div>
+                        <span class="message__meta">
+                            <strong>Derek</strong>
+                            <small>8:42 PM</small>
+                        </span>
+                        <p>that was personal</p>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <span class="avatar">B</span>
+
+                    <div>
+                        <span class="message__meta">
+                            <strong>Brandon</strong>
+                            <small>8:42 PM</small>
+                        </span>
+                        <p>tap tap tap 😂</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <span>Message the table...</span>
+                <button type="button" aria-label="Send message">➤</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="final-cta">
+        <div class="final-cta__decoration" aria-hidden="true">
+            <div class="deathbox-cube">
+                <span>☠</span>
+            </div>
+
+            <span class="cup cup--one"></span>
+            <span class="cup cup--two"></span>
+        </div>
+
+        <div class="final-cta__copy">
+            <h2>
+                Ready to make <span>someone</span> drink?
+            </h2>
+
+            <p>Gather your crew and let the games begin.</p>
+        </div>
+
+<div class="final-cta__actions">
+  <button
+    class="button button--primary button--large"
+    type="button"
+    (click)="openCreateForm()"
+  >
+    <span>Create Game</span>
+    <small>It’s free</small>
+  </button>
+
+  <button
+    class="button button--secondary button--large"
+    type="button"
+    (click)="openJoinForm()"
+  >
+    <span>Join Game</span>
+    <small>Enter a code</small>
+  </button>
+</div>
+    </section>
+</main>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { RouterOutlet } from '@angular/router';
+import { SeoService } from './seo.service';
 
 @Component({
     selector: 'app-root',
@@ -10,6 +11,10 @@ import { RouterOutlet } from '@angular/router';
     imports: [RouterOutlet]
 })
 export class AppComponent {
+  constructor(private readonly seoService: SeoService) {}
 
+  ngOnInit(): void {
+    this.seoService.initialize();
+  }
 }
 

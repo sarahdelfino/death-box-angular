@@ -1,32 +1,82 @@
-<div class="container howto-container">
-  <section class="home-panel howto-panel">
-    <!-- top bar -->
-    <header class="howto-top">
-      <a class="howto-brand" routerLink="/" aria-label="Back to home">
-        <img class="howto-logo" src="/assets/deathbox-logo.png" alt="Death Box" />
-        <div class="howto-brand-text">
-          <p class="label">Death Box</p>
-          <p class="howto-title">How to Play</p>
-        </div>
+<div class="howto-page">
+  <header class="howto-nav">
+    <a
+      class="brand"
+      routerLink="/"
+      aria-label="Return to the Deathbox home page"
+    >
+      <img
+        class="brand__logo"
+        src="/assets/deathbox-logo.png"
+        alt=""
+        aria-hidden="true"
+      />
+
+      <span class="brand__wordmark">
+        DEATH<span>BOX</span>
+      </span>
+    </a>
+
+    <nav class="nav-links" aria-label="Main navigation">
+      <a routerLink="/">Home</a>
+      <a routerLink="/how-to-play" class="nav-links__active">
+        How to Play
       </a>
+    </nav>
 
-      <nav class="howto-nav" aria-label="How to Play navigation">
-        <a routerLink="/" class="howto-link">Home</a>
-        <a routerLink="/" fragment="how-to-panel" class="howto-link">Rules</a>
-        <a routerLink="/" class="howto-link">Play</a>
-      </nav>
-    </header>
+    <a class="button button--primary button--nav" routerLink="/">
+      Create Game
+    </a>
+  </header>
 
-    <!-- content card inside the panel -->
-    <main class="howto-content" role="main">
+  <main class="howto-main">
+    <section class="howto-intro">
+      <div class="howto-intro__copy">
+        <p class="eyebrow">How to play</p>
+
+        <h1>
+          Choose. Guess.<br />
+          <span>Try not to drink.</span>
+        </h1>
+
+        <p class="howto-intro__lede">
+          Pick one of the nine stacks and guess whether the next card will be
+          higher or lower. Get three correct guesses to end your turn. Guess
+          wrong and you drink while the rest of the table slows your timer.
+        </p>
+      </div>
+    </section>
+
+    <section class="rules-section" aria-labelledby="rules-heading">
+      <header class="rules-section__heading">
+        <p class="eyebrow">Complete rules</p>
+        <h2 id="rules-heading">Everything you need to know.</h2>
+      </header>
+
       <app-rules></app-rules>
-    </main>
+    </section>
 
-    <!-- footer -->
-    <footer class="howto-footer">
-      <a routerLink="/" class="howto-back">← Back to home</a>
-      <span class="howto-sep">•</span>
-      <a routerLink="/" fragment="how-to-panel" class="howto-back">Read rules on home</a>
-    </footer>
-  </section>
+    <section class="final-cta">
+      <div>
+        <p class="eyebrow">Got it?</p>
+        <h2>Put the rules to work.</h2>
+      </div>
+
+      <div class="final-cta__actions">
+        <a class="button button--primary" routerLink="/">
+          <span>Create Game</span>
+          <small>It’s free</small>
+        </a>
+
+        <a class="button button--secondary" routerLink="/">
+          <span>Join Game</span>
+          <small>Enter a code</small>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="howto-footer">
+    <a routerLink="/">← Back to Deathbox</a>
+  </footer>
 </div>

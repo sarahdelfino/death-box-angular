@@ -7,6 +7,7 @@ import { filter } from 'rxjs';
 import { GameStore } from '../game.store';
 import { MatDialog } from '@angular/material/dialog';
 import { RulesComponent } from "../rules/rules.component";
+import { AnalyticsService } from '../analyticsservice.service';
 
 @Component({
   selector: 'app-lobby',
@@ -19,7 +20,12 @@ export class LobbyComponent implements OnInit {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private dialog = inject(MatDialog);
+  private analytics = inject(AnalyticsService);
+
   readonly store = inject(GameStore);
+    private track(name: string, params?: Record<string, any>) {
+    this.analytics.track(name, params);
+  }
 
   private platformId = inject(PLATFORM_ID);
 
@@ -190,6 +196,7 @@ export class LobbyComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const cleanGameId = this.gameId;
+    this.track('click_start_game', { game_id: cleanGameId });
 
     if (cleanGameId) {
       this.store.startGame(cleanGameId);

@@ -23,6 +23,7 @@ import { ScoreboardComponent } from '../scoreboard/scoreboard.component';
 import { RulesComponent } from '../rules/rules.component';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 import { FirebaseApp } from '@angular/fire/app';
+import { AnalyticsService } from '../analyticsservice.service';
 
 @Component({
   selector: 'app-game',
@@ -44,7 +45,11 @@ import { FirebaseApp } from '@angular/fire/app';
 export class GameComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   readonly store = inject(GameStore);
+  private analytics = inject(AnalyticsService);
   private platformId = inject(PLATFORM_ID);
+    private track(name: string, params?: Record<string, any>) {
+    this.analytics.track(name, params);
+  }
 
   @ViewChild('deckEl', { read: ElementRef }) deckEl!: ElementRef;
   @ViewChildren(StackComponent) stacks!: QueryList<StackComponent>;
@@ -141,6 +146,11 @@ export class GameComponent implements OnInit, OnDestroy {
           const currentIndex = players.indexOf(currentDrinker);
           const nextIndex = (currentIndex + 1) % players.length;
           const nextDrinker = players[nextIndex];
+          this.track('turn_ended', {
+            game_id: game.id,
+            player: currentDrinker,
+            next_player: nextDrinker,
+          });
           this.store.setCurrentTurnAndResetGuesses({
             gameId: game.id,
             newPlayerId: nextDrinker,
@@ -274,6 +284,10 @@ private onKeydown = (e: KeyboardEvent) => {
   /** Highlight → then actually remove stacks and rebuild deck. */
   private async rebuildDeckFromSpecificStacks(gameId: string, stackKeys: string[]): Promise<void> {
     // highlight
+    this.track('deck_rebuild_queued', {
+      game_id: gameId,
+      taken_stacks: stackKeys.length,
+    });
     setTimeout(() => (this.removingStackKeys = [...stackKeys]), 2000);
     // this.removingStackKeys = [...stackKeys];
 
@@ -328,6 +342,11 @@ private onKeydown = (e: KeyboardEvent) => {
     if (!gameId || !this.sessionPlayer) return;
 
     this.selectedCard = card;
+    this.track('card_selected', {
+      game_id: gameId,
+      player: this.sessionPlayer,
+      card_name: card.cardName,
+    });
 
     // If deck is empty, arm rebuild (but do NOT execute during penalty/resolution)
     if (!deck || deck.length === 0) {
@@ -563,6 +582,10 @@ private onKeydown = (e: KeyboardEvent) => {
 
   setActiveTab(tab: 'chat' | 'scoreboard' | 'howto') {
     this.activeTab = tab;
+    this.track('tab_changed', {
+      game_id: this.gameId,
+      tab: tab,
+    });
   }
 
   isChatActive(): boolean {

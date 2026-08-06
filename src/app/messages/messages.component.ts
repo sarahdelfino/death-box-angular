@@ -10,6 +10,7 @@ import {
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { GameStore } from '../game.store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AnalyticsService } from '../analyticsservice.service';
 
 @Component({
   selector: 'app-messages',
@@ -21,6 +22,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class MessagesComponent implements AfterViewInit {
   private store = inject(GameStore);
   private destroyRef = inject(DestroyRef);
+  private analytics = inject(AnalyticsService);
+
+    private track(name: string, params?: Record<string, any>) {
+    this.analytics.track(name, params);
+  }
 
   @ViewChild('message') message!: ElementRef<HTMLInputElement>;
   @Input() gameId!: string;
@@ -77,6 +83,13 @@ export class MessagesComponent implements AfterViewInit {
     const timestamp = new Date()
       .toISOString()
       .replace(/[\.][0-9]*\w/g, '');
+
+      this.track('send_message', {
+      game_id: this.gameId,
+      player: this.user,
+      message_length: text.length,
+      timestamp,
+    });
 
     this.store.sendMessage({
       gameId: this.gameId,

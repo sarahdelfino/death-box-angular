@@ -1,46 +1,103 @@
-@if (game$ | async; as game) {
-  <section class="lobby-panel">
-    <!-- Left: logo, game code, buttons, how-to -->
-    <header class="lobby-header">
-      <div class="logo-group">
-        <img class="logo" src="../../assets/deathbox-logo.png" alt="deathbox-logo" />
-        <div class="game-meta">
-          <p class="label">Lobby code</p>
-          <p class="gameId">{{ game.id }}</p>
-          <div style="display: flex; flex-direction: row-reverse;">
-            @if (isHost) {
-              <a class="status-pill status-host" (click)="startGame()">Start Game</a>
-            } @else {
-              <p class="status-pill status-waiting">
-                Waiting on host to start…
-              </p>
-            }
-            <a class="status-pill" (click)="inviteClicked()">Invite a friend</a>
-          </div>
-        </div>
-      </div>
+<div class="lobby-page">
+  @if (game$ | async; as game) {
+    <main class="lobby-shell">
+      <header class="lobby-topbar">
+        <a class="lobby-brand" routerLink="/" aria-label="Deathbox home">
+          <img
+            class="lobby-brand__logo"
+            src="../../assets/deathbox-logo.png"
+            alt="Deathbox"
+          />
+        </a>
 
-      <div class="controls">
-        <!-- other controls can stay here if you add them later -->
-      </div>
+        <div class="lobby-code">
+          <span class="lobby-code__label">Lobby code</span>
+          <strong>{{ game.id }}</strong>
+        </div>
+
+        <div class="lobby-actions">
+          <button
+            class="lobby-button lobby-button--secondary"
+            type="button"
+            (click)="inviteClicked()"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">
+              person_add
+            </span>
+            Invite
+          </button>
+
+          @if (isHost) {
+            <button
+              class="lobby-button lobby-button--primary"
+              type="button"
+              (click)="startGame()"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">
+                play_arrow
+              </span>
+              Start Game
+            </button>
+          } @else {
+            <div class="waiting-pill">
+              <span class="waiting-pill__dot" aria-hidden="true"></span>
+              Waiting for host
+            </div>
+          }
+        </div>
+      </header>
+
+      <section class="players-section">
+        <header class="players-section__header">
+          <div>
+            <p class="section-eyebrow">The table</p>
+            <h1>Players</h1>
+          </div>
+
+          <!-- <span class="player-count">
+            {{ game.players | keyvalue | playerCount }} joined
+          </span> -->
+        </header>
+
+        <div class="players">
+          @for (player of game.players | keyvalue; track player.key) {
+            <article class="player-card">
+              <div
+                class="avatar-wrapper"
+                [class.loading]="isLoadingAvatars[player.key] !== false"
+              >
+                <img
+                  class="avatar"
+                  [src]="'https://robohash.org/' + game.id + player.key + '?set=set5'"
+                  [alt]="player.key + ' avatar'"
+                  (load)="onImageLoad(player.key)"
+                />
+              </div>
+
+              <p>{{ player.key }}</p>
+            </article>
+          }
+        </div>
+      </section>
 
       <section class="how-to-panel" id="how-to-panel">
         <button
-          class="how-to-inline how-to-toggle"
+          class="how-to-toggle"
           type="button"
           (click)="toggleInfo()"
           [class.active]="infoClicked"
           [attr.aria-expanded]="infoClicked"
           aria-controls="how-to-body"
-          >
-          <div class="how-to-toggle-left">
-            <span class="material-symbols-outlined how-to-icon">
+        >
+          <span class="how-to-toggle__label">
+            <span class="material-symbols-outlined" aria-hidden="true">
               menu_book
             </span>
-            <span>How to play</span>
-          </div>
-          <span class="how-to-chevron" aria-hidden="true">
-            {{ infoClicked ? '–' : '+' }}
+            How to Play
+          </span>
+
+          <span class="material-symbols-outlined how-to-toggle__chevron">
+            {{ infoClicked ? 'remove' : 'add' }}
           </span>
         </button>
 
@@ -48,77 +105,53 @@
           class="how-to-body"
           id="how-to-body"
           [class.collapsed]="!infoClicked"
-          >
+        >
           <app-rules></app-rules>
         </div>
       </section>
-    </header>
 
-    <!-- Right: players -->
-    <section class="lobby-players">
-      <h2 class="players-title">
-        Players
-      </h2>
+      @if (showInviteToast) {
+        <div class="invite-toast">
+          {{ inviteToastMessage }}
+        </div>
+      }
+    </main>
+  }
 
-      <div class="players" [class.scroll]="isHost">
-        @for (player of game.players | keyvalue; track player.key) {
-          <div class="list-flex">
-            <div
-              class="avatar-wrapper"
-              [class.loading]="isLoadingAvatars[player.key] !== false"
-              >
-              <img
-                class="avatar"
-                [src]="'https://robohash.org/' + game.id + player.key + '?set=set5'"
-                (load)="onImageLoad(player.key)"
-                />
-            </div>
-            <p>{{ player.key }}</p>
-          </div>
-        }
-      </div>
-    </section>
+  @if (showJoinForm) {
+    <dialog id="dialog">
+      <form [formGroup]="joinGameForm" (ngSubmit)="joinGame()">
+        <p class="dialog-eyebrow">Join the table</p>
+        <h2>Choose your name.</h2>
 
-    @if (showInviteToast) {
-      <div class="invite-toast">
-        {{ inviteToastMessage }}
-      </div>
-    }
-  </section>
-}
+        <label for="playerName">Name</label>
 
-<!-- Join dialog for people who hit the lobby without a session player -->
-@if (showJoinForm) {
-  <dialog id="dialog">
-    <form [formGroup]="joinGameForm" (ngSubmit)="joinGame()">
-      <h2>Join this lobby</h2>
-      <label for="playerName">Name</label>
-      <input
-        id="playerName"
-        type="text"
-        class="arcade-input"
-        formControlName="playerName"
-        autocomplete="off"
-        placeholder="Who goes there?"
+        <input
+          id="playerName"
+          type="text"
+          class="dialog-input"
+          formControlName="playerName"
+          autocomplete="off"
+          placeholder="Who goes there?"
         />
-      <!-- Honeypot: hidden from humans, bots love it -->
-      <input
-        type="text"
-        name="dumb"
-        formControlName="dumb"
-        autocomplete="off"
-        tabindex="-1"
-        class="dumb"
+
+        <input
+          class="dumb"
+          type="text"
+          name="dumb"
+          formControlName="dumb"
+          autocomplete="off"
+          tabindex="-1"
         />
-      <div class="dialog-actions">
+
         <button
           type="submit"
-          class="arcade-btn primary"
+          class="dialog-submit"
           [disabled]="joinGameForm.invalid"
-          >
-          Join
+        >
+          Join Lobby
         </button>
-      </div>
-    </form>
-  </dialog>
-}
+      </form>
+    </dialog>
+  }
+</div>

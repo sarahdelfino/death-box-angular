@@ -1,87 +1,238 @@
-<section class="howto" aria-label="How to play Death Box">
-  <header class="howto__header">
-    <div class="howto__titleRow">
-      <h2 class="howto__title">How to play Death Box</h2>
+<section class="rules" aria-label="Complete Deathbox rules">
+  <section class="rules-card rules-card--warning">
+    <div class="rules-card__heading">
+      <span
+        class="rules-card__icon material-symbols-outlined"
+        aria-hidden="true"
+      >
+        warning
+      </span>
+
+      <div>
+        <p class="rules-card__eyebrow">Before you play</p>
+        <h2>Know the basics.</h2>
+      </div>
     </div>
 
-    <p class="howto__lede">
-      Guess whether the next card is <strong>higher</strong> or <strong>lower</strong>.
-      If you’re wrong, you drink until the timer hits zero. Survive until there’s only
-      <strong>one stack</strong> left.
-    </p>
-  </header>
+    <div class="rules-card__columns">
+      <ul class="rules-list">
+        <li class="rules-list__item rules-list__item--warning">
+          <strong>
+            This is a drinking game. Know your limits and drink responsibly.
+          </strong>
+        </li>
 
-  <div class="howto__grid">
-    <!-- FULL-WIDTH: Before you start -->
-    <section class="card card--warn card--span">
-      <div class="card__head">
-        <span class="card__icon material-symbols-outlined" aria-hidden="true">warning</span>
-        <h3 class="card__title">Before you start</h3>
+        <li class="rules-list__item">
+          The game begins with <strong>nine face-up cards</strong> arranged in
+          a 3×3 grid.
+        </li>
+
+        <li class="rules-list__item">
+          Aces are <strong>low</strong>.
+        </li>
+
+        <li class="rules-list__item">
+          Drawing a <strong>joker</strong> means you drink.
+        </li>
+      </ul>
+
+      <aside class="rules-callout">
+        <span class="rules-callout__label">Your goal</span>
+
+        <p>
+          Survive each turn, consolidate the table down to one final stack,
+          and play through the entire last deck.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="rules-card">
+    <div class="rules-card__heading">
+      <span
+        class="rules-card__icon material-symbols-outlined"
+        aria-hidden="true"
+      >
+        playing_cards
+      </span>
+
+      <div>
+        <p class="rules-card__eyebrow">Your turn</p>
+        <h2>Choose. Predict. Stack.</h2>
       </div>
+    </div>
 
-      <div class="card__cols">
-        <ul class="list">
-          <li class="list__item list__item--strong">
-            <strong>This is a drinking game. Know your limits and drink responsibly.</strong>
-          </li>
-          <li class="list__item">Ace is <strong>low</strong>, just to be annoying.</li>
-          <li class="list__item">If you pull a <strong>joker</strong>, you drink.</li>
-        </ul>
+    <ol class="rules-steps">
+      <li class="rules-step">
+        <span class="rules-step__number">1</span>
 
-        <div class="callout">
-          <div class="callout__k">Endgame</div>
-          <div class="callout__v">
-            When the deck runs out, stacks are merged and reshuffled.
-            Your goal is to survive until only <strong>one stack</strong> remains.
-          </div>
+        <div>
+          <h3>Choose a card</h3>
+          <p>
+            Select one of the face-up cards currently on the table.
+          </p>
+        </div>
+      </li>
+
+      <li class="rules-step">
+        <span class="rules-step__number">2</span>
+
+        <div>
+          <h3>Guess higher or lower</h3>
+          <p>
+            Predict whether the next card from the deck will be higher or lower
+            than the selected card.
+          </p>
+        </div>
+      </li>
+
+      <li class="rules-step">
+        <span class="rules-step__number">3</span>
+
+        <div>
+          <h3>Reveal and stack</h3>
+          <p>
+            Draw the next card and place it face-up on the chosen stack.
+          </p>
+        </div>
+      </li>
+
+      <li class="rules-step">
+        <span class="rules-step__number">4</span>
+
+        <div>
+          <h3>Get three correct</h3>
+          <p>
+            Three correct predictions end your turn. They do not need to be
+            consecutive.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="rules-card rules-card--drink">
+    <div class="rules-card__heading">
+      <span
+        class="rules-card__icon material-symbols-outlined"
+        aria-hidden="true"
+      >
+        local_bar
+      </span>
+
+      <div>
+        <p class="rules-card__eyebrow">Wrong guess</p>
+        <h2>Drink while your friends make it worse.</h2>
+      </div>
+    </div>
+
+    <div class="drink-layout">
+      <div class="timer-example">
+        <div class="timer-example__ring">
+          <strong>12</strong>
+          <span>seconds</span>
+        </div>
+
+        <div class="timer-example__copy">
+          <span>Assigned time</span>
+
+          <p>
+            The number of cards in the chosen stack determines how long you
+            drink.
+          </p>
         </div>
       </div>
-    </section>
 
-    <!-- LEFT: Turn flow (combined) -->
-    <section class="card">
-      <div class="card__head">
-        <span class="card__icon material-symbols-outlined" aria-hidden="true">sports_esports</span>
-        <h3 class="card__title">On your turn</h3>
+      <div class="sabotage-copy">
+        <h3>The table controls the timer.</h3>
+
+        <p>
+          While you drink, every other player can repeatedly tap their screen
+          to slow the countdown and increase your actual drinking time.
+        </p>
+
+        <div class="rules-note">
+          <span
+            class="material-symbols-outlined"
+            aria-hidden="true"
+          >
+            analytics
+          </span>
+
+          <p>
+            Deathbox compares assigned time with actual time so everyone can
+            see who was sabotaged the most.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rules-card rules-card--endgame">
+    <div class="rules-card__heading">
+      <span
+        class="rules-card__icon material-symbols-outlined"
+        aria-hidden="true"
+      >
+        restart_alt
+      </span>
+
+      <div>
+        <p class="rules-card__eyebrow">The endgame</p>
+        <h2>Every reshuffle makes it harder.</h2>
+      </div>
+    </div>
+
+    <div class="endgame-layout">
+      <div class="endgame-steps">
+        <div class="endgame-step">
+          <span>1</span>
+          <p>The deck runs out.</p>
+        </div>
+
+        <div class="endgame-step">
+          <span>2</span>
+          <p>One row of stacks is consolidated.</p>
+        </div>
+
+        <div class="endgame-step">
+          <span>3</span>
+          <p>Those cards are shuffled into the new deck.</p>
+        </div>
+
+        <div class="endgame-step">
+          <span>4</span>
+          <p>Repeat until only one stack remains.</p>
+        </div>
       </div>
 
-      <ol class="steps">
-        <li class="steps__item">
-          <span class="steps__n">1</span>
-          <span class="steps__t">Choose one of the <strong>nine stacks</strong>.</span>
-        </li>
-        <li class="steps__item">
-          <span class="steps__n">2</span>
-          <span class="steps__t">Predict <strong>higher</strong> or <strong>lower</strong>.</span>
-        </li>
-        <li class="steps__item">
-          <span class="steps__n">3</span>
-          <span class="steps__t">Get <strong>three predictions</strong> right to end your turn.</span>
-        </li>
-      </ol>
+      <aside class="final-stack">
+        <div class="final-stack__cards" aria-hidden="true">
+          <span class="final-stack__card final-stack__card--back"></span>
+          <span class="final-stack__card final-stack__card--middle"></span>
+          <span class="final-stack__card final-stack__card--front">K♥</span>
+        </div>
 
-      <div class="divider"></div>
+        <div>
+          <p class="rules-card__eyebrow">One stack left</p>
+          <h3>This is where it gets brutal.</h3>
 
-      <div class="mini">
-        <div class="mini__title">If you’re wrong</div>
-        <ul class="list list--tight">
-          <li class="list__item">The stack size becomes your <strong>drinking time</strong>.</li>
-          <li class="list__item">A countdown starts — drink until it hits zero.</li>
-        </ul>
-      </div>
-    </section>
+          <p>
+            Everyone must keep guessing against the same growing stack. Wrong
+            guesses become more common and the drinking time keeps increasing.
+          </p>
 
-    <!-- RIGHT: Counters -->
-    <section class="card">
-      <div class="card__head">
-        <span class="card__icon material-symbols-outlined" aria-hidden="true">touch_app</span>
-        <h3 class="card__title">The counters</h3>
-      </div>
+          <p class="final-stack__ending">
+            The game ends after the entire final deck has been played onto that
+            last stack.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
 
-      <p class="card__p">
-        Other players can help you out or make it worse.
-        Tap to <strong>speed up</strong> the drinking time.
-      </p>
-    </section>
-  </div>
+  <p class="rules-chat-note">
+    Playing remotely? Every game includes live table chat for reactions,
+    strategy, and trash talk.
+  </p>
 </section>
