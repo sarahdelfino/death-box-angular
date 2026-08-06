@@ -197,6 +197,10 @@ export class LobbyComponent implements OnInit {
 
     const cleanGameId = this.gameId;
     this.track('click_start_game', { game_id: cleanGameId });
+        gtag('event', 'conversion', {
+      send_to: 'AW-18375322224/HK3WCLa4r90cEPDUhLpE'
+    });
+
 
     if (cleanGameId) {
       this.store.startGame(cleanGameId);
