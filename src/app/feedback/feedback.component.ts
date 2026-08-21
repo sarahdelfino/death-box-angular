@@ -49,14 +49,6 @@ export class FeedbackComponent {
     });
   }
 
-  toggleFeedback(): void {
-    this.showFeedback = !this.showFeedback;
-
-    if (this.showFeedback) {
-      logEvent(getAnalytics(this.firebaseApp), 'feedback_opened', {});
-    }
-  }
-
   submitFeedback(): void {
     if (this.feedbackForm.invalid || this.feedbackSubmitting) return;
 

@@ -24,6 +24,7 @@ import { RulesComponent } from '../rules/rules.component';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 import { FirebaseApp } from '@angular/fire/app';
 import { AnalyticsService } from '../analyticsservice.service';
+import { FeedbackComponent } from "../feedback/feedback.component";
 
 @Component({
   selector: 'app-game',
@@ -39,6 +40,7 @@ import { AnalyticsService } from '../analyticsservice.service';
     MessagesComponent,
     ScoreboardComponent,
     RulesComponent,
+    FeedbackComponent
   ],
   providers: [GameStore],
 })
@@ -47,7 +49,7 @@ export class GameComponent implements OnInit, OnDestroy {
   readonly store = inject(GameStore);
   private analytics = inject(AnalyticsService);
   private platformId = inject(PLATFORM_ID);
-    private track(name: string, params?: Record<string, any>) {
+  private track(name: string, params?: Record<string, any>) {
     this.analytics.track(name, params);
   }
 
@@ -80,7 +82,7 @@ export class GameComponent implements OnInit, OnDestroy {
   selectedCard: Card | null = null;
   counting = false;
   unreadMessages = false;
-  activeTab: 'chat' | 'howto' | 'scoreboard' = 'chat';
+  activeTab: 'chat' | 'howto' | 'scoreboard' | 'feedback' = 'chat';
   wrongCardId: string | null = null;
   debug = false;
 
@@ -108,15 +110,15 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // ✅ SSR-safe reads
     if (isPlatformBrowser(this.platformId)) {
-    window.addEventListener('keydown', this.onKeydown);
+      window.addEventListener('keydown', this.onKeydown);
       this.sessionPlayer = sessionStorage.getItem('player');
       this.isHost = sessionStorage.getItem('host') === 'true';
       this.isMobile = window.innerWidth < 500;
     }
 
-      this.route.queryParamMap.subscribe(q => {
-    this.debug = q.get('debug') === '1';
-  });
+    this.route.queryParamMap.subscribe(q => {
+      this.debug = q.get('debug') === '1';
+    });
 
     this.gameId = this.route.snapshot.paramMap.get('id');
 
@@ -162,39 +164,39 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private debugAllowed(): boolean {
-  if (!isPlatformBrowser(this.platformId)) return false;
-  if (!this.debug) return false;
-  if (!this.gameId) return false;
-  // optional but recommended:
-  if (!this.isHost) return false;
-  return true;
-}
+    if (!isPlatformBrowser(this.platformId)) return false;
+    if (!this.debug) return false;
+    if (!this.gameId) return false;
+    // optional but recommended:
+    if (!this.isHost) return false;
+    return true;
+  }
 
-private setDeckLen(n: number): void {
-  if (!this.debugAllowed()) return;
+  private setDeckLen(n: number): void {
+    if (!this.debugAllowed()) return;
 
-  const gameId = this.gameId!;
-  const next = (this.deck ?? []).slice(0, Math.max(0, n));
+    const gameId = this.gameId!;
+    const next = (this.deck ?? []).slice(0, Math.max(0, n));
 
-  this.store.updateDeck({ gameId, deck: next });
+    this.store.updateDeck({ gameId, deck: next });
 
-  // keep local copy in sync immediately so your UI reacts right away
-  this.deck = next;
-}
+    // keep local copy in sync immediately so your UI reacts right away
+    this.deck = next;
+  }
 
-debugDeck0(): void { this.setDeckLen(0); }
-debugDeck1(): void { this.setDeckLen(1); }
-debugDeck5(): void { this.setDeckLen(5); }
+  debugDeck0(): void { this.setDeckLen(0); }
+  debugDeck1(): void { this.setDeckLen(1); }
+  debugDeck5(): void { this.setDeckLen(5); }
 
 
-private onKeydown = (e: KeyboardEvent) => {
-  if (!this.debugAllowed()) return;
+  private onKeydown = (e: KeyboardEvent) => {
+    if (!this.debugAllowed()) return;
 
-  // D = deck 0, O = deck 1, F = deck 5
-  if (e.key === 'd' || e.key === 'D') this.debugDeck0();
-  if (e.key === 'o' || e.key === 'O') this.debugDeck1();
-  if (e.key === 'f' || e.key === 'F') this.debugDeck5();
-};
+    // D = deck 0, O = deck 1, F = deck 5
+    if (e.key === 'd' || e.key === 'D') this.debugDeck0();
+    if (e.key === 'o' || e.key === 'O') this.debugDeck1();
+    if (e.key === 'f' || e.key === 'F') this.debugDeck5();
+  };
 
   onCountFinished(): void {
     this.showCount = false;
@@ -202,9 +204,9 @@ private onKeydown = (e: KeyboardEvent) => {
   }
 
   ngOnDestroy(): void {
-      if (isPlatformBrowser(this.platformId)) {
-    window.removeEventListener('keydown', this.onKeydown);
-  }
+    if (isPlatformBrowser(this.platformId)) {
+      window.removeEventListener('keydown', this.onKeydown);
+    }
     this.logEvent('left_during_game', {
       game_id: this.gameId,
       deck_size: this.deck?.length ?? 0,
@@ -580,12 +582,9 @@ private onKeydown = (e: KeyboardEvent) => {
     if (gameId) this.store.endCounting(gameId);
   }
 
-  setActiveTab(tab: 'chat' | 'scoreboard' | 'howto') {
+  setActiveTab(tab: 'chat' | 'scoreboard' | 'howto' | 'feedback') {
     this.activeTab = tab;
-    this.track('tab_changed', {
-      game_id: this.gameId,
-      tab: tab,
-    });
+    this.track(`tab_clicked_${tab}`);
   }
 
   isChatActive(): boolean {
@@ -600,7 +599,11 @@ private onKeydown = (e: KeyboardEvent) => {
     return this.activeTab === 'howto';
   }
 
-  constructor(private firebaseApp: FirebaseApp) {}
+  isFeedbackActive(): boolean {
+    return this.activeTab === 'feedback';
+  }
+
+  constructor(private firebaseApp: FirebaseApp) { }
   logEvent(name: string, params: Record<string, unknown>) {
     logEvent(getAnalytics(this.firebaseApp), name, params);
   }

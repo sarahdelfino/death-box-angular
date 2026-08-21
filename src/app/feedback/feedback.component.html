@@ -1,20 +1,5 @@
 <section class="feedback-shell">
-  <button type="button" class="feedback-toggle" (click)="toggleFeedback()" [class.active]="showFeedback"
-    [attr.aria-expanded]="showFeedback" aria-controls="feedback-body">
-    <div class="feedback-toggle-left">
-      <span class="material-symbols-outlined feedback-icon" aria-hidden="true">
-        bug_report
-      </span>
-      <span class="feedback-label">
-        Feedback
-      </span>
-    </div>
-    <span class="feedback-chevron" aria-hidden="true">
-      {{ showFeedback ? '–' : '+' }}
-    </span>
-  </button>
-
-  <div class="feedback-body" id="feedback-body" [class.collapsed]="!showFeedback">
+  <div class="feedback-body" id="feedback-body">
     <form class="feedback-form" [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
       <div class="input-row">
         <label>What’s this about?</label>
@@ -28,7 +13,7 @@
       <div class="input-row">
         <label for="fbMessage">Tell me what happened</label>
         <textarea id="fbMessage" class="arcade-input textarea" rows="3" formControlName="message"
-        placeholder="Tell me what’s confusing, busted, or could be better."></textarea>
+          placeholder="Tell me what’s confusing, busted, or could be better."></textarea>
       </div>
 
       <div class="input-row optional-row">
@@ -49,18 +34,14 @@
 
       <div class="feedback-footer">
         @if (feedbackSent) {
-          <p class="feedback-note">
-            Thanks for reaching out!
-          </p>
+        <p class="feedback-note">
+          Thanks for reaching out!
+        </p>
         }
 
         <div class="feedback-actions">
-          <button type="submit" class="arcade-btn small"
-            [disabled]="feedbackForm.invalid || feedbackSubmitting">
+          <button type="submit" class="arcade-btn small" [disabled]="feedbackForm.invalid || feedbackSubmitting">
             {{ feedbackSubmitting ? 'Sending...' : 'Send' }}
-          </button>
-          <button type="button" class="arcade-btn small" (click)="toggleFeedback()">
-            Close
           </button>
         </div>
       </div>

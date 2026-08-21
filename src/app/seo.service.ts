@@ -112,7 +112,7 @@ export class SeoService {
 
     this.meta.updateTag({
       property: 'og:site_name',
-      content: 'Deathbox',
+      content: 'Death Box',
     });
 
     this.meta.updateTag({

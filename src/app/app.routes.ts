@@ -10,11 +10,11 @@ export interface SeoRouteData {
 export const routes: Routes = [
   {
     path: '',
-    title: 'Deathbox | Free Online Multiplayer Drinking Card Game',
+    title: 'Death Box | Free Online Multiplayer Drinking Card Game',
     data: {
       seo: {
         description:
-          'Play Deathbox, a free online multiplayer drinking card game of higher-or-lower guesses, stacked cards, sabotage, live chat, and bad decisions.',
+          'Play Death Box, a free online multiplayer drinking card game of higher-or-lower guesses, stacked cards, sabotage, live chat, and bad decisions.',
         canonical: 'https://deathbox.app/',
         robots: 'index, follow',
         image: 'https://deathbox.app/images/deathbox-social-preview.webp',
@@ -28,11 +28,11 @@ export const routes: Routes = [
 
   {
     path: 'how-to-play',
-    title: 'How to Play Deathbox | Drinking Card Game Rules',
+    title: 'How to Play Death Box | Drinking Card Game Rules',
     data: {
       seo: {
         description:
-          'Learn how to play Deathbox, including higher-or-lower guesses, card stacks, drinking timers, player sabotage, deck resets, and remote play.',
+          'Learn how to play Death Box, including higher-or-lower guesses, card stacks, drinking timers, player sabotage, deck resets, and remote play.',
         canonical: 'https://deathbox.app/how-to-play',
         robots: 'index, follow',
         image: 'https://deathbox.app/images/deathbox-social-preview.webp',
@@ -46,10 +46,10 @@ export const routes: Routes = [
 
   {
     path: 'lobby/:id',
-    title: 'Deathbox Game Lobby',
+    title: 'Death Box Game Lobby',
     data: {
       seo: {
-        description: 'Join your private Deathbox game lobby.',
+        description: 'Join your private Death Box game lobby.',
         robots: 'noindex, nofollow',
       } satisfies SeoRouteData,
     },
@@ -61,10 +61,10 @@ export const routes: Routes = [
 
   {
     path: 'play/:id',
-    title: 'Play Deathbox',
+    title: 'Play Death Box',
     data: {
       seo: {
-        description: 'Play a private multiplayer game of Deathbox.',
+        description: 'Play a private multiplayer game of Death Box.',
         robots: 'noindex, nofollow',
       } satisfies SeoRouteData,
     },
@@ -76,10 +76,10 @@ export const routes: Routes = [
 
   // {
   //   path: '**',
-  //   title: 'Page Not Found | Deathbox',
+  //   title: 'Page Not Found | Death Box',
   //   data: {
   //     seo: {
-  //       description: 'The requested Deathbox page could not be found.',
+  //       description: 'The requested Death Box page could not be found.',
   //       robots: 'noindex, nofollow',
   //     } satisfies SeoRouteData,
   //   },

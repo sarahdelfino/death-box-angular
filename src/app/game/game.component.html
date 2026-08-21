@@ -86,6 +86,9 @@
           <button class="side-tab" [class.active]="isHowToActive()" (click)="setActiveTab('howto')" type="button">
             Rules
           </button>
+                    <button class="side-tab" [class.active]="isFeedbackActive()" (click)="setActiveTab('feedback')" type="button">
+            Feedback
+          </button>
         </div>
 
         <div class="side-body">
@@ -98,6 +101,9 @@
             }
             @if (isHowToActive()) {
             <app-rules></app-rules>
+            }
+            @if (isFeedbackActive()) {
+            <app-feedback class="side-content side-content--feedback" [gameId]="game.id"></app-feedback>
             }
           </div>
         </div>
